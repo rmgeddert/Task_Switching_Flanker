@@ -1,1 +1,35 @@
+body {
+  font-family: Arial, Helvetiva;
+}
 
+#instructions {
+  max-width: 600px;
+  margin: 0 auto;
+  margin-top: 30px;
+}
+
+#startExperimentButton {
+  margin-top: 50px;
+  display: inline-block;
+  color: black;
+  border: 3px outset grey;
+  background-color: #CCCCCC;
+  padding: 8px;
+  text-decoration: none;
+  font-family: Arial, Helvetica;
+  font-weight: bold;
+}
+
+#startExperimentButton:hover {
+  color: white;
+}
+
+#startExperimentButton:active {
+  border: 3px inset grey;
+}
+
+#pressStartMessage {
+  margin-top: 50px;
+  text-align: center;
+  color: red;
+}
