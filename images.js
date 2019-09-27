@@ -1,0 +1,22 @@
+var listImageNames = [
+ '../pics/finalpics/M31.jpg',
+ '../pics/finalpics/M42.jpg',
+ '../pics/finalpics/M9.jpg',
+ '../pics/finalpics/M33.jpg',
+ '../pics/finalpics/M51.jpg',
+ '../pics/finalpics/M66.jpg',
+ '../pics/finalpics/M70.jpg',
+ '../pics/finalpics/M68.jpg',
+ '../pics/finalpics/M102.jpg',
+ '../pics/finalpics/M122.jpg',
+ '../pics/finalpics/M192.jpg',
+ '../pics/finalpics/M190.jpg',
+ '../pics/finalpics/M152.jpg',
+ '../pics/finalpics/M136.jpg',
+ '../pics/finalpics/M42.jpg',
+ '../pics/finalpics/M141.jpg',
+ '../pics/finalpics/M171.jpg',
+ '../pics/finalpics/M149.jpg',
+ '../pics/finalpics/M181.jpg',
+ '../pics/finalpics/M187.jpg'
+]
