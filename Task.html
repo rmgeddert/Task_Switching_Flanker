@@ -4,26 +4,45 @@
     <script type="text/javascript" src="jquery-3.4.1.js"></script>
     <link rel="stylesheet" href="styles.css" type="text/css" charset="utf-8">
     <title>MTurk Task</title>
-  </head>
-  <body>
-    <div id="instructions"
-
-    </div>
-
 
     <script>
-      $(document).ready(function(){
+      function startExperiment(){
+        console.log("Start Experiment ran");
+        $('#instructions').hide();
+      }
 
-      })
+      function loadImages(){
+        var imgFile = listImageNames;
+        var imgArr = new Array(imgFile.length);
+        var imgCount = 0;
 
+        /* load images from images.js into local array imgArr */
+        while (imgCount < imgFile.length){
+          imgArr[imgCount] = new Image();
+          imgArr[imgCount].src = imgFile[imgCount];
+          imgCount++;
+        }
+      }
 
       /* Fisher-Yates shuffle */
       function shuffle(array){
         for(var j, x, i = array.length; i; j = Math.floor(Math.random() * i), x = array[--i], array[i] = array[j], array[j] = x);
         return array;
       }
-
-
     </script>
+
+  </head>
+  <body>
+    <div id="instructions">
+      <p>In this HIT, you will be presented with an image, which you will have to classify in one of two ways using your keyboard. It is important that you respond <strong>as quickly and accurately as possible.</strong></p>
+      <p>If you see the prompt <strong>S/L</strong>, use the <strong>A</strong> and <strong>L</strong> keys to indicate if the item is smaller (A) or larger (L) than a <strong>shoebox</strong>.</p>
+      <p>If you see the prompt <strong>N/M</strong>, use the <strong>A</strong> and <strong>L</strong> keys to indicate if the item is <strong>natural</strong> (A) or <strong>man-made</strong> (L).</p>
+      <p style="text-align: center">
+        <a href="javascript:startExperiment()" id="startExperimentButton">Start Experiment</a>
+      </p>
+      <p id="pressStartMessage">Press 'Start Experiment' to begin the task.</p>
+    </div>
+    <div id="taskBox">
+    </div>
   </body>
 </html>
