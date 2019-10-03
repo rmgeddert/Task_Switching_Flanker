@@ -24,11 +24,11 @@
           imgArr[imgCount].src = imgFile[imgCount];
           imgCount++;
         }
-
+        
+        /* randomizes image array */
         random_img = []
         for (var g=0;g < imgFile.length;g++) {
           random_img.push(g);
-          console.log(g)
         }
 
         shuffle(random_img);
