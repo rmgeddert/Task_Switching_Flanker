@@ -17,12 +17,12 @@
 
       // ----- Prepare Experiment ----- //
       prepare(); //from prepareTask.js
+      runInstructions();
 
       // ----- Instructions ----- //
       function runInstructions(){
         showInstructions(); // from instructions.js
         $(document).on('click', "#startExpButton", function(){
-          console.log('this ran');
           $('#instructions').hide();
           practice();
         });
@@ -30,7 +30,6 @@
 
       // ----- Practice Block ----- //
       function practice(){
-
 
       };
 
