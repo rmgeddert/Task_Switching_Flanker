@@ -1,16 +1,19 @@
 body {
-  font-family: Arial, Helvetiva;
+  font-family: Arial, Helvetica;
+}
+
+.instructions {
+  color: black;
+  font-size: 22px;
+  text-align: left;
 }
 
 #instructions {
-  max-width: 600px;
-  margin: 0 auto;
-  margin-top: 30px;
+  margin-left: 20px;
 }
 
-#startExperimentButton {
-  margin-top: 50px;
-  display: inline-block;
+#startExpButton {
+  display:none;
   color: black;
   border: 3px outset grey;
   background-color: #CCCCCC;
@@ -20,11 +23,11 @@ body {
   font-weight: bold;
 }
 
-#startExperimentButton:hover {
+#startExpButton:hover {
   color: white;
 }
 
-#startExperimentButton:active {
+#startExpButton:active {
   border: 3px inset grey;
 }
 

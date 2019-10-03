@@ -4,54 +4,54 @@
     <link rel="stylesheet" href="styles.css" type="text/css" charset="utf-8">
     <script type="text/javascript" src="jquery-3.4.1.js"></script>
     <script type="text/javascript" src="images.js"></script>
+    <script type="text/javascript" src="prepareTask.js"></script>
+    <script type="text/javascript" src="instructions.js"></script>
     <title>MTurk Task</title>
 
     <script>
-      function startExperiment(){
+      /*function startExperiment(){
         console.log("Start Experiment ran");
         loadImages()
         $('#instructions').hide();
-      }
+      }*/
 
-      function loadImages(){
-        var imgFile = listImageNames;
-        var imgArr = new Array(imgFile.length);
-        var imgCount = 0;
+      // ----- Prepare Experiment ----- //
+      prepare(); //from prepareTask.js
 
-        /* load images from images.js into local array imgArr */
-        while (imgCount < imgFile.length){
-          imgArr[imgCount] = new Image();
-          imgArr[imgCount].src = imgFile[imgCount];
-          imgCount++;
-        }
-        
-        /* randomizes image array */
-        random_img = []
-        for (var g=0;g < imgFile.length;g++) {
-          random_img.push(g);
-        }
+      // ----- Instructions ----- //
+      function runInstructions(){
+        showInstructions(); // from instructions.js
+        $(document).on('click', "#startExpButton", function(){
+          console.log('this ran');
+          $('#instructions').hide();
+          practice();
+        });
+      };
 
-        shuffle(random_img);
-      }
+      // ----- Practice Block ----- //
+      function practice(){
 
-      /* Fisher-Yates shuffle */
-      function shuffle(array){
-        for(var j, x, i = array.length; i; j = Math.floor(Math.random() * i), x = array[--i], array[i] = array[j], array[j] = x);
-        return array;
-      }
+
+      };
+
     </script>
 
   </head>
   <body>
     <div id="instructions">
-      <p>In this HIT, you will be presented with an image, which you will have to classify in one of two ways using your keyboard. It is important that you respond <strong>as quickly and accurately as possible.</strong></p>
-      <p>If you see the prompt <strong>S/L</strong>, use the <strong>A</strong> and <strong>L</strong> keys to indicate if the item is smaller (A) or larger (L) than a <strong>shoebox</strong>.</p>
-      <p>If you see the prompt <strong>N/M</strong>, use the <strong>A</strong> and <strong>L</strong> keys to indicate if the item is <strong>natural</strong> (A) or <strong>man-made</strong> (L).</p>
-      <p style="text-align: center">
-        <a href="javascript:startExperiment()" id="startExperimentButton">Start Experiment</a>
-      </p>
-      <p id="pressStartMessage">Press 'Start Experiment' to begin the task.</p>
+      <!-- HTML objects for instruction (see instructions.js for relevant code) -->
+      <h1>Instructions</h1>
+      <p id="instructions0" class="instructions" style="font-weight: bold">Please read these instructions carefully.</p>
+      <p id="instructions1" class="instructions"></p>
+      <p id="instructions2" class="instructions"></p>
+      <p id="instructions3" class="instructions"></p>
+      <p id="instructions4" class="instructions"></p>
+      <p id="instructions5" class="instructions"></p>
+      <p id="instructions6" class="instructions" style="font-weight: bold"></p>
+      <p id="instructions7" class="instructions"></p>
+      <p id="instructions8" class="instructions"></p>
+      <button id="nextInstrButton" class="instructions">Next</button>
+      <button id="startExpButton">Start Experiment</button>
     </div>
-
   </body>
 </html>
