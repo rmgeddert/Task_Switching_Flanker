@@ -1,5 +1,5 @@
 function prepare(){
-  loadImages();
+
 };
 
 function loadImages(){
@@ -22,6 +22,11 @@ function loadImages(){
 
   shuffle(random_img);
 }
+
+function make_stim_array{
+
+}
+
 
 // Fisher-Yates shuffle
 function shuffle(array){
