@@ -1,5 +1,5 @@
 function prepare(){
-
+  loadImages();
 };
 
 function loadImages(){
@@ -15,17 +15,19 @@ function loadImages(){
   }
 
   // randomizes image array
-  random_img = []
-  for (var g=0;g < imgFile.length;g++) {
-    random_img.push(g);
-  }
-
+  // NTS: this could probably be done by just randomizing imgArr without creating an entire new function.... will see what happens as code gets written.
+  imgArr.forEach((item,index) => random_img.push(item));
   shuffle(random_img);
-}
+};
 
-function make_stim_array{
+function make_stim_array(){
+  stimChoices = [1,2,3,4,6,7,8,9];
+  stimArray = [];
+  stimChoices.forEach(function (item,index) {
 
-}
+  });
+
+};
 
 
 // Fisher-Yates shuffle
