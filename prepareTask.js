@@ -1,25 +1,6 @@
 let stimArray = createStimArray();
 let actionArray = createActionArray();
 
-function loadImages(){
-  let imgFile = listImageNames;
-  let imgArr = new Array(imgFile.length);
-  let imgCount = 0;
-
-  // load images from images.js into local array imgArr
-  while (imgCount < imgFile.length){
-    imgArr[imgCount] = new Image();
-    imgArr[imgCount].src = imgFile[imgCount];
-    imgCount++;
-  }
-
-  // randomizes image array
-  // NTS: this could probably be done by just randomizing imgArr without creating an entire new variable.... we'll see
-  let random_img = [];
-  imgArr.forEach((item,index) => random_img.push(item));
-  shuffle(random_img);
-}
-
 function createStimArray(){
   //makes a set of 64 randomized stimuli using 1-9 exclude 5
   let stimChoices = ['1','2','3','4','6','7','8','9'];
