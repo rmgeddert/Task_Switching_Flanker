@@ -1,8 +1,5 @@
-function prepare(){
-  //loadImages();
-  createStimArray();
-  createActionArray();
-}
+let stimArray = createStimArray();
+let actionArray = createActionArray();
 
 function loadImages(){
   let imgFile = listImageNames;
