@@ -37,14 +37,12 @@ function createStimArray(){
 }
 
 function createActionArray(){
-  // makes a set of 64 actions (0 or 1) with a range of repeats.
   let actionSet = [];
-  while (countRepeats(actionSet) < 30 || countRepeats(actionSet) > 34) {
-    actionSet = makeCuedTaskArray();
-  };
+  do { actionSet = createRandomkArray();} while (countRepeats(actionSet) < 30 || countRepeats(actionSet) > 34);
+  console.log(actionSet);
   // return actionSet;
 
-  function makeCuedTaskArray(){
+  function createRandomkArray(){
     let a1 = Array(32); a2 = Array(32);
     a1.fill(0); a2.fill(1);
     return shuffle(a1.concat(a2));
