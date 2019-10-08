@@ -1,5 +1,5 @@
 // initiate variables
-var instrNum = 1; instrNumMax = 8
+let instrNum = 1; instrNumMax = 8
 
 // show instructions to participant (one at a time)
 function showInstructions(){
