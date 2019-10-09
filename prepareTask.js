@@ -2,17 +2,6 @@
 and required action/correct response arrays, as well as creating
 a stimCategories array that identifies flanker congruency types. */
 
-// ------------- Main ------------- //
-let stimCategories = {
-  Parity: {},
-  Magnitude: {},
-  CongruencyClass: {}
-};
-let stimulusArray = createStimArray(); //also defines stimCategories
-let cuedTaskArray = createCuedTaskArray();
- let actionArray = createActionArray();
-// console.log(stimulusArray); console.log(stimCategories);
-
 // ------------- Stimulus ------------- //
 function createStimArray(){
   let targetChoices = [1,2,3,4,6,7,8,9];
@@ -25,7 +14,7 @@ function createStimArray(){
     distractorChoices.forEach( function(distractor) {
       let newStim = createStimulus(target,distractor);
       stimCategories["Parity"][newStim] = (isEven(target)) ? "Even" : "Odd";
-      stimCategories["Magnitude"][newStim] = (target > 5) ? "Greater" : "Less";
+      stimCategories["Magnitude"][newStim] = (target > 5) ? "Larger" : "Smaller";
       stimCategories["CongruencyClass"][newStim] = checkCongruencyClass(target, distractor);
       stimArray.push(newStim);
     });
@@ -73,13 +62,16 @@ function createStimArray(){
 
 // ------------- Cued Task ------------- //
 function createCuedTaskArray(){
-  let actionSet = [];
-  do { actionSet = createRandomArray(); } while (countRepeats(actionSet) < 30 || countRepeats(actionSet) > 34);
-  return actionSet;
+  let taskSet = [];
+
+  // create random task orders, making sure enough switch/repeats
+  do { taskSet = createRandomArray(); }
+  while (countRepeats(taskSet) < 30 || countRepeats(taskSet) > 34);
+  return taskSet;
 
   function createRandomArray(){
     let a1 = Array(32), a2 = Array(32);
-    a1.fill("M"); a2.fill("P");
+    a1.fill("Magnitude"); a2.fill("Parity");
     return shuffle( a1.concat(a2) );
   }
 
@@ -96,15 +88,24 @@ function createCuedTaskArray(){
 // ------------- Action (based on stimulus and task) ------------- //
 function createActionArray(){
   let actionArr = [];
-  stimulusArray.forEach( function(item, index){
-    if (cuedTaskArray[index] == "P") {
-      // if ( isEven(item) )
-    } else if (true) {
-
-    } else {
-
+  let responseMappings = {
+    Parity: {
+      Odd : 90,
+      Even : 88
+    },
+    Magnitude: {
+      Larger : 78,
+      Smaller : 77
     }
+  };
+
+  // for each stimulus and associated task, identify required action for correct response
+  stimulusArray.forEach(function(item, index) {
+    let task = cuedTaskArray[index];
+    actionArr.push( responseMappings[task][ stimCategories[task][item] ]);
   });
+
+  return actionArr;
 }
 
 // ------------- Misc Functions ------------- //
