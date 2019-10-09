@@ -1,6 +1,8 @@
 let myArray = createStimArray();
 let cuedTaskArray = createCuedTaskArray();
 
+//testing 1 2 3
+
 // ------------- Stimulus ------------- //
 function createStimArray(){
   let targetChoices = [1,2,3,4,6,7,8,9];
