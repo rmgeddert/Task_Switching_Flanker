@@ -1,6 +1,14 @@
 // initiate variables
 let instrNum = 1; instrNumMax = 8
 
+// to run relevant instructions
+function runInstructions(){
+  showInstructions(); // from instructions.js
+  $(document).on('click', "#startExpButton", function(){
+    $('#instructions').hide();
+  });
+};
+
 // show instructions to participant (one at a time)
 function showInstructions(){
   if (instrNum == instrNumMax){
