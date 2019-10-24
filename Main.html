@@ -1,47 +1,18 @@
 <!DOCTYPE html>
 <html >
   <head>
-    <link rel="stylesheet" href="styles.css" type="text/css" charset="utf-8">
+    <link rel="stylesheet" href="styles.css">
     <script src="jquery-3.4.1.js"></script>
     <script src="images.js"></script>
     <script src="prepareTask.js"></script>
     <script src="instructions.js"></script>
+    <script src ="main.js"></script>
     <title>MTurk Task</title>
-
-    <script>
-      //https://javascript.info/strict-mode
-      "use strict";
-
-      //declare global variables (easy access for changes)
-      let trialNumber = 320;
-      let miniBlockSize = 16;
-
-      // ----- Prepare Experiment ----- //
-      let stimCategories = {
-        Parity: {},
-        Magnitude: {},
-        CongruencyClass: {}
-      };
-      let stimulusArray = createStimArray(); //also defines stimCategories
-      let cuedTaskArray = createCuedTaskArray();
-      let actionArray = createActionArray();
-
-
-      // ----- Instructions ----- //
-      runInstructions();
-
-      // ----- Practice Block ----- //
-
-      // ----- Main Task ----- //
-
-
-    </script>
-
   </head>
 
   <body>
+    <!-- HTML objects for instruction (see instructions.js for relevant code) -->
     <div id="instructions">
-      <!-- HTML objects for instruction (see instructions.js for relevant code) -->
       <h1>Instructions</h1>
       <p id="instructions0" class="instructions" style="font-weight: bold">Please read these instructions carefully.</p>
       <p id="instructions1" class="instructions"></p>
@@ -55,9 +26,11 @@
       <button id="nextInstrButton" class="instructions">Next</button>
       <button id="startExpButton">Start Experiment</button>
     </div>
-    <div id="task">
-      <canvas id="myCanvas" width="500" height="500"></canvas>
-    </div>
+
+    <!--canvas element for displaying stimuli during the task and practice -->
+    <canvas id="myCanvas" width="500" height="500"></canvas>
+
+    <!-- hidden html elements for uploading things to turk/getting turk data -->
     <form id="mturk_form" method="POST" action="http://152.3.33.14/AMTSubmit/dataHandler.php">
       <!-- <form id="mturk_form" method="POST" action="https://workersandbox.mturk.com/mturk/externalSubmit"> -->
       <!-- <form id="mturk_form" method="POST" action="https://wwww.mturk.com/mturk/externalSubmit"> -->
