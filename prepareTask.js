@@ -1,6 +1,14 @@
 /* These scripts create the randomized stimulus, cued Task,
 and required action/correct response arrays, as well as creating
 a stimCategories array that identifies flanker congruency types. */
+let stimCategories = {
+  Parity: {},
+  Magnitude: {},
+  CongruencyClass: {}
+};
+let stimulusArray = createStimArray(); //also defines stimCategories
+let cuedTaskArray = createCuedTaskArray();
+let actionArray = createActionArray();
 
 // ------------- Stimulus ------------- //
 function createStimArray(){
