@@ -7,6 +7,7 @@ let magnitudeIncStim = [ ['77177','99199'] , ['66266','88288'] , ['77377','99399
 This stores distractor number, stim number, stim magnitude, stim parity,
 and stim congruency to prevent repeats in task set.*/
 
+let stimArray = createStimArray();
 let stimTypes = {
   target: {},
   targetPar: {},
@@ -14,12 +15,13 @@ let stimTypes = {
   distractor: {},
   congruency: {}
 };
+defineStimulusTypes(stimArray);
 
-function defineStimulusTypes(){
-  congruentStim.forEach(function(newStim){
-    // store stimuli in variables
-    let stimTarget = getTarget(newStim);
-    let stimDistractor = getDistractor(newStim);
+function defineStimulusTypes(inputArr){
+  inputArr.forEach(function(newStim){
+    // pull out target and distractor from stimulus string
+    let stimTarget = toString(newStim).slice(2,3); // target = 3rd number in string
+    let stimDistractor = toString(newStim).slice(0,1); // distractor = 1st number in string
 
     // add stimulus variables to stimTypes variable
     stimTypes['target'][newStim] = stimTarget;
@@ -28,14 +30,7 @@ function defineStimulusTypes(){
     stimTypes['targetMag'][newStim] = (stimTarget > 5) ? 'larger' : 'smaller';
     stimTypes['congruency'][newStim] = getCongruency(stimTarget,stimDistractor);
   })
-}
-
-function getTarget(stimulus){
-  // loop through string and get middle on
-}
-
-function getDistractor(stimulus){
-  //loop through string and get first one
+  console.log(stimTypes);
 }
 
 function getCongruency(stimulus, distractor){
@@ -44,6 +39,12 @@ function getCongruency(stimulus, distractor){
 
 function createStimArray() {
   let stimArray = [];
+  //select stim from congruent and incongruent stim arrays and add to main stim array
+  congruentStim.forEach(function(stim){stimArray.push(stim);})
+  parityIncStim.forEach(function(stimPair){stimArray.push(stimPair[getRandomInt(2)]);})
+  magnitudeIncStim.forEach(function(stimPair){stimArray.push(stimPair[getRandomInt(2)]);})
+
+  return stimArray;
 }
 
 // ------------- Misc Functions ------------- //
@@ -55,3 +56,8 @@ function shuffle(array){
 
 // isEven Function for stimulus categorization
 function isEven(n) {return n % 2 == 0;}
+
+//random integer function
+function getRandomInt(max){
+  return Math.floor(Math.random() * Math.floor(max));
+}

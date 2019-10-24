@@ -6,17 +6,19 @@ let trialNumber = 320;
 let miniBlockSize = 16;
 
 // ----- Prepare Experiment ----- //
-let stimCategories = {
-  Parity: {},
-  Magnitude: {},
-  CongruencyClass: {}
-};
-let stimulusArray = createStimArray(); //also defines stimCategories
-let cuedTaskArray = createCuedTaskArray();
-let actionArray = createActionArray();
-console.log(stimulusArray);
-console.log(cuedTaskArray);
-console.log(actionArray);
+// let stimCategories = {
+//   Parity: {},
+//   Magnitude: {},
+//   CongruencyClass: {}
+// };
+// let stimulusArray = createStimArray(); //also defines stimCategories
+// let cuedTaskArray = createCuedTaskArray();
+// let actionArray = createActionArray();
+// console.log(stimulusArray);
+// console.log(cuedTaskArray);
+// console.log(actionArray);
+
+console.log(stimArray);
 
 // ----- Instructions ----- //
 runInstructions();
