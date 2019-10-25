@@ -15,34 +15,37 @@ let stimTypes = {
   distractor: {},
   congruency: {}
 };
-defineStimulusTypes(stimArray);
+defineStimulusTypes(stimArray, incongruency);
 
 function defineStimulusTypes(inputArr){
   inputArr.forEach(function(newStim){
     // pull out target and distractor from stimulus string
-    let stimTarget = toString(newStim).slice(2,3); // target = 3rd number in string
-    let stimDistractor = toString(newStim).slice(0,1); // distractor = 1st number in string
+    let stimTarget = newStim.slice(2,3); // target = 3rd number in string
+    let stimDistractor = newStim.slice(0,1); // distractor = 1st number in string
 
     // add stimulus variables to stimTypes variable
     stimTypes['target'][newStim] = stimTarget;
     stimTypes['distractor'][newStim] = stimDistractor;
     stimTypes['targetPar'][newStim] = (isEven(stimTarget)) ? 'even' : 'odd';
     stimTypes['targetMag'][newStim] = (stimTarget > 5) ? 'larger' : 'smaller';
-    stimTypes['congruency'][newStim] = getCongruency(stimTarget,stimDistractor);
+    stimTypes['congruency'][newStim] = function(incongruency){
+      if incongruency = ""
+    }
   })
   console.log(stimTypes);
 }
 
-function getCongruency(stimulus, distractor){
-  //determine if
-}
-
 function createStimArray() {
   let stimArray = [];
+  
   //select stim from congruent and incongruent stim arrays and add to main stim array
   congruentStim.forEach(function(stim){stimArray.push(stim);})
-  parityIncStim.forEach(function(stimPair){stimArray.push(stimPair[getRandomInt(2)]);})
-  magnitudeIncStim.forEach(function(stimPair){stimArray.push(stimPair[getRandomInt(2)]);})
+  parityIncStim.forEach(function(stimPair,"parity"){
+    stimArray.push(stimPair[getRandomInt(2)]);
+  })
+  magnitudeIncStim.forEach(function(stimPair,"parity"){
+    stimArray.push(stimPair[getRandomInt(2)]);
+  })
 
   return stimArray;
 }
