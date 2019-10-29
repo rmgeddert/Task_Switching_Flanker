@@ -4,11 +4,15 @@
 $(document).ready(function(){
 
   // ----- Prepare Stimuli and Task ----- //
-  let stimArray = createStimArray();
-  let stimClassification = defineStimulusTypes(stimArray);
+    let stimArray = createStimArray();
+    let stimClassification = defineStimuli(stimArray);
 
-  // ----- Practice Block #1 ----- //
-  runPractice1();
+    // prepare task canvas
+    let taskCanvas = document.getElementById('myCanvas');
+    let ctx = taskCanvas.getContext('2d');
+
+  // ----- Practice Blocks ----- //
+    runInstructions("1"); //start with first instruction block
 
 });
 
@@ -17,3 +21,6 @@ $(document).ready(function(){
 
 //  let taskCanvas = document.getElementById('myCanvas');
 //  let ctx = taskCanvas.getContext('2d');
+
+// let cuedTaskArray = createCuedTaskArray(stimArray.length);
+// let actionArray = createActionArray();

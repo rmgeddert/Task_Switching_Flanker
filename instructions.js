@@ -46,7 +46,8 @@ function runInstructions(practiceBlockNum){
       $('#instructions').hide();
       $('#startExpButton').hide();
       $(document).off("click","#nextInstrButton");
-      runPractice2();
+      $(document).off("click","#startExpButton");
+      runPractice(practiceBlockNum);
     });
   };
 };
