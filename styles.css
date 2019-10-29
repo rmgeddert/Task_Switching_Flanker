@@ -10,6 +10,7 @@ body {
 
 #instructions {
   margin-left: 20px;
+  display:none
 }
 
 #startExpButton {

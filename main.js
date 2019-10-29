@@ -1,17 +1,19 @@
 //https://javascript.info/strict-mode
 "use strict";
 
-//declare global variables (easy access for changes)
-
 $(document).ready(function(){
-  // ----- Prepare Stimulis ----- //
+
+  // ----- Prepare Stimuli and Task ----- //
   let stimArray = createStimArray();
   let stimClassification = defineStimulusTypes(stimArray);
 
-  // ----- Practice Block ----- //
-  runInstructions();
-  let taskCanvas = document.getElementById('myCanvas');
-  let ctx = taskCanvas.getContext('2d');
+  // ----- Practice Block #1 ----- //
+  runPractice1();
+
 });
 
-// ----- Main Task ----- //
+    // ----- Main Task ----- //
+
+
+//  let taskCanvas = document.getElementById('myCanvas');
+//  let ctx = taskCanvas.getContext('2d');
