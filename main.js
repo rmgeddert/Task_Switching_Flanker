@@ -13,5 +13,6 @@ $(document).ready(function(){
     let ctx = taskCanvas.getContext('2d');
 
   // ----- Practice Blocks ----- //
-    runInstructions("1"); //start with first instruction block
+    // runInstructions("1"); //start with first instruction block
+    runPractice("1");
 });
