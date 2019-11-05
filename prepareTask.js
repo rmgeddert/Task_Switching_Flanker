@@ -87,7 +87,7 @@ function createCuedTaskArray(trialCount, taskInvolved = "both"){
     return Array(trialCount).fill("magnitude");
 
   } else if (taskInvolved == "parity") {
-
+    
     return Array(trialCount).fill("parity");
 
   } else {
@@ -124,10 +124,10 @@ function createCuedTaskArray(trialCount, taskInvolved = "both"){
 function createActionArray(taskStimSet, cuedTaskSet){
   let actionArr = [];
   let responseMappings = {
-    odd : 90,
-    even : 88,
-    larger : 78,
-    smaller : 77
+    odd : 122,
+    even : 120,
+    larger : 110,
+    smaller : 109
   };
 
   // for each stimulus and associated task, identify required action for correct response

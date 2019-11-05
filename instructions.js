@@ -7,8 +7,8 @@ let instrNum = {
 let instrNumMax = 8;
 
 // main instruction function (come here at start of practice block)
-function runInstructions(practiceBlockNum){
-  if (instrNum[practiceBlockNum] == instrNumMax){
+function runInstructions(){
+  if (instrNum[pracBlockNum] == instrNumMax){
     // if we've already been through all this before for this practice run but need to repeat (participant failed to meet accuracy requirement), then reshow all instructions (should still be correct from last time).
     $('#instructions').show();
     $('#nextInstrButton').hide();
@@ -31,11 +31,11 @@ function runInstructions(practiceBlockNum){
     // https://stackoverflow.com/questions/19237235/jquery-button-click-event-not-firing
     $(document).on("click", "#nextInstrButton", function(){
       // $("#nextInstrButton").on('click', function(){
-      if (instrNum[practiceBlockNum] < instrNumMax){
-        $('#instructions' + instrNum[practiceBlockNum]).text( getNextInstructions( instrNum[practiceBlockNum], practiceBlockNum));
-        instrNum[practiceBlockNum]++;
+      if (instrNum[pracBlockNum] < instrNumMax){
+        $('#instructions' + instrNum[pracBlockNum]).text( getNextInstructions( instrNum[pracBlockNum], pracBlockNum));
+        instrNum[pracBlockNum]++;
       } else{
-        $('#instructions' + instrNum[practiceBlockNum]).text(  getNextInstructions(instrNum[practiceBlockNum], practiceBlockNum));
+        $('#instructions' + instrNum[pracBlockNum]).text(  getNextInstructions(instrNum[pracBlockNum], pracBlockNum));
         $('#nextInstrButton').hide();
         $('#startExpButton').show();
       };
@@ -47,13 +47,13 @@ function runInstructions(practiceBlockNum){
       $('#startExpButton').hide();
       $(document).off("click","#nextInstrButton");
       $(document).off("click","#startExpButton");
-      runPractice(practiceBlockNum);
+      runPractice();
     });
   };
 };
 
-function getNextInstructions(slideNum, practiceBlockNum){
-  switch (practiceBlockNum){
+function getNextInstructions(slideNum, pracBlockNum){
+  switch (pracBlockNum){
     case "1":
       switch (slideNum){
         case 1:
