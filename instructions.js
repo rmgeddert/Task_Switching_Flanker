@@ -1,14 +1,22 @@
-// declare global variables
-let instrNum = {
-  "1": 1,
-  "2": 1,
-  "3": 1
+// global instruction iterator information. Change as needed
+let instructions = {
+  iterator: {
+    prac1: 1,
+    prac2: 1,
+    prac3: 1,
+    mainTask: 1
+  },
+  max: {
+    prac1: 8,
+    prac2: 8,
+    prac3: 8,
+    mainTask: 8
+  }
 };
-let instrNumMax = 8;
 
 // main instruction function (come here at start of practice block)
 function runInstructions(){
-  if (instrNum[pracBlockNum] == instrNumMax){
+  if (instructions["iterator"][expStage] == instructions["max"][expStage]){
     // if we've already been through all this before for this practice run but need to repeat (participant failed to meet accuracy requirement), then reshow all instructions (should still be correct from last time).
     $('#instructions').show();
     $('#nextInstrButton').hide();
@@ -16,9 +24,13 @@ function runInstructions(){
 
   } else{
 
+    // remove any previous click listeners, if any
+    $(document).off("click","#nextInstrButton");
+    $(document).off("click","#startExpButton");
+
     // clear all previous instructions, if any
     let i;
-    for (i = 1; i <= instrNumMax; i++) {
+    for (i = 1; i <= instructions["max"][expStage]; i++) {
       $('#instructions' + i).text("");
     }
 
@@ -30,12 +42,13 @@ function runInstructions(){
     // if running from Atom, need to use $(document).on, if through Duke Public Home Directory, either works.
     // https://stackoverflow.com/questions/19237235/jquery-button-click-event-not-firing
     $(document).on("click", "#nextInstrButton", function(){
-      // $("#nextInstrButton").on('click', function(){
-      if (instrNum[pracBlockNum] < instrNumMax){
-        $('#instructions' + instrNum[pracBlockNum]).text( getNextInstructions( instrNum[pracBlockNum], pracBlockNum));
-        instrNum[pracBlockNum]++;
+    // $("#nextInstrButton").on('click', function(){
+      let instrNum = instructions["iterator"][expStage];
+      if (instrNum < instructions["max"][expStage]){
+        $('#instructions' + instrNum).text( getNextInstructions( instrNum, expStage));
+        instructions["iterator"][expStage]++;
       } else{
-        $('#instructions' + instrNum[pracBlockNum]).text(  getNextInstructions(instrNum[pracBlockNum], pracBlockNum));
+        $('#instructions' + instrNum).text( getNextInstructions(instrNum, expStage));
         $('#nextInstrButton').hide();
         $('#startExpButton').show();
       };
@@ -52,9 +65,9 @@ function runInstructions(){
   };
 };
 
-function getNextInstructions(slideNum, pracBlockNum){
-  switch (pracBlockNum){
-    case "1":
+function getNextInstructions(slideNum, expStage){
+  switch (expStage){
+    case "prac1":
       switch (slideNum){
         case 1:
           return "In this task, you will see a number (1-9 excluding 5) appear in the middle of the screen.";
@@ -81,7 +94,7 @@ function getNextInstructions(slideNum, pracBlockNum){
           return "This block contains 10 trials. Press 'Start Experiment' to begin, then place your right hand on the 'N' and 'M' keys.";
           break;
       }
-    case "2":
+    case "prac2":
       switch (slideNum){
         case 1:
           return "Great job! In this block, you will again see a number (1-9 excluding 5), but now you will indicate if the number is ODD or EVEN.";
@@ -108,7 +121,7 @@ function getNextInstructions(slideNum, pracBlockNum){
           return "This block contains 10 trials. Press 'Start Experiment' to begin, then place your left hand on the 'Z' and 'X' keys.";
           break;
       }
-    case "3":
+    case "prac3":
       switch (slideNum){
         case 1:
           return "Great job! In the final block, you will again see a number (1-9 excluding 5), but now you will either make a GREATER/LESS THAN or a ODD/EVEN decision, depending on the color of the box.";
@@ -132,7 +145,7 @@ function getNextInstructions(slideNum, pracBlockNum){
           return "Please enlarge this window to your entire screen and sit a comfortable distance from the computer screen. You must get above 80% on the practice task in order to move onto the next task.";
           break;
         case 8:
-          return "You will start with a practice block of 20 trials. Press 'Start Experiment' to begin, then place your right hand on the 'N' and 'M' keys and left hand on the 'Z' and 'X' keys.";
+          return "This block contains 20 trials. Press 'Start Experiment' to begin, then place your right hand on the 'N' and 'M' keys and left hand on the 'Z' and 'X' keys.";
           break;
       }
   }

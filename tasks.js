@@ -1,5 +1,5 @@
 function runPractice(){
-  if (pracBlockNum == "1"){
+  if (expStage == "prac1"){
 
     stimCount = 0;
 
@@ -14,7 +14,7 @@ function runPractice(){
     // start countdown into practice block
     countDown(3);
 
-  } else if (pracBlockNum == "2"){
+  } else if (expStage == "prac2"){
     stimCount = 0;
 
     // create arrays for this practice block
@@ -25,7 +25,7 @@ function runPractice(){
     // start countdown into practice block
     countDown(3);
 
-  } else if (pracBlockNum == "3") {
+  } else if (expStage == "prac3") {
 
     stimCount = 0;
 
@@ -51,14 +51,19 @@ function countDown(seconds){
 
 function runTrial(){
   if (stimCount < taskStimuliSet.length){
-    fixationScreen();
+    if (expType == 2){
+      expType = 3;
+      promptLetGo();
+    } else {
+      fixationScreen();
+    }
   } else {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (pracBlockNum == "1"){
-      pracBlockNum = "2";
+    if (expStage == "prac1"){
+      expStage = "prac2";
       runInstructions();
-    } else if (pracBlockNum == "2") {
-      pracBlockNum = "3";
+    } else if (expStage == "prac2") {
+      expStage = "prac3";
       runInstructions();
     } else {
       ctx.fillStyle = "Black";
@@ -85,7 +90,8 @@ function stimScreen(){
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   //await trial response
-  expType = 1; acc = 0;
+  if (expType != 2) {expType = 1;}; //reset expType if not awaiting keyup
+  acc = 99;
 
   // display stimulus
   ctx.fillText(taskStimuliSet[stimCount],canvas.width/2,canvas.height/2);
@@ -95,16 +101,54 @@ function stimScreen(){
 }
 
 function itiScreen(){
+  if (expType != 2) {expType = 0;}; //reset expType if not awaiting keyup
+
   // prepare ITI canvas
-  ctx.fillStyle = (acc == 1) ? "green" : "red"
+  ctx.fillStyle = accFeedbackColor();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // display response feedback (correct/incorrect)
-  ctx.fillText((acc == 1) ? "Correct" : "Incorrect",canvas.width/2,canvas.height/2);
+  ctx.fillText(accFeedback(),canvas.width/2,canvas.height/2);
 
   // trial iteration finished. iterate stimCount.
   stimCount++;
 
   // proceed to next trial or to next section
   setTimeout(runTrial, itiInterval);
+}
+
+// functions for determining ITI feedback depending on accuracy
+function accFeedback(){
+  if (acc == 1){
+    return "Correct";
+  } else if (acc == 0) {
+    return "Incorrect";
+  } else {
+    return "Too Slow";
+  }
+}
+
+function accFeedbackColor(){
+  if (acc == 1){
+    return "green";
+  } else if (acc == 0) {
+    return "red";
+  } else {
+    return "black";
+  }
+}
+
+// functions for edge cases (too fast, button mashing, pressing and not letting go)
+function promptLetGo(){
+  //prepare canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "black";
+  ctx.font = "30px Arial"
+
+  // show warning
+  ctx.fillText("Please release key",canvas.width/2,canvas.height/2);
+  ctx.fillText("immediately after responding.",canvas.width/2,canvas.height/2 + 30);
+
+  // reset font for next trials
+  ctx.font = "bold 60px Arial";
 }
