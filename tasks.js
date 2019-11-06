@@ -11,8 +11,8 @@ function runPractice(){
     // console.log(cuedTaskSet);
     // console.log(actionSet);
 
-    // go into block, including stimulus presentation and ITI's
-    runTrial();
+    // start countdown into practice block
+    countDown(3);
 
   } else if (pracBlockNum == "2"){
     stimCount = 0;
@@ -22,8 +22,8 @@ function runPractice(){
     cuedTaskSet = createCuedTaskArray(24, "parity");
     actionSet = createActionArray(taskStimuliSet, cuedTaskSet);
 
-    // go into block, including stimulus presentation and ITI's
-    runTrial();
+    // start countdown into practice block
+    countDown(3);
 
   } else if (pracBlockNum == "3") {
 
@@ -34,7 +34,17 @@ function runPractice(){
     cuedTaskSet = createCuedTaskArray(24);
     actionSet = createActionArray(taskStimuliSet, cuedTaskSet);
 
-    // go into block, including stimulus presentation and ITI's
+    // start countdown into practice block
+    countDown(3);
+  }
+}
+
+function countDown(seconds){
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (seconds > 0){
+    ctx.fillText(seconds,canvas.width/2,canvas.height/2)
+    setTimeout(function(){countDown(seconds - 1)},1000);
+  } else {
     runTrial();
   }
 }
@@ -74,7 +84,7 @@ function stimScreen(){
   ctx.fillStyle = (cuedTaskSet[stimCount] == "magnitude") ? "red" : "blue";
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  //allow button response
+  //await trial response
   expType = 1; acc = 0;
 
   // display stimulus

@@ -8,7 +8,7 @@ let taskStimuliSet, cuedTaskSet, actionSet; // global vars for task components
 let canvas, ctx; // global canvas variable
 let pracBlockNum = "1"; // efault/initial value for practice block logic
 let stimCount, acc; // vars for tasks (iterator, accuracy)
-let expType = 0; // 0 = none task sections, 1 = task awaiting response, 2 = task - response received
+let expType = 0; // 0 = non-task sections, 1 = task - awaiting response, 2 = task - response received/keyup needed
 let stimTimeout; // global timeout variables
 
 // ----- Task Paramenters (CHANGE ME) ----- //
@@ -25,7 +25,7 @@ $(document).ready(function(){
     // create key press listener
     $("body").keypress(function(event){
       if (expType == 1){
-        expType = 2;
+        expType = 2; //prevent additional responses during this trial (i.e. holding down key)
         if (event.which == actionSet[stimCount]){
           acc = 1;
         } else {
@@ -36,7 +36,7 @@ $(document).ready(function(){
 
     $("body").keyup(function(event){
       if (expType == 2){
-        //check accuracy of response
+        expType = 0; //prevent additional keyup events during this trial
         clearTimeout(stimTimeout);
         itiScreen();
       }
