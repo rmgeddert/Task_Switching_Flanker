@@ -89,7 +89,6 @@ function stimScreen(){
   if (expType == 5) {
 
     expType = 6;
-    console.log(expType);
     promptLetGo();
 
   } else {
@@ -100,7 +99,6 @@ function stimScreen(){
 
     //await trial response
     expType = 1; acc = 99;
-    console.log(expType);
 
     // display stimulus
     ctx.fillText(taskStimuliSet[stimCount],canvas.width/2,canvas.height/2);
@@ -115,10 +113,8 @@ function itiScreen(){
   // if still awaiting keyup front response, change expType so that keyup function doesn't trigger another itiscreen() call.
   if (expType == 1) {
     expType = 0;
-    console.log(expType);
   } else if (expType == 2) {
     expType = 3;
-    console.log(expType);
   }
 
   // prepare ITI canvas

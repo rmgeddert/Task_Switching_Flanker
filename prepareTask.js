@@ -11,7 +11,7 @@ let congruentStim = ['11111' , '22222' , '33333' , '44444' , '66666' , '77777' ,
 let parityIncStim = [ ['22122','44144'] , ['11211','33233'] , ['22322','44344'] , ['11411','33433'] , ['77677','99699'] , ['66766','88788'] , ['77877','99899'] , ['66966','88988'] ];
 let magnitudeIncStim = [ ['77177','99199'] , ['66266','88288'] , ['77377','99399'] , ['66466','88488'] , ['22622','44644'] , ['11711','33733'] , ['22822','44844'] , ['11911','33933'] ];
 
-function createStimArray() {
+function selectExperimentStimuli(){
   let stimArray = [];
 
   //each congruent stim goes into main stim array
@@ -20,12 +20,12 @@ function createStimArray() {
   })
 
   // randomly pick from each pair of incongruent stimuli to add to main stim arr
-  loopAndAdd(parityIncStim, "parityInc");
-  loopAndAdd(magnitudeIncStim, "magnitudeInc");
+  randStimPick(parityIncStim, "parityInc");
+  randStimPick(magnitudeIncStim, "magnitudeInc");
 
   return stimArray;
 
-  function loopAndAdd(arr, designation){
+  function randStimPick(arr, designation){
     arr.forEach(function(stimPair){
       stimArray.push( [stimPair[getRandomInt(2)], designation] );
     })
@@ -36,8 +36,8 @@ function defineStimuli(inputArr){
   // object var for storing stimulus information
   let stimDict = {
     target: {},
-    parity: {},
-    magnitude: {},
+    p: {},
+    m: {},
     distractor: {},
     congruency: {}
   };
@@ -52,8 +52,8 @@ function defineStimuli(inputArr){
     // add stimulus variables to stimDict variable
     stimDict['target'][stimulus] = stimTarget;
     stimDict['distractor'][stimulus] = stimDistractor;
-    stimDict['parity'][stimulus] = (isEven(stimTarget)) ? 'even' : 'odd';
-    stimDict['magnitude'][stimulus] = (stimTarget > 5) ? 'larger' : 'smaller';
+    stimDict['p'][stimulus] = (isEven(stimTarget)) ? 'even' : 'odd';
+    stimDict['m'][stimulus] = (stimTarget > 5) ? 'larger' : 'smaller';
     stimDict['congruency'][stimulus] = newStim[1];
   })
 
@@ -61,19 +61,134 @@ function defineStimuli(inputArr){
 }
 
 /* ##################################################
-   ---------------- Task Set Creation  --------------
+   ------------- Stimulus/Task Creation  ------------
    ##################################################
-   - Creates trial matrix of stimuli, making sure that
-   numbers aren't repeated from one trial to next and
-   there aren't too many repeats of congruencies. */
+   - randomly assigns magnitude/parity task to each
+   stimulus. It guarantees that each stimulus type
+   (odd,<5),(even,<5),etc... is paired with each task once,
+   guaranteeing 50/50 task and task responses. */
 
-function createTaskStimuliSet(numTrials){
-  let taskStimSet = [];
+function createStimuliTaskPairings(numTrials, tasks = "both"){
+  let taskStim = {
+    congruent: {
+      larger: {
+        even: [],
+        odd: []
+      },
+      smaller: {
+        even: [],
+        odd: []
+      }
+    },
+    parityInc: {
+      larger: {
+        even: [],
+        odd: []
+      },
+      smaller: {
+        even: [],
+        odd: []
+      }
+    },
+    magnitudeInc: {
+      larger: {
+        even: [],
+        odd: []
+      },
+      smaller: {
+        even: [],
+        odd: []
+      }
+    }
+  }
+
+  // fill taskStim object variable with stimuli based on congruency, magnitude, and parity
   stimArray.forEach(function(stimPair){
-    taskStimSet.push(stimPair[0]);
+    // variables defined for readability.
+    let stim = stimPair[0];
+    let stimCongruency = stimPair[1];
+    let stimMag = stimClassification["m"][stim];
+    let stimPar = stimClassification["p"][stim];
+    // add stim to taskStim
+    taskStim[stimCongruency][stimMag][stimPar].push(stim);
   })
-  return shuffle(taskStimSet);
+
+  // ----- create stimulus-task pairings ----- //
+  let stimTaskPairs = [];
+
+  // the below code is a VERY concise object looping method to iterate over the taskStim object.
+  // see https://stackoverflow.com/questions/8312459/iterate-through-object-properties
+  Object.keys(taskStim).forEach(e => Object.keys(taskStim[e]).forEach( f => Object.keys(taskStim[e][f]).forEach(function(g){
+    let pairShuffle = shuffle(taskStim[e][f][g]);
+    stimTaskPairs.push( [pairShuffle[0], (tasks == "p") ? "p" : "m"] );
+    stimTaskPairs.push( [pairShuffle[1], (tasks == "m") ? "m" : "p"] );
+  })));
+
+  return stimTaskPairs;
 }
+
+/*##################################################
+  --------------  Randomize Tasks   ---------------
+  ##################################################
+    - Shuffles task pairings array (stimTaskPairs),
+    ensuring that the following conditions are met:
+      - < 4 congruency repeats in a row
+      - < 4 task repetition/switch in a row
+      - < 6 trials in a row w/out 3rd congruency*/
+  function shuffleTaskSet(stimTaskPairs){
+    //shuffle array
+    do {
+      stimTaskPairs = shuffle(stimTaskPairs);
+    } while (!taskOrderIsOk(stimTaskPairs));
+    console.log(stimTaskPairs);
+  }
+
+  function taskOrderIsOk(taskArr){
+    //checks task switches and repeats to ensure enough variety.
+
+    //define start vars
+    let countTaskRepeats = 0, countTaskSwitches = 0, prevTask;
+
+    //loop through array and count task switch/repeats
+    for (let i = 0; i < taskArr.length; i++){
+      if (i == 0) {  //skip the first trial
+        prevTask = taskArr[i][1];
+        continue;
+      }
+
+      // check if task switch/repeat and increment
+      if (taskArr[i][1] == prevTask) {
+        countTaskSwitches = 0;
+        countTaskRepeats++;
+      } else {
+        countTaskRepeats = 0;
+        countTaskSwitches++;
+      }
+
+      // if more than 3 switch/repeat in a row, return false
+      if (countTaskSwitches > 3 || countTaskRepeats > 3){
+        return false;
+      }
+
+      //prepare prevTask for next trial
+      prevTask = taskArr[i][1];
+    }
+
+    //if made it this far, return true
+    return true;
+  }
+
+  function taskOrderIsOk(taskArr){
+    let taskString = "";
+
+    //loop through array and count task switch/repeats
+    for (let i = 0; i < taskArr.length; i++){
+      taskString = taskString + taskArr[i][1]
+    }
+
+    return !( taskString.includes("mmmmm") || taskString.includes("ppppp") || taskString.includes("mpmpm") || taskString.includes("pmpmp") )
+  }
+
 
 /* ##################################################
    ------------ Cued Task Set Creation  -------------
@@ -87,7 +202,7 @@ function createCuedTaskArray(trialCount, taskInvolved = "both"){
     return Array(trialCount).fill("magnitude");
 
   } else if (taskInvolved == "parity") {
-    
+
     return Array(trialCount).fill("parity");
 
   } else {
@@ -148,6 +263,7 @@ function shuffle(array){
 
 // isEven Function for stimulus categorization
 function isEven(n) {return n % 2 == 0;}
+// let isEven = (n) => n % 2 == 0;
 
 //random integer function
 function getRandomInt(max){

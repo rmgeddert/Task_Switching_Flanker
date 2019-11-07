@@ -2,15 +2,26 @@
 "use strict";
 
 //initialize global task variables
-let stimArray = createStimArray(); // establish stimuli set for task
+let stimArray = selectExperimentStimuli(); // establish stimuli set for task
 let stimClassification = defineStimuli(stimArray); // define characteristics of stimuli
 let taskStimuliSet, cuedTaskSet, actionSet; // global vars for task components
 let canvas, ctx; // global canvas variable
 let expStage = "prac1"; // default/initial value for experiment logic
 let stimCount, acc; // vars for tasks (iterator, accuracy)
-let expType = 0; // 0 = non-task sections, 1 = task - awaiting response, 2 = task - response received/keyup needed, 3 - held button too long
-console.log(expType);
 let stimTimeout; // global timeout variables
+let expType = 0; // see comments below:
+taskStimuliSet = createStimuliTaskPairings(24);
+shuffleTaskSet(taskStimuliSet);
+
+/*  expType explanations:
+      0: No key press expected/needed
+      1: Key press expected (triggered by stimScreen() func that presents stimuli)
+      2: Key press from 1 received. Awaiting keyup event, which resets to 0 and calls itiScreen() function immediately.
+      3: Parcticipant still holding keypress from 1 during ITI. Awaitng keyup event, which resets to 0 but doesn't call itiScreen() function.
+      4: Participant still holding keypress from 1 at start of next Trial. Call promptLetGo() func to get participant to let go. After keyup resume experiment and reset to 0.
+      5: Key press from 0 still being held down. On keyup, reset to 0.
+      6: Key press from 0 still being held down when stimScreen() func is called. Call promptLetGo() func. After keyup resume and reset to 0.
+*/
 
 // ----- Task Paramenters (CHANGE ME) ----- //
 let stimInterval = 1000, fixInterval = 500;
@@ -22,7 +33,6 @@ function ITIInterval(){
 
   // random number between itiMin and Max by step size
   let randInterval = itiMin + (Math.floor( Math.random() * ( Math.floor( (itiMax - itiMin) / itiStep ) + 1 ) ) * 50);
-  console.log(randInterval);
   return randInterval;
 }
 
@@ -39,10 +49,8 @@ $(document).ready(function(){
     $("body").keypress(function(event){
       if (expType == 0) {
         expType = 5; //keydown when not needed. Keyup will reset to 0.
-        console.log(expType);
       } else if (expType == 1){
         expType = 2; //prevent additional responses during this trial (i.e. holding down key)
-        console.log(expType);
         acc = (event.which == actionSet[stimCount]) ? 1 : 0;
       }
     })
@@ -50,15 +58,12 @@ $(document).ready(function(){
     $("body").keyup(function(event){
       if (expType == 2){
         expType = 0;
-        console.log(expType);
         clearTimeout(stimTimeout);
         itiScreen();
       } else if (expType == 3 || expType == 5) {
         expType = 0;
-        console.log(expType);
       } else if (expType == 4 || expType == 6) {
         expType = 0;
-        console.log(expType);
         setTimeout(function(){countDown(3);},500);
       }
     });
