@@ -9,12 +9,25 @@ let canvas, ctx; // global canvas variable
 let expStage = "prac1"; // default/initial value for experiment logic
 let stimCount, acc; // vars for tasks (iterator, accuracy)
 let expType = 0; // 0 = non-task sections, 1 = task - awaiting response, 2 = task - response received/keyup needed, 3 - held button too long
+console.log(expType);
 let stimTimeout; // global timeout variables
 
 // ----- Task Paramenters (CHANGE ME) ----- //
-let itiInterval = 1000, stimInterval = 1000, fixInterval = 300;
+let stimInterval = 1000, fixInterval = 500;
+
+function ITIInterval(){
+  let itiMin = 1200; //minimum ITI value
+  let itiMax = 1400; //maximum ITI value
+  let itiStep = 50; //step size for randomization
+
+  // random number between itiMin and Max by step size
+  let randInterval = itiMin + (Math.floor( Math.random() * ( Math.floor( (itiMax - itiMin) / itiStep ) + 1 ) ) * 50);
+  console.log(randInterval);
+  return randInterval;
+}
 
 $(document).ready(function(){
+
     // prepare task canvas
     canvas = document.getElementById('myCanvas');
     ctx = canvas.getContext('2d');
@@ -24,24 +37,29 @@ $(document).ready(function(){
 
     // create key press listener
     $("body").keypress(function(event){
-      if (expType == 1){
+      if (expType == 0) {
+        expType = 5; //keydown when not needed. Keyup will reset to 0.
+        console.log(expType);
+      } else if (expType == 1){
         expType = 2; //prevent additional responses during this trial (i.e. holding down key)
-        if (event.which == actionSet[stimCount]){
-          acc = 1;
-        } else {
-          acc = 0;
-        }
+        console.log(expType);
+        acc = (event.which == actionSet[stimCount]) ? 1 : 0;
       }
     })
 
     $("body").keyup(function(event){
       if (expType == 2){
-        expType = 0; //prevent additional keyup events during this trial
+        expType = 0;
+        console.log(expType);
         clearTimeout(stimTimeout);
         itiScreen();
-      } else if (expType == 3) {
+      } else if (expType == 3 || expType == 5) {
         expType = 0;
-        setTimeout(function(){countDown(3);},1000);
+        console.log(expType);
+      } else if (expType == 4 || expType == 6) {
+        expType = 0;
+        console.log(expType);
+        setTimeout(function(){countDown(3);},500);
       }
     });
 
