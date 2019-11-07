@@ -66,9 +66,13 @@ function defineStimuli(inputArr){
    - randomly assigns magnitude/parity task to each
    stimulus. It guarantees that each stimulus type
    (odd,<5),(even,<5),etc... is paired with each task once,
-   guaranteeing 50/50 task and task responses. */
+   guaranteeing 50/50 task and task responses. Shuffles task
+   pairings array (stimTaskPairs), ensuring:
+     - < 4 congruency repeats in a row
+     - < 4 task repetition/switch in a row
+     - < 3 congruency repetitions*/
 
-function createStimuliTaskPairings(numTrials, tasks = "both"){
+function createStimuliTaskSet(numTrials, tasks = "both"){
   let taskStim = {
     congruent: {
       larger: {
@@ -113,6 +117,8 @@ function createStimuliTaskPairings(numTrials, tasks = "both"){
     taskStim[stimCongruency][stimMag][stimPar].push(stim);
   })
 
+  let shuffledStimArray = shuffle(stimArray);
+
   // ----- create stimulus-task pairings ----- //
   let stimTaskPairs = [];
 
@@ -124,111 +130,49 @@ function createStimuliTaskPairings(numTrials, tasks = "both"){
     stimTaskPairs.push( [pairShuffle[1], (tasks == "m") ? "m" : "p"] );
   })));
 
+  //shuffle stimTaskPairs array until task and stim order criteria are met.
+  do {
+    stimTaskPairs = shuffle(stimTaskPairs);
+  } while (!taskOrderIsOk(stimTaskPairs) || !stimOrderIsOk(stimTaskPairs));
+
   return stimTaskPairs;
 }
 
-/*##################################################
-  --------------  Randomize Tasks   ---------------
-  ##################################################
-    - Shuffles task pairings array (stimTaskPairs),
-    ensuring that the following conditions are met:
-      - < 4 congruency repeats in a row
-      - < 4 task repetition/switch in a row
-      - < 6 trials in a row w/out 3rd congruency*/
-  function shuffleTaskSet(stimTaskPairs){
-    //shuffle array
-    do {
-      stimTaskPairs = shuffle(stimTaskPairs);
-    } while (!taskOrderIsOk(stimTaskPairs));
-    console.log(stimTaskPairs);
+function taskOrderIsOk(taskArr){
+  let taskString = "";
+
+  //loop through array and count task switch/repeats
+  for (let i = 0; i < taskArr.length; i++){
+    taskString = taskString + taskArr[i][1]
   }
 
-  function taskOrderIsOk(taskArr){
-    //checks task switches and repeats to ensure enough variety.
+  return !( taskString.includes("mmmmm") || taskString.includes("ppppp") || taskString.includes("mpmpm") || taskString.includes("pmpmp") )
+}
 
-    //define start vars
-    let countTaskRepeats = 0, countTaskSwitches = 0, prevTask;
+function stimOrderIsOk(stimArr){
+  let prevItem, stimCounter = 0;
 
-    //loop through array and count task switch/repeats
-    for (let i = 0; i < taskArr.length; i++){
-      if (i == 0) {  //skip the first trial
-        prevTask = taskArr[i][1];
-        continue;
-      }
-
-      // check if task switch/repeat and increment
-      if (taskArr[i][1] == prevTask) {
-        countTaskSwitches = 0;
-        countTaskRepeats++;
-      } else {
-        countTaskRepeats = 0;
-        countTaskSwitches++;
-      }
-
-      // if more than 3 switch/repeat in a row, return false
-      if (countTaskSwitches > 3 || countTaskRepeats > 3){
-        return false;
-      }
-
-      //prepare prevTask for next trial
-      prevTask = taskArr[i][1];
+  //loop through array and
+  for (let i = 0; i < stimArr.length; i++){
+    let stimCongruency = stimClassification["congruency"][stimArr[i][0]];
+    if (i==0){
+      prevItem = stimCongruency;
+      continue;
     }
-
-    //if made it this far, return true
-    return true;
-  }
-
-  function taskOrderIsOk(taskArr){
-    let taskString = "";
-
-    //loop through array and count task switch/repeats
-    for (let i = 0; i < taskArr.length; i++){
-      taskString = taskString + taskArr[i][1]
+    //count repeats
+    if (stimCongruency == prevItem){
+      stimCounter++;
+    } else {
+      stimCounter = 0;
     }
-
-    return !( taskString.includes("mmmmm") || taskString.includes("ppppp") || taskString.includes("mpmpm") || taskString.includes("pmpmp") )
+    // check if more than 2 in a row of one congruency type
+    if (stimCounter > 2) {
+      return false;
+    }
+    prevItem = stimCongruency;
   }
 
-
-/* ##################################################
-   ------------ Cued Task Set Creation  -------------
-   ##################################################
-   - Creates Task Set Matrix for which task is done
-   on each trial. */
-
-function createCuedTaskArray(trialCount, taskInvolved = "both"){
-  if (taskInvolved == "magnitude"){
-
-    return Array(trialCount).fill("magnitude");
-
-  } else if (taskInvolved == "parity") {
-
-    return Array(trialCount).fill("parity");
-
-  } else {
-
-    // create random task orders with both tasks, making sure enough switch/repeats
-    let taskSet;
-    do { taskSet = createRandomArray(); }
-    while (countRepeats(taskSet) < (trialCount/2 - 2) || countRepeats(taskSet) > (trialCount/2 + 2) );
-    return taskSet;
-
-  }
-
-  function createRandomArray(){
-    let a1 = Array(trialCount/2), a2 = Array(trialCount/2);
-    a1.fill("magnitude"); a2.fill("parity");
-    return shuffle( a1.concat(a2) );
-  }
-
-  function countRepeats(taskArr){
-    let prevItem, repeatCount = 0;
-    taskArr.forEach(function (item) {
-      if (item == prevItem) repeatCount++;
-      prevItem = item;
-    });
-    return repeatCount;
-  }
+  return true;
 }
 
 // ################################################## //

@@ -10,8 +10,8 @@ let expStage = "prac1"; // default/initial value for experiment logic
 let stimCount, acc; // vars for tasks (iterator, accuracy)
 let stimTimeout; // global timeout variables
 let expType = 0; // see comments below:
-taskStimuliSet = createStimuliTaskPairings(24);
-shuffleTaskSet(taskStimuliSet);
+taskStimuliSet = createStimuliTaskSet(24);
+console.log(taskStimuliSet);
 
 /*  expType explanations:
       0: No key press expected/needed
@@ -22,6 +22,10 @@ shuffleTaskSet(taskStimuliSet);
       5: Key press from 0 still being held down. On keyup, reset to 0.
       6: Key press from 0 still being held down when stimScreen() func is called. Call promptLetGo() func. After keyup resume and reset to 0.
 */
+
+function split2dArray(arr, returnCol){
+
+}
 
 // ----- Task Paramenters (CHANGE ME) ----- //
 let stimInterval = 1000, fixInterval = 500;

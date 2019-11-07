@@ -7,9 +7,6 @@ function runPractice(){
     taskStimuliSet = createTaskStimuliSet(24);
     cuedTaskSet = createCuedTaskArray(24, "magnitude");
     actionSet = createActionArray(taskStimuliSet, cuedTaskSet);
-    // console.log(taskStimuliSet);
-    // console.log(cuedTaskSet);
-    // console.log(actionSet);
 
     // start countdown into practice block
     countDown(3);
