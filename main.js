@@ -1,6 +1,19 @@
 //https://javascript.info/strict-mode
 "use strict";
 
+// ----- Task Paramenters (CHANGE ME) ----- //
+let stimInterval = 1500, fixInterval = 500;
+
+function ITIInterval(){
+  let itiMin = 1200; //minimum ITI value
+  let itiMax = 1400; //maximum ITI value
+  let itiStep = 50; //step size
+
+  // random number between itiMin and Max by step size
+  let randInterval = itiMin + (Math.floor( Math.random() * ( Math.floor( (itiMax - itiMin) / itiStep ) + 1 ) ) * itiStep);
+  return randInterval;
+}
+
 //initialize global task variables
 let stimArray = selectExperimentStimuli(); // establish stimuli set for task
 let stimClassification = defineStimuli(stimArray); // define characteristics of stimuli
@@ -9,9 +22,7 @@ let canvas, ctx; // global canvas variable
 let expStage = "prac1"; // default/initial value for experiment logic
 let stimCount, acc; // vars for tasks (iterator, accuracy)
 let stimTimeout; // global timeout variables
-let expType = 0; // see comments below:
-taskStimuliSet = createStimuliTaskSet(24);
-console.log(taskStimuliSet);
+let expType = 0; // see comments below
 
 /*  expType explanations:
       0: No key press expected/needed
@@ -23,23 +34,8 @@ console.log(taskStimuliSet);
       6: Key press from 0 still being held down when stimScreen() func is called. Call promptLetGo() func. After keyup resume and reset to 0.
 */
 
-function split2dArray(arr, returnCol){
-
-}
-
-// ----- Task Paramenters (CHANGE ME) ----- //
-let stimInterval = 1000, fixInterval = 500;
-
-function ITIInterval(){
-  let itiMin = 1200; //minimum ITI value
-  let itiMax = 1400; //maximum ITI value
-  let itiStep = 50; //step size for randomization
-
-  // random number between itiMin and Max by step size
-  let randInterval = itiMin + (Math.floor( Math.random() * ( Math.floor( (itiMax - itiMin) / itiStep ) + 1 ) ) * 50);
-  return randInterval;
-}
-
+// ------ EXPERIMENT STARTS HERE ------ //
+// vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv //
 $(document).ready(function(){
 
     // prepare task canvas
@@ -59,6 +55,7 @@ $(document).ready(function(){
       }
     })
 
+    // create key release listener
     $("body").keyup(function(event){
       if (expType == 2){
         expType = 0;
@@ -72,9 +69,11 @@ $(document).ready(function(){
       }
     });
 
-  // ----- Practice Blocks ----- //
-    runInstructions("1");
+  // ----- Start with Practice Block Instructions ----- //
+    runInstructions();
 });
+
+// ------- Misc Experiment Wide Functions ------- //
 
 // function for wrapping text in Canvas
 // https://stackoverflow.com/questions/2936112/text-wrap-in-a-canvas-element

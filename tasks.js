@@ -4,9 +4,10 @@ function runPractice(){
     stimCount = 0;
 
     // create arrays for this practice block
-    taskStimuliSet = createTaskStimuliSet(24);
-    cuedTaskSet = createCuedTaskArray(24, "magnitude");
-    actionSet = createActionArray(taskStimuliSet, cuedTaskSet);
+    taskStimuliPairs = createStimuliAndTaskSets(24, "m");
+    taskStimuliSet = getStimSet(taskStimuliPairs);
+    cuedTaskSet = getTaskSet(taskStimuliPairs);
+    actionSet = createActionArray();
 
     // start countdown into practice block
     countDown(3);
@@ -15,8 +16,9 @@ function runPractice(){
     stimCount = 0;
 
     // create arrays for this practice block
-    taskStimuliSet = createTaskStimuliSet(24);
-    cuedTaskSet = createCuedTaskArray(24, "parity");
+    taskStimuliPairs = createStimuliAndTaskSets(24, "p");
+    taskStimuliSet = getStimSet(taskStimuliPairs);
+    cuedTaskSet = getTaskSet(taskStimuliPairs);
     actionSet = createActionArray(taskStimuliSet, cuedTaskSet);
 
     // start countdown into practice block
@@ -27,8 +29,9 @@ function runPractice(){
     stimCount = 0;
 
     // create arrays for this practice block
-    taskStimuliSet = createTaskStimuliSet(24);
-    cuedTaskSet = createCuedTaskArray(24);
+    taskStimuliPairs = createStimuliAndTaskSets(24);
+    taskStimuliSet = getStimSet(taskStimuliPairs);
+    cuedTaskSet = getTaskSet(taskStimuliPairs);
     actionSet = createActionArray(taskStimuliSet, cuedTaskSet);
 
     // start countdown into practice block
@@ -91,7 +94,7 @@ function stimScreen(){
   } else {
 
     // prepare canvas for stimulus
-    ctx.fillStyle = (cuedTaskSet[stimCount] == "magnitude") ? "red" : "blue";
+    ctx.fillStyle = (cuedTaskSet[stimCount] == "m") ? "red" : "blue";
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     //await trial response

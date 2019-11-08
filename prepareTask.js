@@ -4,7 +4,7 @@
    ------------- Stimulus Set Creation  -------------
    ##################################################
    - defines which stimuli are part of the overall experiment
-     and classifies them in dictionary */
+     and classifies them in dictionary for later use */
 
 // possible stimuli
 let congruentStim = ['11111' , '22222' , '33333' , '44444' , '66666' , '77777' , '88888' , '99999'];
@@ -12,22 +12,22 @@ let parityIncStim = [ ['22122','44144'] , ['11211','33233'] , ['22322','44344'] 
 let magnitudeIncStim = [ ['77177','99199'] , ['66266','88288'] , ['77377','99399'] , ['66466','88488'] , ['22622','44644'] , ['11711','33733'] , ['22822','44844'] , ['11911','33933'] ];
 
 function selectExperimentStimuli(){
-  let stimArray = [];
+  let selectedStim = [];
 
   //each congruent stim goes into main stim array
   congruentStim.forEach( function(stim){
-    stimArray.push( [stim, "congruent"] );
+    selectedStim.push( [stim, "congruent"] );
   })
 
   // randomly pick from each pair of incongruent stimuli to add to main stim arr
   randStimPick(parityIncStim, "parityInc");
   randStimPick(magnitudeIncStim, "magnitudeInc");
 
-  return stimArray;
+  return selectedStim;
 
   function randStimPick(arr, designation){
     arr.forEach(function(stimPair){
-      stimArray.push( [stimPair[getRandomInt(2)], designation] );
+      selectedStim.push( [stimPair[getRandomInt(2)], designation] );
     })
   }
 }
@@ -72,7 +72,7 @@ function defineStimuli(inputArr){
      - < 4 task repetition/switch in a row
      - < 3 congruency repetitions*/
 
-function createStimuliTaskSet(numTrials, tasks = "both"){
+function createStimuliAndTaskSets(numTrials, tasks = "both"){
   let taskStim = {
     congruent: {
       larger: {
@@ -131,14 +131,21 @@ function createStimuliTaskSet(numTrials, tasks = "both"){
   })));
 
   //shuffle stimTaskPairs array until task and stim order criteria are met.
-  do {
-    stimTaskPairs = shuffle(stimTaskPairs);
-  } while (!taskOrderIsOk(stimTaskPairs) || !stimOrderIsOk(stimTaskPairs));
+  if (tasks == "both") {
+    do {
+      stimTaskPairs = shuffle(stimTaskPairs);
+    } while (!taskOrderIsOk(stimTaskPairs) || !stimOrderIsOk(stimTaskPairs));
+  } else {
+    do {
+      stimTaskPairs = shuffle(stimTaskPairs);
+    } while (!stimOrderIsOk(stimTaskPairs));
+  }
 
   return stimTaskPairs;
 }
 
 function taskOrderIsOk(taskArr){
+  // makes sure there aren't 4 switches or repeats in a row
   let taskString = "";
 
   //loop through array and count task switch/repeats
@@ -150,6 +157,7 @@ function taskOrderIsOk(taskArr){
 }
 
 function stimOrderIsOk(stimArr){
+  // makes sure there aren't 3 congruency types in a row
   let prevItem, stimCounter = 0;
 
   //loop through array and
@@ -175,12 +183,38 @@ function stimOrderIsOk(stimArr){
   return true;
 }
 
+/* ################################################## //
+   ------------ Stimulus/Task Splitting  ------------ //
+   ################################################## //
+   - createStimuliAndTaskSets() returns a 2d array. We
+   need to split this into separate arrays for use by
+   tasks.js during stimulus presentation
+   NTS: Could probably also just have tasks.js split this
+   on the fly... tbd. */
+
+function getStimSet(arr){
+  let newArr = []
+  for (let i = 0; i < arr.length; i++) {
+   newArr = newArr.concat(arr[i][0]); //0 b/c stim are 1st in stimTaskPair arr
+  }
+  return newArr;
+}
+
+function getTaskSet(arr){
+  let newArr = []
+  for (let i = 0; i < arr.length; i++) {
+   newArr = newArr.concat(arr[i][1]); //1 b/c stim are 2nd in stimTaskPair arr
+  }
+  return newArr;
+}
+
 // ################################################## //
 // -------------- Action Set Creation --------------- //
 // ################################################## //
 // - based on stimulus set and cued task, what is correct response?
 
-function createActionArray(taskStimSet, cuedTaskSet){
+function createActionArray(){
+  console.log(taskStimuliSet, cuedTaskSet);
   let actionArr = [];
   let responseMappings = {
     odd : 122,
@@ -190,7 +224,7 @@ function createActionArray(taskStimSet, cuedTaskSet){
   };
 
   // for each stimulus and associated task, identify required action for correct response
-  taskStimSet.forEach(function(taskStim, index){
+  taskStimuliSet.forEach(function(taskStim, index){
     let task = cuedTaskSet[index]
     actionArr.push(responseMappings[ stimClassification[task][taskStim] ]);
   })
