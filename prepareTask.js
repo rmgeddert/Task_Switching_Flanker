@@ -131,15 +131,14 @@ function createStimuliAndTaskSets(numTrials, tasks = "both"){
   })));
 
   //shuffle stimTaskPairs array until task and stim order criteria are met.
-  if (tasks == "both") {
-    do {
-      stimTaskPairs = shuffle(stimTaskPairs);
-    } while (!taskOrderIsOk(stimTaskPairs) || !stimOrderIsOk(stimTaskPairs));
-  } else {
-    do {
-      stimTaskPairs = shuffle(stimTaskPairs);
-    } while (!stimOrderIsOk(stimTaskPairs));
-  }
+  do {
+    stimTaskPairs = shuffle(stimTaskPairs);
+  } while (!taskOrderIsOk(stimTaskPairs) || function(){
+    if (tasks == "both"){
+      !stimOrderIsOk(stimTaskPairs)
+    } else {
+      return true;
+    })
 
   return stimTaskPairs;
 }
