@@ -3,7 +3,7 @@
 
 // ----- Task Paramenters (CHANGE ME) ----- //
 let stimInterval = 100, fixInterval = 100; //1500, 500
-let numBlocks = 3, trialsPerBlock = 96; // (multiples of 24)
+let numBlocks = 3, trialsPerBlock = 48; // (multiples of 24)
 let miniBlockLength = 24;
 
 function ITIInterval(){
@@ -23,7 +23,7 @@ let taskStimuliSet, cuedTaskSet, actionSet; // global vars for task components
 let canvas, ctx; // global canvas variable
 let expStage = "prac1"; // default/initial value for experiment logic
 let stimCount, acc; // vars for tasks (iterator, accuracy)
-let stimTimeout, miniBlockOn = false;
+let stimTimeout, miniBlockOn = false, feedbackOn = false;
 let expType = 0; // see comments below
 
 /*  expType explanations:

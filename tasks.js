@@ -53,6 +53,7 @@ function runTasks(){
 function countDown(seconds){
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
+  ctx.font = "bold 60px Arial";
   if (seconds > 0){
     ctx.fillText(seconds,canvas.width/2,canvas.height/2)
     setTimeout(function(){countDown(seconds - 1)},1000);
@@ -90,16 +91,16 @@ function runPracticeTrial(){
 }
 
 function runTrial(){
-  if (trialCount == trialsPerBlock ) {
+  if (trialCount == trialsPerBlock && !feedbackOn) {
 
-    ctx.fillText("finished!")
+    feedbackOn = true; blockFeedback();
 
   } else if (trialCount % miniBlockLength == 0 && !miniBlockOn && trialCount != 0) {
 
     miniBlockOn = true; miniBlockScreen();
 
   } else {
-    miniBlockOn = false;
+    miniBlockOn = false; feedbackOn = false;
     if (expType == 3){
       expType = 4;
       promptLetGo();
@@ -170,13 +171,21 @@ function itiScreen(){
 
 function miniBlockScreen(){
   expType = 7;
+  // prep canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
-  ctx.fillText("mini block break",canvas.width/2,canvas.height/2);
+  ctx.font = "30px Arial";
+  // display miniblock text
+  ctx.fillText(Math.round((trialCount/trialsPerBlock)*100)+"% through block",canvas.width/2,canvas.height/2);
 }
 
 function blockFeedback(){
   expType = 7;
+  // prep canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
+  ctx.font = "30px Arial";
+  // display feedback
   ctx.fillText("big block break",canvas.width/2,canvas.height/2);
 }
 
@@ -206,12 +215,9 @@ function promptLetGo(){
   //prepare canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
-  ctx.font = "30px Arial"
+  ctx.font = "30px Arial";
 
   // show warning
   ctx.fillText("Please release key",canvas.width/2,canvas.height/2);
   ctx.fillText("immediately after responding.",canvas.width/2,canvas.height/2 + 30);
-
-  // reset font for next trials
-  ctx.font = "bold 60px Arial";
 }
