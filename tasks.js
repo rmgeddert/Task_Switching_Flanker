@@ -1,10 +1,11 @@
-function runPractice(){
+let trialFunc;
+function runTasks(){
   if (expStage == "prac1"){
 
-    stimCount = 0;
+    trialCount = 0;
 
     // create arrays for this practice block
-    taskStimuliPairs = createStimuliAndTaskSets(24, "m");
+    taskStimuliPairs = createStimuliAndTaskSets(12, "m");
     taskStimuliSet = getStimSet(taskStimuliPairs);
     cuedTaskSet = getTaskSet(taskStimuliPairs);
     actionSet = createActionArray();
@@ -13,10 +14,10 @@ function runPractice(){
     countDown(3);
 
   } else if (expStage == "prac2"){
-    stimCount = 0;
+    trialCount = 0;
 
     // create arrays for this practice block
-    taskStimuliPairs = createStimuliAndTaskSets(24, "p");
+    taskStimuliPairs = createStimuliAndTaskSets(12, "p");
     taskStimuliSet = getStimSet(taskStimuliPairs);
     cuedTaskSet = getTaskSet(taskStimuliPairs);
     actionSet = createActionArray(taskStimuliSet, cuedTaskSet);
@@ -26,34 +27,49 @@ function runPractice(){
 
   } else if (expStage == "prac3") {
 
-    stimCount = 0;
+    trialCount = 0;
 
     // create arrays for this practice block
-    taskStimuliPairs = createStimuliAndTaskSets(24);
+    taskStimuliPairs = createStimuliAndTaskSets();
     taskStimuliSet = getStimSet(taskStimuliPairs);
     cuedTaskSet = getTaskSet(taskStimuliPairs);
     actionSet = createActionArray(taskStimuliSet, cuedTaskSet);
 
     // start countdown into practice block
     countDown(3);
+
+  } else if (expStage == "main") {
+    trialCount = 0;
+
+    // code for main experiments here
+    taskStimuliPairs = createStimuliAndTaskSets().concat(createStimuliAndTaskSets(),createStimuliAndTaskSets());
+    taskStimuliSet = getStimSet(taskStimuliPairs);
+    cuedTaskSet = getTaskSet(taskStimuliPairs);
+    actionSet = createActionArray();
+    countDown(3);
   }
 }
 
 function countDown(seconds){
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "black";
   if (seconds > 0){
     ctx.fillText(seconds,canvas.width/2,canvas.height/2)
     setTimeout(function(){countDown(seconds - 1)},1000);
   } else {
-    runTrial();
+    if (expStage != "main"){
+      trialFunc = runPracticeTrial;
+    } else {
+      trialFunc = runTrial;
+    }
+    trialFunc();
   }
 }
 
-function runTrial(){
-  if (stimCount < taskStimuliSet.length){
+function runPracticeTrial(){
+  if (trialCount < taskStimuliSet.length){
     if (expType == 3){
       expType = 4;
-      console.log(expType);
       promptLetGo();
     } else {
       fixationScreen();
@@ -67,8 +83,29 @@ function runTrial(){
       expStage = "prac3";
       runInstructions();
     } else {
-      ctx.fillStyle = "Black";
-      ctx.fillText("Finished!",canvas.width/2,canvas.height/2)
+      expStage = "main";
+      runInstructions();
+    }
+  }
+}
+
+function runTrial(){
+  if (trialCount == trialsPerBlock ) {
+
+    ctx.fillText("finished!")
+
+  } else if (trialCount % miniBlockLength == 0 && !miniBlockOn && trialCount != 0) {
+
+    miniBlockOn = true; miniBlockScreen();
+
+  } else {
+    miniBlockOn = false;
+    if (expType == 3){
+      expType = 4;
+      promptLetGo();
+    } else {
+      // start trial cycle
+      fixationScreen();
     }
   }
 }
@@ -94,14 +131,14 @@ function stimScreen(){
   } else {
 
     // prepare canvas for stimulus
-    ctx.fillStyle = (cuedTaskSet[stimCount] == "m") ? "red" : "blue";
+    ctx.fillStyle = (cuedTaskSet[trialCount] == "m") ? "red" : "blue";
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     //await trial response
     expType = 1; acc = 99;
 
     // display stimulus
-    ctx.fillText(taskStimuliSet[stimCount],canvas.width/2,canvas.height/2);
+    ctx.fillText(taskStimuliSet[trialCount],canvas.width/2,canvas.height/2);
 
     // proceed to ITI screen
     stimTimeout = setTimeout(itiScreen,stimInterval);
@@ -124,11 +161,23 @@ function itiScreen(){
   // display response feedback (correct/incorrect)
   ctx.fillText(accFeedback(),canvas.width/2,canvas.height/2);
 
-  // trial iteration finished. iterate stimCount.
-  stimCount++;
+  // trial iteration finished. iterate trialCount.
+  trialCount++;
 
   // proceed to next trial or to next section
-  setTimeout(runTrial, ITIInterval());
+  setTimeout(trialFunc, ITIInterval());
+}
+
+function miniBlockScreen(){
+  expType = 7;
+  ctx.fillStyle = "black";
+  ctx.fillText("mini block break",canvas.width/2,canvas.height/2);
+}
+
+function blockFeedback(){
+  expType = 7;
+  ctx.fillStyle = "black";
+  ctx.fillText("big block break",canvas.width/2,canvas.height/2);
 }
 
 // functions for determining ITI feedback depending on accuracy

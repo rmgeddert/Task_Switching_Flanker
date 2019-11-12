@@ -72,7 +72,7 @@ function defineStimuli(inputArr){
      - < 4 task repetition/switch in a row
      - < 3 congruency repetitions*/
 
-function createStimuliAndTaskSets(numTrials, tasks = "both"){
+function createStimuliAndTaskSets(numTrials = 24, tasks = "both"){
   let taskStim = {
     congruent: {
       larger: {
@@ -131,49 +131,98 @@ function createStimuliAndTaskSets(numTrials, tasks = "both"){
   })));
 
   //shuffle stimTaskPairs array until task and stim order criteria are met.
-  if (tasks == "both") {
-    do {
-      stimTaskPairs = shuffle(stimTaskPairs);
-    } while (!taskOrderIsOk(stimTaskPairs) || !stimOrderIsOk(stimTaskPairs));
-  } else {
-    do {
-      stimTaskPairs = shuffle(stimTaskPairs);
-    } while (!stimOrderIsOk(stimTaskPairs));
-  }
+  do {
+    stimTaskPairs = shuffle(stimTaskPairs);
+  } while (!taskOrderIsOk(tasks, stimTaskPairs) || !stimOrderIsOk(stimTaskPairs) || !responseOrderIsOk(stimTaskPairs) );
 
-function taskOrderIsOk(taskArr){
-  // makes sure there aren't 4 switches or repeats in a row
-  let taskString = "";
-
-  //loop through array and count task switch/repeats
-  for (let i = 0; i < taskArr.length; i++){
-    taskString = taskString + taskArr[i][1]
-  }
-
-  return !( taskString.includes("mmmmm") || taskString.includes("ppppp") || taskString.includes("mpmpm") || taskString.includes("pmpmp") )
+  return stimTaskPairs.slice(0,numTrials);
 }
 
-function stimOrderIsOk(stimArr){
+function responseOrderIsOk(stimPairArr){
+  let responseCounter = 0;
+  let stim, task, taskResponse;
+  let prevResponse;
+
+  for (var i = 0; i < stimPairArr.length; i++) {
+    stim = stimPairArr[i][0];
+    task = stimPairArr[i][1];
+    taskResponse = stimClassification[task][stim];
+
+    // check responses for repeats
+    if (i != 0) {
+      if (taskResponse == prevResponse){
+        responseCounter++;
+      } else {
+        responseCounter = 0;
+      }
+    }
+
+    // quit function early if more than 3 in a row of one type
+    if (responseCounter > 2){
+      return false;
+    }
+
+    // set prev for next loop iteration
+    prevResponse = taskResponse;
+  }
+  //  if made to hear, return response order is ok. return true.
+  return true;
+}
+
+function taskOrderIsOk(tasks, stimPairArr){
+  if (tasks == "m" || tasks == "p") {return true;} //quit if only one kind of task
+
+  //define start vars
+  let countTaskRepeats = 0, countTaskSwitches = 0, prevTask;
+  let overallSwitchCount = 0
+
+  //loop through array and count task switch/repeats
+  for (let i = 0; i < stimPairArr.length; i++){
+
+    // check if task switch/repeat and increment
+    if (i != 0) {
+      if (stimPairArr[i][1] == prevTask) {
+        countTaskSwitches = 0;
+        countTaskRepeats++;
+      } else {
+        countTaskRepeats = 0;
+        countTaskSwitches++;
+        overallSwitchCount++;
+      }
+    }
+
+    // if more than 3 switch/repeat in a row, return false
+    if (countTaskSwitches > 3 || countTaskRepeats > 3){ return false;}
+
+    //prepare prevTask for next loop iteration
+    prevTask = stimPairArr[i][1];
+  }
+
+  //if enough switches in block of 24, then return true
+  return overallSwitchCount >= 10 && overallSwitchCount <= 14
+}
+
+function stimOrderIsOk(stimPairArr){
   // makes sure there aren't 3 congruency types in a row
   let prevItem, stimCounter = 0;
 
   //loop through array and
-  for (let i = 0; i < stimArr.length; i++){
-    let stimCongruency = stimClassification["congruency"][stimArr[i][0]];
+  for (let i = 0; i < stimPairArr.length; i++){
+    let stimCongruency = stimClassification["congruency"][stimPairArr[i][0]];
     if (i==0){
       prevItem = stimCongruency;
       continue;
     }
+
     //count repeats
     if (stimCongruency == prevItem){
       stimCounter++;
     } else {
       stimCounter = 0;
     }
+
     // check if more than 2 in a row of one congruency type
-    if (stimCounter > 2) {
-      return false;
-    }
+    if (stimCounter > 2) { return false; }
     prevItem = stimCongruency;
   }
 
@@ -211,7 +260,6 @@ function getTaskSet(arr){
 // - based on stimulus set and cued task, what is correct response?
 
 function createActionArray(){
-  console.log(taskStimuliSet, cuedTaskSet);
   let actionArr = [];
   let responseMappings = {
     odd : 122,
