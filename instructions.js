@@ -16,12 +16,18 @@ let instructions = {
 
 // main instruction function (come here at start of practice block)
 function runInstructions(){
+  // hide canvas
+  canvas.style.display = "none";
+
   if (instructions["iterator"][expStage] == instructions["max"][expStage]){
-    // if we've already been through all this before for this practice run but need to repeat (participant failed to meet accuracy requirement), then reshow all instructions (should still be correct from last time).
+    // if we've already been through all this before for this practice run but need to repeat (participant failed to meet accuracy requirement), then reshow all instructions
+    for (var i = 1; i <= instructions["max"][expStage]; i++) {
+      $('#instructions' + i).text( getNextInstructions( i, expStage ));
+    }
+
     $('#instructions').show();
     $('#nextInstrButton').hide();
     $('#startExpButton').show();
-
   } else{
 
     // remove any previous click listeners, if any
@@ -29,14 +35,17 @@ function runInstructions(){
     $(document).off("click","#startExpButton");
 
     // clear all previous instructions, if any
-    let i;
-    for (i = 1; i <= 8; i++) {
+    for (let i = 1; i <= 8; i++) {
       $('#instructions' + i).text("");
     }
 
     // show instructions and next button, in case they are hidden
     $('#instructions').show();
     $('#nextInstrButton').show();
+
+    // remove any previous event listeners
+    $(document).off("click","#nextInstrButton");
+    $(document).off("click","#startExpButton");
 
     // code for "Next" button click during instruction display
     // if running from Atom, need to use $(document).on, if through Duke Public Home Directory, either works.
@@ -58,8 +67,6 @@ function runInstructions(){
     $(document).on('click', '#startExpButton', function(){
       $('#instructions').hide();
       $('#startExpButton').hide();
-      $(document).off("click","#nextInstrButton");
-      $(document).off("click","#startExpButton");
       runTasks();
     });
   };
@@ -88,7 +95,7 @@ function getNextInstructions(slideNum, expStage){
           return "It is important that you respond as quickly and as accurately as possible.";
           break;
         case 7:
-          return "Please enlarge this window to your entire screen and sit a comfortable distance from the computer screen. You must get above 80% on the practice task in order to move onto the next task.";
+          return "Please enlarge this window to your entire screen and sit a comfortable distance from the computer screen. You must get above " + practiceAccCutoff + "% on the practice task in order to move onto the next task.";
           break;
         case 8:
           return "This block contains 10 trials. Press 'Start Experiment' to begin, then place your right hand on the 'N' and 'M' keys.";
@@ -97,7 +104,7 @@ function getNextInstructions(slideNum, expStage){
     case "prac2":
       switch (slideNum){
         case 1:
-          return "Great job! In this block, you will again see a number (1-9 excluding 5), but now you will indicate if the number is ODD or EVEN.";
+          return "In this block, you will again see a number (1-9 excluding 5), but now you will indicate if the number is ODD or EVEN.";
           break;
         case 2:
           return "Press 'Z' with your left hand middle finger if the number is ODD.";
@@ -106,7 +113,7 @@ function getNextInstructions(slideNum, expStage){
           return "Press 'X' with your left hand index finger if the number is EVEN.";
           break;
         case 4:
-          return "Remember to only respond to the center number, not the numbers on either side of it, and to respond as quickly and as accurately as possible.";
+          return "Remember to only respond to the center number, not the numbers on either side of it, and to respond as quickly and as accurately as possible. You must get above " + practiceAccCutoff + "% on the practice task in order to move onto the next task.";
           break;
         case 5:
           return "This block contains 12 trials. Press 'Start Experiment' to begin, then place your left hand on the 'Z' and 'X' keys.";
@@ -118,7 +125,7 @@ function getNextInstructions(slideNum, expStage){
     case "prac3":
       switch (slideNum){
         case 1:
-          return "Great job! In the final block, you will again see a number (1-9 excluding 5), but now you will either make a GREATER/LESS THAN or a ODD/EVEN decision, depending on the color of the text.";
+          return "In the final block, you will again see a number (1-9 excluding 5), but now you will either make a GREATER/LESS THAN or a ODD/EVEN decision, depending on the color of the text.";
           break;
         case 2:
           return "If the numbers are RED, indicate if the number is GREATER ('N' with right index finger) or LESS ('M' with right middle finger) than 5.";
@@ -127,7 +134,7 @@ function getNextInstructions(slideNum, expStage){
           return "If the numbers are BLUE, indicate if the number is ODD ('Z' with left middle finger) or EVEN ('X' with left index finger).";
           break;
         case 4:
-          return "Remember to only respond to the center number, not the numbers on either side of it, and to respond as quickly and as accurately as possible.";
+          return "Remember to only respond to the center number, not the numbers on either side of it, and to respond as quickly and as accurately as possible. You must get above " + practiceAccCutoff + "% on the practice task in order to move onto the next task.";
           break;
         case 5:
           return "This block contains 24 trials. Press 'Start Experiment' to begin, then place your right hand on the 'N' and 'M' keys and left hand on the 'Z' and 'X' keys.";
@@ -151,7 +158,7 @@ function getNextInstructions(slideNum, expStage){
             return "As always, remember to only respond to the center number, not the numbers on either side of it, and to respond as quickly and as accurately as possible.";
             break;
           case 5:
-            return "The experiment will consist of 6 blocks of 48 trials each. You will have a short rest break between each block, and you will receive feedback about your performance during these breaks.";
+            return "The experiment will consist of " + numBlocks +" blocks of " + trialsPerBlock + " trials each. You will have a short rest break between each block, and you will receive feedback about your performance during these breaks.";
             break;
           case 6:
             return "You must receive get at least 80% of trials correctly in order to be compensated.";
@@ -165,3 +172,11 @@ function getNextInstructions(slideNum, expStage){
         }
   }
 };
+
+function clearInstructions(){
+  $('#instructions').hide();
+  $('#startExpButton').hide();
+  for (let i = 1; i <= 8; i++) {
+    $('#instructions' + i).text("");
+  }
+}

@@ -1,8 +1,12 @@
 let trialFunc;
 function runTasks(){
+  //clear any instructions and show canvas
+  clearInstructions();
+  canvas.style.display = "block";
+
   if (expStage == "prac1"){
 
-    trialCount = 0;
+    trialCount = 0; accCount = 0;
 
     // create arrays for this practice block
     taskStimuliPairs = createStimuliAndTaskSets(12, "m");
@@ -14,7 +18,7 @@ function runTasks(){
     countDown(3);
 
   } else if (expStage == "prac2"){
-    trialCount = 0;
+    trialCount = 0; accCount = 0;
 
     // create arrays for this practice block
     taskStimuliPairs = createStimuliAndTaskSets(12, "p");
@@ -27,7 +31,7 @@ function runTasks(){
 
   } else if (expStage == "prac3") {
 
-    trialCount = 0;
+    trialCount = 0; accCount = 0;
 
     // create arrays for this practice block
     taskStimuliPairs = createStimuliAndTaskSets();
@@ -39,7 +43,7 @@ function runTasks(){
     countDown(3);
 
   } else if (expStage == "main") {
-    trialCount = 0;
+    trialCount = 0; accCount = 0;
 
     // code for main experiments here
     taskStimuliPairs = createStimuliAndTaskSets().concat(createStimuliAndTaskSets(),createStimuliAndTaskSets());
@@ -76,31 +80,21 @@ function runPracticeTrial(){
       fixationScreen();
     }
   } else {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (expStage == "prac1"){
-      expStage = "prac2";
-      runInstructions();
-    } else if (expStage == "prac2") {
-      expStage = "prac3";
-      runInstructions();
-    } else {
-      expStage = "main";
-      runInstructions();
-    }
+    practiceAccuracyFeedback( Math.round( accCount / (trialCount) * 100 ) );
   }
 }
 
 function runTrial(){
-  if (trialCount == trialsPerBlock && !feedbackOn) {
+  if (trialCount == trialsPerBlock && !breakOn) {
 
-    feedbackOn = true; blockFeedback();
+    breakOn = true; blockFeedback();
 
-  } else if (trialCount % miniBlockLength == 0 && !miniBlockOn && trialCount != 0) {
+  } else if (trialCount % miniBlockLength == 0 && !breakOn && trialCount != 0) {
 
-    miniBlockOn = true; miniBlockScreen();
+    breakOn = true; miniBlockScreen();
 
   } else {
-    miniBlockOn = false; feedbackOn = false;
+    breakOn = false;
     if (expType == 3){
       expType = 4;
       promptLetGo();
@@ -108,6 +102,46 @@ function runTrial(){
       // start trial cycle
       fixationScreen();
     }
+  }
+}
+
+function practiceAccuracyFeedback(accuracy){
+  // prepare canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "black";
+  ctx.font = "25px Arial";
+  expType = 8;
+
+  // display feedback
+  if (accuracy < practiceAccCutoff) {
+
+    // display feedback text
+    ctx.fillText("You got " + accuracy + "% correct in this practice block.",canvas.width/2,canvas.height/2 - 50);
+    ctx.fillText("Remember, you need to get >" + practiceAccCutoff + "%.",canvas.width/2,canvas.height/2);
+    ctx.fillText("Press any button to go back ",canvas.width/2,canvas.height/2 + 80);
+    ctx.fillText("to the instructions and try again.",canvas.width/2,canvas.height/2 + 110);
+
+    // prep key press/instruction logic
+    repeatNecessary = true;
+
+  } else {
+
+    // display feedback text
+    ctx.fillText("You got " + accuracy + "% correct in this practice block.",canvas.width/2,canvas.height/2 - 50);
+    ctx.fillText("Press any button to go on to the next section.",canvas.width/2,canvas.height/2 + 100);
+
+    // prep key press/instruction logic
+    repeatNecessary = false;
+
+  }
+}
+
+function navigateInstructionPath(repeat = false){
+  if (repeat == true) {
+    runInstructions();
+  } else {
+    expStage = (expStage == "prac1") ? "prac2" : (expStage == "prac2") ? "prac3" : "main";
+    runInstructions();
   }
 }
 
@@ -130,6 +164,7 @@ function stimScreen(){
     promptLetGo();
 
   } else {
+    stimOnset = new Date().getTime();
 
     // prepare canvas for stimulus
     ctx.fillStyle = (cuedTaskSet[trialCount] == "m") ? "red" : "blue";
@@ -148,10 +183,10 @@ function stimScreen(){
 }
 
 function itiScreen(){
-  // if still awaiting keyup front response, change expType so that keyup function doesn't trigger another itiscreen() call.
-  if (expType == 1) {
+  if (expType == 1) { // participant didn't respond
     expType = 0;
-  } else if (expType == 2) {
+    respTime = null;
+  } else if (expType == 2) { //participant still holding down response key
     expType = 3;
   }
 
@@ -162,8 +197,8 @@ function itiScreen(){
   // display response feedback (correct/incorrect)
   ctx.fillText(accFeedback(),canvas.width/2,canvas.height/2);
 
-  // trial iteration finished. iterate trialCount.
-  trialCount++;
+  // trial iteration finished. iterate trialCount (unless finished)
+  if (trialCount < taskStimuliSet.length) {trialCount++;}
 
   // proceed to next trial or to next section
   setTimeout(trialFunc, ITIInterval());
@@ -171,12 +206,18 @@ function itiScreen(){
 
 function miniBlockScreen(){
   expType = 7;
+
   // prep canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
-  ctx.font = "30px Arial";
+  ctx.font = "25px Arial";
+
   // display miniblock text
-  ctx.fillText(Math.round((trialCount/trialsPerBlock)*100)+"% through block",canvas.width/2,canvas.height/2);
+  ctx.fillText("You are "+ Math.round((trialCount/trialsPerBlock)*100)+"% through this block.",canvas.width/2,canvas.height/2 - 50);
+  ctx.fillText("Your overall accuracy so far is " + Math.round((accCount/trialCount)*100) + "%.",canvas.width/2,canvas.height/2);
+  ctx.fillText("Press any button to continue.",canvas.width/2,canvas.height/2 + 100);
+  ctx.font = "italic bold 22px Arial";
+  ctx.fillText("Remember, you need >80% accuracy to be paid.",canvas.width/2,canvas.height/2 + 50);
 }
 
 function blockFeedback(){

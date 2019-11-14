@@ -1,14 +1,15 @@
 //https://javascript.info/strict-mode
 "use strict";
 
-// ----- Task Paramenters (CHANGE ME) ----- //
-let stimInterval = 100, fixInterval = 100; //1500, 500
-let numBlocks = 3, trialsPerBlock = 48; // (multiples of 24)
-let miniBlockLength = 24;
+// ----- Experiment Paramenters (CHANGE ME) ----- //
+let stimInterval = 500, fixInterval = 300; //2000, 500
+let numBlocks = 8, trialsPerBlock = 24; // (multiples of 24)
+let miniBlockLength = 0; //when intermediary breaks appear (doesn't need to be multiple of 24)
+let practiceAccCutoff = 75; //% value
 
 function ITIInterval(){
-  let itiMin = 100; //minimum ITI value 1200
-  let itiMax = 100; //maximum ITI value 1400
+  let itiMin = 200; //minimum ITI value 1200
+  let itiMax = 200; //maximum ITI value 1400
   let itiStep = 50; //step size
 
   // random number between itiMin and Max by step size
@@ -22,8 +23,9 @@ let stimClassification = defineStimuli(stimArray); // define characteristics of 
 let taskStimuliSet, cuedTaskSet, actionSet; // global vars for task components
 let canvas, ctx; // global canvas variable
 let expStage = "prac1"; // default/initial value for experiment logic
-let stimCount, acc; // vars for tasks (iterator, accuracy)
-let stimTimeout, miniBlockOn = false, feedbackOn = false;
+// vars for tasks (iterator, accuracy) and reaction times:
+let trialCount, acc, accCount, stimOnset, respOnset, respTime;
+let stimTimeout, breakOn = false, repeatNecessary = false;
 let expType = 0; // see comments below
 
 /*  expType explanations:
@@ -35,6 +37,7 @@ let expType = 0; // see comments below
       5: Key press from 0 still being held down. On keyup, reset to 0.
       6: Key press from 0 still being held down when stimScreen() func is called. Call promptLetGo() func. After keyup resume and reset to 0.
       7: mini block screen. Awaiting key press to continue, keyup resets to 0 and goes to next trial.
+      8: instruction feedback screen
 */
 
 // ------ EXPERIMENT STARTS HERE ------ //
@@ -54,7 +57,13 @@ $(document).ready(function(){
         expType = 5; //keydown when not needed. Keyup will reset to 0.
       } else if (expType == 1){
         expType = 2; //prevent additional responses during this trial (i.e. holding down key)
-        acc = (event.which == actionSet[stimCount]) ? 1 : 0;
+        acc = (event.which == actionSet[trialCount]) ? 1 : 0;
+        if (acc == 1){accCount++;}
+        respOnset = new Date().getTime();
+        respTime = respOnset - stimOnset;
+      } else if (expType == 8) {
+        expType = 5;
+        navigateInstructionPath(repeatNecessary);
       }
     })
 
