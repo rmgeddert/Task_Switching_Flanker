@@ -2,14 +2,14 @@
 "use strict";
 
 // ----- Experiment Paramenters (CHANGE ME) ----- //
-let stimInterval = 500, fixInterval = 300; //2000, 500
-let numBlocks = 8, trialsPerBlock = 24; // (multiples of 24)
+let stimInterval = 200, fixInterval = 100; //2000, 500
+let numBlocks = 8, trialsPerBlock = 48; // (multiples of 24)
 let miniBlockLength = 0; //when intermediary breaks appear (doesn't need to be multiple of 24)
 let practiceAccCutoff = 75; //% value
 
 function ITIInterval(){
-  let itiMin = 200; //minimum ITI value 1200
-  let itiMax = 200; //maximum ITI value 1400
+  let itiMin = 100; //minimum ITI value 1200
+  let itiMax = 100; //maximum ITI value 1400
   let itiStep = 50; //step size
 
   // random number between itiMin and Max by step size

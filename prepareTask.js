@@ -71,8 +71,16 @@ function defineStimuli(inputArr){
      - < 4 congruency repeats in a row
      - < 4 task repetition/switch in a row
      - < 3 congruency repetitions*/
+function createStimuliAndTaskSets(numTrials = stimArray.length, tasks = "both"){
+  let blocksNeeded = Math.ceil(numTrials/stimArray.length);
+  let arr = [];
+  for (var i = 0; i < blocksNeeded; i++) {
+    arr = arr.concat(createPairSet(tasks));
+  }
+  return arr.slice(0,numTrials);
+}
 
-function createStimuliAndTaskSets(numTrials = 24, tasks = "both"){
+function createPairSet(tasks){
   let taskStim = {
     congruent: {
       larger: {
@@ -135,7 +143,7 @@ function createStimuliAndTaskSets(numTrials = 24, tasks = "both"){
     stimTaskPairs = shuffle(stimTaskPairs);
   } while (!taskOrderIsOk(tasks, stimTaskPairs) || !stimOrderIsOk(stimTaskPairs) || !responseOrderIsOk(stimTaskPairs) );
 
-  return stimTaskPairs.slice(0,numTrials);
+  return stimTaskPairs;
 }
 
 function responseOrderIsOk(stimPairArr){
@@ -165,7 +173,7 @@ function responseOrderIsOk(stimPairArr){
     // set prev for next loop iteration
     prevResponse = taskResponse;
   }
-  //  if made to hear, return response order is ok. return true.
+  //  if made to here, return response order is ok. return true.
   return true;
 }
 
@@ -275,7 +283,6 @@ function createActionArray(){
   })
   return actionArr;
 }
-
 
 // ------------- Misc Functions ------------- //
 // Fisher-Yates shuffle

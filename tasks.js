@@ -46,7 +46,8 @@ function runTasks(){
     trialCount = 0; accCount = 0;
 
     // code for main experiments here
-    taskStimuliPairs = createStimuliAndTaskSets().concat(createStimuliAndTaskSets(),createStimuliAndTaskSets());
+    taskStimuliPairs = createStimuliAndTaskSets(numBlocks * trialsPerBlock);
+    console.log(taskStimuliPairs);
     taskStimuliSet = getStimSet(taskStimuliPairs);
     cuedTaskSet = getTaskSet(taskStimuliPairs);
     actionSet = createActionArray();
@@ -85,7 +86,7 @@ function runPracticeTrial(){
 }
 
 function runTrial(){
-  if (trialCount == trialsPerBlock && !breakOn) {
+  if (trialCount % trialsPerBlock == 0 && !breakOn && trialCount != 0) {
 
     breakOn = true; blockFeedback();
 
@@ -165,7 +166,7 @@ function stimScreen(){
 
   } else {
     stimOnset = new Date().getTime();
-
+    console.log(trialCount);
     // prepare canvas for stimulus
     ctx.fillStyle = (cuedTaskSet[trialCount] == "m") ? "red" : "blue";
     ctx.clearRect(0, 0, canvas.width, canvas.height);
