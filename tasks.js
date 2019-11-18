@@ -166,7 +166,7 @@ function stimScreen(){
 
   } else {
     stimOnset = new Date().getTime();
-    console.log(trialCount);
+
     // prepare canvas for stimulus
     ctx.fillStyle = (cuedTaskSet[trialCount] == "m") ? "red" : "blue";
     ctx.clearRect(0, 0, canvas.width, canvas.height);

@@ -1,21 +1,37 @@
 // global instruction iterator information. Change as needed
 let instructions = {
   iterator: {
-    prac1: 1,
-    prac2: 1,
-    prac3: 1,
-    main: 1
+    prac1: 1, prac2: 1, prac3: 1, main1: 1, main2: 1, main3: 1
   },
   max: {
-    prac1: 8,
-    prac2: 5,
-    prac3: 5,
-    main: 5
+    prac1: 8, prac2: 5, prac3: 5, main1: 6, main2: 4, main3: 4
   }
 };
 
+
+
+function displayDefaults(stage){
+  switch(stage){
+    case "prac1":
+    case "prac2":
+    case "prac3":
+      $('#instructionHeader').show();
+      $('#instructions0').show();
+      break;
+    case "main1":
+    case "main2":
+    case "main3":
+    default:
+      showFirst();
+      $('#instructionHeader').hide();
+      $('#instructions0').hide();
+      break;
+  }
+}
+
 // main instruction function (come here at start of practice block)
 function runInstructions(){
+
   // hide canvas
   canvas.style.display = "none";
 
@@ -42,10 +58,10 @@ function runInstructions(){
     // show instructions and next button, in case they are hidden
     $('#instructions').show();
     $('#nextInstrButton').show();
+    displayDefaults(expStage);
 
-    // remove any previous event listeners
-    $(document).off("click","#nextInstrButton");
-    $(document).off("click","#startExpButton");
+    // change default format for this for this instruction segment
+    formatInstructions(expStage);
 
     // code for "Next" button click during instruction display
     // if running from Atom, need to use $(document).on, if through Duke Public Home Directory, either works.
@@ -143,40 +159,97 @@ function getNextInstructions(slideNum, expStage){
           return "";
           break;
       }
-      case "main":
+    case "main1":
+      switch (slideNum){
+        case 1:
+          return "Great job! You are now ready to begin the main experiment.";
+          break;
+        case 2:
+          return "In this task, participants often struggle with:";
+          break;
+        case 3:
+          return "1) Switching between the two tasks, and";
+          break;
+        case 4:
+          return "2) Ignoring the distractor numbers.";
+          break;
+        case 5:
+          return "As you complete the experiment, try your best to avoid distraction from the side numbers and switch well between the two tasks. We will let you know how you are doing compared to previous participants.";
+          break;
+        case 6:
+          return "Press any button to continue";
+          break;
+        }
+      case "main2":
         switch (slideNum){
           case 1:
-            return "Great job! You are now ready to begin the main experiment.";
+            return "This feedback is based on both your accuracy and reaction time during the task. Remember to respond as quickly and as accuractely as possible.";
             break;
           case 2:
-            return "Remember, if the numbers are red, indicate if the center number is greater or less than 5 using the 'N' and 'M' keys with your right hand.";
+            return "Please note that you are not required to perform as well as or better than previous participants, and you will be compensated no matter how well you perform relative to other participants.";
             break;
           case 3:
-            return "If the numbers are blue, indicate if the center number is odd or even using the 'Z' and 'X' keys with your left hand.";
+            return "However, we do ask that you get > 75% correct over the course of the experiment. Performing worse may impact whether you are compensated.";
             break;
           case 4:
-            return "As always, remember to only respond to the center number, not the numbers on either side of it, and to respond as quickly and as accurately as possible.";
+            return "Press any button to continue";
             break;
-          case 5:
+        }
+      case "main3":
+        switch (slideNum){
+          case 1:
+            return "Remember, if the number is red, dinicate if it is greater or less than 5 using the 'N' and 'M' keys.";
+            break;
+          case 2:
+            return "If the number is blue, indicate if it is even or odd uring the 'Z' and 'X' keys.";
+            break;
+          case 3:
             return "The experiment will consist of " + numBlocks +" blocks of " + trialsPerBlock + " trials each. You will have a short rest break between each block, and you will receive feedback about your performance during these breaks.";
             break;
-          case 6:
-            return "You must receive get at least 80% of trials correctly in order to be compensated.";
-            break;
-          case 7:
-            return "";
-            break;
-          case 8:
-            return "";
+          case 4:
+            return "Press any button to begin the experiment.";
             break;
         }
   }
 };
+
+function showFirst() {
+  let instrNum = instructions["iterator"][expStage];
+  console.log(instrNum);
+  $('#instructions' + instrNum).text( getNextInstructions( instrNum, expStage));
+  instructions["iterator"][expStage]++;
+}
 
 function clearInstructions(){
   $('#instructions').hide();
   $('#startExpButton').hide();
   for (let i = 1; i <= 8; i++) {
     $('#instructions' + i).text("");
+  }
+}
+
+function makeBold(){
+
+}
+
+function italicize(){
+
+}
+
+function alignElement(elementName, alignment){
+  $(elementName).css('text-align',alignment);
+}
+
+function formatInstructions(){
+  switch (expStage){
+    case 'main1':
+      $('#instructionHeader').css('text-align','center');
+      $('#instructions').css('text-align','center');
+      $('.instructions').css('text-align','center');
+      break;
+    default:
+      $('#instructionHeader').css('text-align','left');
+      $('.instructions').css('text-align','left');
+      break;
   }
 }
