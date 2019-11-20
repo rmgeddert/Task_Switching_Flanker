@@ -2,10 +2,10 @@
 "use strict";
 
 // ----- Experiment Paramenters (CHANGE ME) ----- //
-let stimInterval = 200, fixInterval = 100; //2000, 500
+let stimInterval = 100, fixInterval = 100; //2000, 500
 let numBlocks = 8, trialsPerBlock = 48; // (multiples of 24)
 let miniBlockLength = 0; //when intermediary breaks appear (doesn't need to be multiple of 24)
-let practiceAccCutoff = 75; //% value
+let practiceAccCutoff = 60; //% value
 
 function ITIInterval(){
   let itiMin = 100; //minimum ITI value 1200
@@ -16,7 +16,7 @@ function ITIInterval(){
   let randInterval = itiMin + (Math.floor( Math.random() * ( Math.floor( (itiMax - itiMin) / itiStep ) + 1 ) ) * itiStep);
   return randInterval;
 }
-
+60
 //initialize global task variables
 let stimArray = selectExperimentStimuli(); // establish stimuli set for task
 let stimClassification = defineStimuli(stimArray); // define characteristics of stimuli
@@ -37,7 +37,7 @@ let expType = 0; // see comments below
       5: Key press from 0 still being held down. On keyup, reset to 0.
       6: Key press from 0 still being held down when stimScreen() func is called. Call promptLetGo() func. After keyup resume and reset to 0.
       7: mini block screen. Awaiting key press to continue, keyup resets to 0 and goes to next trial.
-      8: instruction feedback screen
+      8: instructions "press to continue"
 */
 
 // ------ EXPERIMENT STARTS HERE ------ //

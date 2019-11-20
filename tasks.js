@@ -42,7 +42,7 @@ function runTasks(){
     // start countdown into practice block
     countDown(3);
 
-  } else if (expStage == "main") {
+  } else if (expStage.indexOf("main") !== -1) {
     trialCount = 0; accCount = 0;
 
     // code for main experiments here
@@ -63,10 +63,10 @@ function countDown(seconds){
     ctx.fillText(seconds,canvas.width/2,canvas.height/2)
     setTimeout(function(){countDown(seconds - 1)},1000);
   } else {
-    if (expStage != "main"){
-      trialFunc = runPracticeTrial;
-    } else {
+    if (expStage.indexOf("main") !== -1){
       trialFunc = runTrial;
+    } else {
+      trialFunc = runPracticeTrial;
     }
     trialFunc();
   }
@@ -141,7 +141,26 @@ function navigateInstructionPath(repeat = false){
   if (repeat == true) {
     runInstructions();
   } else {
-    expStage = (expStage == "prac1") ? "prac2" : (expStage == "prac2") ? "prac3" : "main";
+    switch(expStage){
+      case "prac1":
+        expStage = "prac2";
+        break;
+      case "prac2":
+        expStage = "prac3";
+        break;
+      case "prac3":
+        expStage = "main1";
+        break;
+      case "main1":
+        expStage = "main2";
+        break;
+      case "main2":
+        expStage = "main3";
+        break;
+      case "main3":
+        expStage = "main4";
+        break;
+    }
     runInstructions();
   }
 }
@@ -227,8 +246,14 @@ function blockFeedback(){
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
   ctx.font = "30px Arial";
+
   // display feedback
-  ctx.fillText("big block break",canvas.width/2,canvas.height/2);
+  // display miniblock text
+  ctx.fillText("You are "+ Math.round((trialCount / (trialsPerBlock * numBlocks) ) * 100)+"% through this experiment.",canvas.width/2,canvas.height/2 - 50);
+  ctx.fillText("Your overall accuracy so far is " + Math.round((accCount / trialCount) * 100) + "%.",canvas.width/2,canvas.height/2);
+  ctx.fillText("Press any button to continue.",canvas.width/2,canvas.height/2 + 100);
+  ctx.font = "italic bold 22px Arial";
+  ctx.fillText("Remember, you need >80% accuracy to be paid.",canvas.width/2,canvas.height/2 + 50);
 }
 
 // functions for determining ITI feedback depending on accuracy
