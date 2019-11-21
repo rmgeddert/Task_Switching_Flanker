@@ -1,18 +1,26 @@
+/* high level defaults */
 body {
   font-family: Arial, Helvetica;
 }
 
+canvas {
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  display: none;
+}
+
+/* instruction screen styles */
 .instructions {
   color: black;
   font-size: 22px;
-  text-align: left;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-#instructions {
-  margin-left: 20px;
-  display:none
-}
-
+/* Start Experiment Button  */
 #startExpButton {
   display:none;
   color: black;
@@ -36,12 +44,4 @@ body {
   margin-top: 50px;
   text-align: center;
   color: red;
-}
-
-canvas {
-  padding-left: 0;
-  padding-right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  display: none;
 }

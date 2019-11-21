@@ -58,9 +58,9 @@ function runInstructions(){
     // clear all previous instructions, if any, and reset formats
     for (let i = 1; i <= 8; i++) {
       $('#instructions' + i).text("");
-      $('#instructions' + i).css("font-weight","normal");
-      $('#instructions' + i).css("font-size","22px");
-      $('#instructions' + i).css("color","black");
+      // $('#instructions' + i).css("font-weight","normal");
+      // $('#instructions' + i).css("font-size","22px");
+      // $('#instructions' + i).css("color","black");
     }
 
     // show instructions and next button, in case they are hidden
@@ -90,6 +90,15 @@ function runInstructions(){
 };
 
 function getNextInstructions(slideNum, expStage){
+/* use the following options when modifying text appearance
+    -  iterateAgain = true;
+    -  changeTextFormat('#instructions' + slideNum,'font-weight','bold');
+    -  changeTextFormat('#instructions' + slideNum,'font-size','60px');
+    -  changeTextFormat('#instructions' + slideNum,'color','red');
+    -  changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
+    -  changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
+    - $("<img src='../pics/finalpics/M33.jpg' class='insertedImage'>").insertAfter( "#instructions" + slideNum);
+*/
   switch (expStage){
     case "prac1":
       switch (slideNum){
@@ -109,6 +118,7 @@ function getNextInstructions(slideNum, expStage){
         case 7:
           return "Please enlarge this window to your entire screen and sit a comfortable distance from the computer screen. You must get at least " + practiceAccCutoff + "% correct in order to move onto the next task.";
         case 8:
+          $("<img src='"+instructionImages[4]+"'>").insertAfter( "#instructions" + slideNum);
           return "This block contains 12 trials. Press 'Start Experiment' to begin, then place your right hand on the 'N' and 'M' keys.";
       }
     case "prac2":
@@ -134,7 +144,7 @@ function getNextInstructions(slideNum, expStage){
           changeTextFormat('#instructions' + slideNum,'color','red');
           changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
           changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
-          $('#instructions' + slideNum).css("font-size","60px");
+          changeTextFormat('#instructions' + slideNum,'font-size','60px');
           return "33633";
         case 3:
           return "If the numbers are RED, indicate if the number is GREATER ('N' with right index finger) or LESS ('M' with right middle finger) than 5.";
@@ -144,13 +154,14 @@ function getNextInstructions(slideNum, expStage){
           changeTextFormat('#instructions' + slideNum,'color','blue');
           changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
           changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
-          $('#instructions' + slideNum).css("font-size","60px");
+          changeTextFormat('#instructions' + slideNum,'font-size','60px');
           return "88388";
         case 5:
           return "If the numbers are BLUE, indicate if the number is ODD ('Z' with left middle finger) or EVEN ('X' with left index finger).";
         case 6:
           return "Remember to only respond to the center number, not the numbers on either side of it, and to respond as quickly and as accurately as possible. You must get at least " + practiceAccCutoff + "% correct in order to move onto the next task.";
         case 7:
+          $("<img src='" + instructionImages[1] + "' width='500px'>").insertAfter( "#instructions" + slideNum);
           return "This block contains 24 trials. Press 'Start Experiment' to begin, then place your right hand on the 'N' and 'M' keys and left hand on the 'Z' and 'X' keys.";
       }
     case "main1":
@@ -165,6 +176,7 @@ function getNextInstructions(slideNum, expStage){
         case 4:
           return "2) Ignoring the distractor numbers.";
         case 5:
+          iterateAgain = true;
           return "As you complete the experiment, try your best to avoid distraction from the side numbers and switch well between the two tasks. We will let you know how you are doing compared to previous participants.";
         case 6:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
@@ -177,6 +189,7 @@ function getNextInstructions(slideNum, expStage){
           case 2:
             return "Please note that you are not required to perform as well as or better than previous participants, and you will be compensated no matter how well you perform relative to other participants.";
           case 3:
+            iterateAgain = true;
             return "However, we do ask that you get > 75% correct over the course of the experiment. Performing worse may impact whether you are compensated.";
           case 4:
             changeTextFormat('#instructions' + slideNum,'font-weight','bold');
@@ -192,7 +205,7 @@ function getNextInstructions(slideNum, expStage){
             changeTextFormat('#instructions' + slideNum,'color','red');
             changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
             changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
-            $('#instructions' + slideNum).css("font-size","60px");
+            changeTextFormat('#instructions' + slideNum,'font-size','60px');
             return "33633";
           case 3:
             return "If the number is red, indicate if it is greater or less than 5 using the 'N' and 'M' keys.";
@@ -203,7 +216,7 @@ function getNextInstructions(slideNum, expStage){
             changeTextFormat('#instructions' + slideNum,'color','blue');
             changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
             changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
-            $('#instructions' + slideNum).css("font-size","60px");
+            changeTextFormat('#instructions' + slideNum,'font-size','60px');
             return "88388";
           case 5:
             return "If the number is blue, indicate if it is odd or even using the 'Z' and 'X' keys.";
@@ -256,13 +269,10 @@ function formatInstructions(){
     case 'main1':
     case 'main2':
     case 'main3':
-      $('#instructionHeader').css('text-align','center');
-      $('#instructions').css('text-align','center');
       $('.instructions').css('text-align','center');
       break;
     default:
-      $('#instructionHeader').css('text-align','left');
-      $('.instructions').css('text-align','left');
+      $('.instructions').css('text-align','center');
       break;
   }
 }

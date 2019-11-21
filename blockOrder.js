@@ -13,7 +13,7 @@ function displayFeedbackScreen(feedbackType){
 }
 
 function proFlexibilityFeedback(){
-  $(" <img src='' alt=''> ").insertAfter( "#instructions" + slideNum);
+    $("<img src='../pics/finalpics/M31.jpg'>").insertAfter();
 }
 
 function proStabilityFeedback(){

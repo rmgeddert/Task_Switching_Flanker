@@ -2,21 +2,21 @@
 "use strict";
 
 // ----- Experiment Paramenters (CHANGE ME) ----- //
-let stimInterval = 100, fixInterval = 100; //2000, 500
+let stimInterval = 50, fixInterval = 50; //2000, 500
 let numBlocks = 8, trialsPerBlock = 48; // (multiples of 24)
 let miniBlockLength = 0; //when intermediary breaks appear (doesn't need to be multiple of 24)
-let practiceAccCutoff = 60; //% value
+let practiceAccCutoff = 0; //% value
 
 function ITIInterval(){
-  let itiMin = 100; //minimum ITI value 1200
-  let itiMax = 100; //maximum ITI value 1400
+  let itiMin = 50; //minimum ITI value 1200
+  let itiMax = 50; //maximum ITI value 1400
   let itiStep = 50; //step size
 
   // random number between itiMin and Max by step size
   let randInterval = itiMin + (Math.floor( Math.random() * ( Math.floor( (itiMax - itiMin) / itiStep ) + 1 ) ) * itiStep);
   return randInterval;
 }
-60
+
 //initialize global task variables
 let stimArray = selectExperimentStimuli(); // establish stimuli set for task
 let stimClassification = defineStimuli(stimArray); // define characteristics of stimuli
