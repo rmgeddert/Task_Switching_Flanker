@@ -19,4 +19,6 @@ let instructionImages = {
   2: 'images/handsOnKeyboard2.png',
   3: 'images/handsOnKeyboard3.png',
   4: 'images/handsOnKeyboard4.png',
+  5: 'images/distractorNumbers.png',
+  6: 'images/targetNumber.png'
 }

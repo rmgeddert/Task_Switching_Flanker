@@ -14,13 +14,35 @@ canvas {
 /* instruction screen styles */
 .instructions {
   color: black;
-  font-size: 22px;
   text-align: center;
   max-width: 900px;
   margin: 0 auto;
 }
 
-/* Start Experiment Button  */
+.instruction-body {
+  font-size: 18px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.instruction-header p {
+  padding-bottom: 15px;
+  border-bottom: 3px solid black;
+}
+
+.instruction-header {
+  text-align: left;
+}
+
+/* buttons  */
+#nextInstrButton{
+  font-size: 22px;
+}
+
+#nextInstrSection{
+  font-size: 22px;
+}
+
 #startExpButton {
   display:none;
   color: black;
@@ -38,10 +60,4 @@ canvas {
 
 #startExpButton:active {
   border: 3px inset grey;
-}
-
-#pressStartMessage {
-  margin-top: 50px;
-  text-align: center;
-  color: red;
 }

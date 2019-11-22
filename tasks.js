@@ -1,10 +1,11 @@
 let trialFunc;
 function runTasks(){
+
   //clear any instructions and show canvas
   clearInstructions();
   canvas.style.display = "block";
 
-  if (expStage == "prac1"){
+  if (expStage.indexOf("prac1") !== -1){
 
     trialCount = 0; accCount = 0;
 
@@ -17,7 +18,7 @@ function runTasks(){
     // start countdown into practice block
     countDown(3);
 
-  } else if (expStage == "prac2"){
+  } else if (expStage.indexOf("prac2") !== -1){
     trialCount = 0; accCount = 0;
 
     // create arrays for this practice block
@@ -29,7 +30,7 @@ function runTasks(){
     // start countdown into practice block
     countDown(3);
 
-  } else if (expStage == "prac3") {
+  } else if (expStage.indexOf("prac3") !== -1) {
 
     trialCount = 0; accCount = 0;
 
@@ -142,7 +143,10 @@ function navigateInstructionPath(repeat = false){
     runInstructions();
   } else {
     switch(expStage){
-      case "prac1":
+      case "prac1-1":
+        expStage = "prac1-2";
+        break;
+      case "prac1-2":
         expStage = "prac2";
         break;
       case "prac2":
