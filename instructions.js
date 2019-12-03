@@ -8,12 +8,12 @@ let instructions = {
   },
   // contains the max value of each instruction iteration. iteration will STOP at max.
   max: {
-    "prac1-1": 4, "prac1-2": 5, "prac2": 5, "prac3": 7, "main1": 6, "main2": 4, "main3": 7
+    "prac1-1": 3, "prac1-2": 6, "prac2": 6, "prac3": 8, "main1": 5, "main2": 3, "main3": 8
   },
-  // contains whether this instruction block should end with "start experiment"
-  // or with buttonPress to proceed to the next instruction screen
+  // what does instruction section end with?
+  // #nextSectionButton, #startExpButton, buttonPressNextSection, buttonPressStartTask
   exitResponse: {
-    "prac1-1": 'buttonPress', "prac1-2": '#startExpButton', prac2: '#startExpButton', prac3: '#startExpButton', main1: 'buttonPress', main2: 'buttonPress', main3: '#startExpButton'
+    "prac1-1": '#nextSectionButton', "prac1-2": 'buttonPressStartTask', prac2: 'buttonPressStartTask', prac3: 'buttonPressStartTask', main1: '#nextSectionButton', main2: '#nextSectionButton', main3: 'buttonPressStartTask'
   }
 };
 let iterateAgain = false;
@@ -55,6 +55,7 @@ function runInstructions(){
     // remove any previous click listeners, if any
     $(document).off("click","#nextInstrButton");
     $(document).off("click","#startExpButton");
+    $(document).off("click","#nextSectionButton");
 
     // clear all previous instructions, reset styles, and remove pictures
     for (let i = 1; i <= 8; i++) {
@@ -63,9 +64,10 @@ function runInstructions(){
       $('.insertedImage').remove();
     }
 
-    // show instructions and next button, in case they are hidden
+    // display proper instruction components, in case they are hidden
     $('.instructions').show();
     $('#nextInstrButton').show();
+    $('#nextSectionButton').hide();
     $('#startExpButton').hide();
     displayDefaults(expStage);
 
@@ -84,6 +86,10 @@ function runInstructions(){
       $('#startExpButton').hide();
       $('.insertedImage').remove();
       runTasks();
+    });
+
+    $(document).on('click', '#nextSectionButton', function(){
+      navigateInstructionPath();
     });
   };
 };
@@ -107,11 +113,7 @@ function getNextInstructions(slideNum, expStage){
         case 2:
           return "Press 'N' with your right hand index finger if the number is GREATER than 5.";
         case 3:
-          iterateAgain = true;
           return "Press 'M' with your right hand middle finger if the number is LESS than 5.";
-        case 4:
-          changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          return "Press any button to continue";
       }
     case "prac1-2":
       switch (slideNum){
@@ -126,8 +128,12 @@ function getNextInstructions(slideNum, expStage){
         case 4:
           return "Please enlarge this window to your entire screen and sit a comfortable distance from the computer screen. You must get at least " + practiceAccCutoff + "% correct in order to move on to the next practice block.";
         case 5:
+          iterateAgain = true;
           $( getImageText(instructionImages[3]) ).insertAfter( "#instructions" + slideNum);
-          return "This block contains 12 trials. Press 'Start Experiment' to begin, then place your right hand on the 'N' and 'M' keys as shown.";
+          return "This block contains 12 trials. Please place your right hand on the 'N' and 'M' keys as shown.";
+        case 6:
+          changeTextFormat('#instructions' + slideNum,'font-weight','bold');
+          return "Press any button begin."
       }
     case "prac2":
       switch (slideNum){
@@ -140,8 +146,12 @@ function getNextInstructions(slideNum, expStage){
         case 4:
           return "Remember to only respond to the center number, not the numbers on either side of it, and to respond as quickly and as accurately as possible. You must get at least " + practiceAccCutoff + "% correct in order to move on to the main task.";
         case 5:
+          iterateAgain = true;
           $( getImageText(instructionImages[4]) ).insertAfter( "#instructions" + slideNum);
-          return "This block contains 12 trials. Press 'Start Experiment' to begin, then place your left hand on the 'Z' and 'X' keys as shown.";
+          return "This block contains 12 trials. Please place your left hand on the 'Z' and 'X' keys as shown.";
+        case 6:
+          changeTextFormat('#instructions' + slideNum,'font-weight','bold');
+          return "Press any button begin."
       }
     case "prac3":
       switch (slideNum){
@@ -170,8 +180,12 @@ function getNextInstructions(slideNum, expStage){
         case 6:
           return "Remember to only respond to the center number, not the numbers on either side of it, and to respond as quickly and as accurately as possible. You must get at least " + practiceAccCutoff + "% correct in order to move onto the next task.";
         case 7:
+          iterateAgain = true;
           $( getImageText(instructionImages[2]) ).insertAfter( "#instructions" + slideNum);
-          return "This block contains 24 trials. Press 'Start Experiment' to begin, then place your right hand on the 'N' and 'M' keys and left hand on the 'Z' and 'X' keys.";
+          return "This block contains 24 trials. Please place your right hand on the 'N' and 'M' keys and left hand on the 'Z' and 'X' keys.";
+        case 8:
+          changeTextFormat('#instructions' + slideNum,'font-weight','bold');
+          return "Press any button begin."
       }
     case "main1":
       switch (slideNum){
@@ -185,11 +199,7 @@ function getNextInstructions(slideNum, expStage){
         case 4:
           return "2) Ignoring the distractor numbers.";
         case 5:
-          iterateAgain = true;
           return "As you complete the experiment, try your best to avoid distraction from the side numbers and switch well between the two tasks. We will let you know how you are doing compared to previous participants.";
-        case 6:
-          changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          return "Press any button to continue";
         }
       case "main2":
         switch (slideNum){
@@ -198,11 +208,7 @@ function getNextInstructions(slideNum, expStage){
           case 2:
             return "Please note that you are not required to perform as well as or better than previous participants, and you will be compensated no matter how well you perform relative to other participants.";
           case 3:
-            iterateAgain = true;
             return "However, we do ask that you get > 75% correct over the course of the experiment. Performing worse may impact whether you are compensated.";
-          case 4:
-            changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-            return "Press any button to continue";
         }
       case "main3":
         switch (slideNum){
@@ -232,8 +238,12 @@ function getNextInstructions(slideNum, expStage){
           case 6:
             return "The experiment will consist of " + numBlocks +" blocks of " + trialsPerBlock + " trials each. You will have a short rest break between each block, and you will receive feedback about your performance during these breaks.";
           case 7:
+            iterateAgain = true;
             $( getImageText(instructionImages[2]) ).insertAfter( "#instructions" + slideNum);
-            return "Press 'Start Experiment' to begin, then place your right hand on the 'N' and 'M' keys and left hand on the 'Z' and 'X' keys as shown.";
+            return "Please place your right hand on the 'N' and 'M' keys and left hand on the 'Z' and 'X' keys as shown.";
+          case 8:
+            changeTextFormat('#instructions' + slideNum,'font-weight','bold');
+            return "Press any button begin."
         }
   }
 };
@@ -249,14 +259,49 @@ function iterateInstruction(){
     $('#nextInstrButton').hide();
     if (instructions["exitResponse"][expStage] == "#startExpButton"){
       $('#startExpButton').show();
-    } else {
+    } else if (instructions["exitResponse"][expStage] == "#nextSectionButton") {
+      $('#nextSectionButton').show();
+    } else if (instructions["exitResponse"][expStage] == "buttonPressStartTask"){
       expType = 8;
+    } else if (instructions["exitResponse"][expStage] == "buttonPressNextSection"){
+      expType = 9;
     }
   }
 
   if (iterateAgain == true) {
     iterateAgain = false;
     iterateInstruction();
+  }
+}
+
+function navigateInstructionPath(repeat = false){
+  if (repeat == true) {
+    runInstructions();
+  } else {
+    switch(expStage){
+      case "prac1-1":
+        expStage = "prac1-2";
+        break;
+      case "prac1-2":
+        expStage = "prac2";
+        break;
+      case "prac2":
+        expStage = "prac3";
+        break;
+      case "prac3":
+        expStage = "main1";
+        break;
+      case "main1":
+        expStage = "main2";
+        break;
+      case "main2":
+        expStage = "main3";
+        break;
+      case "main3":
+        expStage = "main4";
+        break;
+    }
+    runInstructions();
   }
 }
 
@@ -272,9 +317,10 @@ function changeTextFormat(elementName, property ,changeTo){
   $(elementName).css( property , changeTo );
 }
 
-function clearInstructions(){
-  $('#instructions').hide();
+function hideInstructions(){
+  $('.instructions').hide();
   $('#startExpButton').hide();
+  $('#nextSectionButton').hide();
   for (let i = 1; i <= 8; i++) {
     $('#instructions' + i).text("");
     resetDefaultStyles('#instructions' + i);

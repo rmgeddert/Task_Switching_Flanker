@@ -39,8 +39,10 @@ canvas {
   font-size: 22px;
 }
 
-#nextInstrSection{
+#nextSectionButton{
+  color: blue;
   font-size: 22px;
+  font-weight: bold;
 }
 
 #startExpButton {

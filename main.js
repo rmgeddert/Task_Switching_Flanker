@@ -37,7 +37,8 @@ let expType = 0; // see comments below
       5: Key press from 0 still being held down. On keyup, reset to 0.
       6: Key press from 0 still being held down when stimScreen() func is called. Call promptLetGo() func. After keyup resume and reset to 0.
       7: mini block screen. Awaiting key press to continue, keyup resets to 0 and goes to next trial.
-      8: instructions "press to continue"
+      8: instruction start task "press to continue"
+      9: proceed to next instruction "press to continue"
 */
 
 // ------ EXPERIMENT STARTS HERE ------ //
@@ -62,6 +63,9 @@ $(document).ready(function(){
         respOnset = new Date().getTime();
         respTime = respOnset - stimOnset;
       } else if (expType == 8) {
+        expType = 5;
+        runTasks();
+      } else if (expType == 9) {
         expType = 5;
         navigateInstructionPath(repeatNecessary);
       }

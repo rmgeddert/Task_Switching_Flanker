@@ -2,7 +2,7 @@ let trialFunc;
 function runTasks(){
 
   //clear any instructions and show canvas
-  clearInstructions();
+  hideInstructions();
   canvas.style.display = "block";
 
   if (expStage.indexOf("prac1") !== -1){
@@ -15,7 +15,7 @@ function runTasks(){
     cuedTaskSet = getTaskSet(taskStimuliPairs);
     actionSet = createActionArray();
 
-    // start countdown into practice block
+    // start countdown into practice blockm
     countDown(3);
 
   } else if (expStage.indexOf("prac2") !== -1){
@@ -48,7 +48,6 @@ function runTasks(){
 
     // code for main experiments here
     taskStimuliPairs = createStimuliAndTaskSets(numBlocks * trialsPerBlock);
-    console.log(taskStimuliPairs);
     taskStimuliSet = getStimSet(taskStimuliPairs);
     cuedTaskSet = getTaskSet(taskStimuliPairs);
     actionSet = createActionArray();
@@ -112,7 +111,7 @@ function practiceAccuracyFeedback(accuracy){
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
   ctx.font = "25px Arial";
-  expType = 8;
+  expType = 9;
 
   // display feedback
   if (accuracy < practiceAccCutoff) {
@@ -135,37 +134,6 @@ function practiceAccuracyFeedback(accuracy){
     // prep key press/instruction logic
     repeatNecessary = false;
 
-  }
-}
-
-function navigateInstructionPath(repeat = false){
-  if (repeat == true) {
-    runInstructions();
-  } else {
-    switch(expStage){
-      case "prac1-1":
-        expStage = "prac1-2";
-        break;
-      case "prac1-2":
-        expStage = "prac2";
-        break;
-      case "prac2":
-        expStage = "prac3";
-        break;
-      case "prac3":
-        expStage = "main1";
-        break;
-      case "main1":
-        expStage = "main2";
-        break;
-      case "main2":
-        expStage = "main3";
-        break;
-      case "main3":
-        expStage = "main4";
-        break;
-    }
-    runInstructions();
   }
 }
 
