@@ -3,9 +3,10 @@
 
 // ----- Experiment Paramenters (CHANGE ME) ----- //
 let stimInterval = 100, fixInterval = 50; //2000, 500
-let numBlocks = 8, trialsPerBlock = 48; // (multiples of 24)
+let numBlocks = 8, trialsPerBlock = 24; // (multiples of 24) (48 usually)
 let miniBlockLength = 0; //when intermediary breaks appear (doesn't need to be multiple of 24)
 let practiceAccCutoff = 0; //% value
+let skipPractice = true;
 
 function ITIInterval(){
   let itiMin = 100; //minimum ITI value 1200
@@ -86,6 +87,7 @@ $(document).ready(function(){
     });
 
   // ----- Start with Practice Block Instructions ----- //
+    if (skipPractice) {expStage = "main1";}
     runInstructions();
     // runTasks();
 });

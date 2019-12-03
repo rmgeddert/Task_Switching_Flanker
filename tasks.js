@@ -86,9 +86,10 @@ function runPracticeTrial(){
 }
 
 function runTrial(){
+  console.log(blockType);
   if (trialCount % trialsPerBlock == 0 && !breakOn && trialCount != 0) {
 
-    breakOn = true; blockFeedback();
+    breakOn = true; displayFeedbackScreen();
 
   } else if (trialCount % miniBlockLength == 0 && !breakOn && trialCount != 0) {
 
