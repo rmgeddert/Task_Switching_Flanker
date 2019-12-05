@@ -2,6 +2,8 @@ let blockOrder1 = ["F","C","S","C","F","C","S"];
 let blockOrder2 = ["S","C","F","C","S","C","F"];
 let blockIterator = 0;
 let blockType = "N/A"
+let img = new Image();
+img.src = "images/targetNumber.png";
 
 function displayFeedbackScreen(){
   setBlockType();
@@ -26,13 +28,12 @@ function proFlexibilityFeedback(){
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
   ctx.font = "25px Arial";
+  ctx.drawImage(img,canvas.width/2 - img.width/2,20);
 
-  // display feedback text
-  ctx.fillText("Pro-Flexibility Block",canvas.width/2,canvas.height/2-50);
-  ctx.fillText("Your overall accuracy so far is " + Math.round((accCount/trialCount)*100) + "%.",canvas.width/2,canvas.height/2);
+  // display feedback
+  ctx.fillText("You are ",canvas.width/2,canvas.height/2-50);
+
   ctx.fillText("Press any button to continue.",canvas.width/2,canvas.height/2 + 100);
-  ctx.font = "italic bold 22px Arial";
-  ctx.fillText("Remember, you need >80% accuracy to be paid.",canvas.width/2,canvas.height/2 + 50);
 }
 
 function proStabilityFeedback(){
