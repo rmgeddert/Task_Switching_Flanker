@@ -2,15 +2,16 @@
 "use strict";
 
 // ----- Experiment Paramenters (CHANGE ME) ----- //
-let stimInterval = 100, fixInterval = 50; //2000, 500
-let numBlocks = 8, trialsPerBlock = 24; // (multiples of 24) (48 usually)
+let stimInterval = 2000, fixInterval = 500; //2000, 500
+let numBlocks = 8, trialsPerBlock = 48; // (multiples of 24) (48 usually)
 let miniBlockLength = 0; //when intermediary breaks appear (doesn't need to be multiple of 24)
-let practiceAccCutoff = 0; //% value
-let skipPractice = true;
+let practiceAccCutoff = 75; //% value
+let taskAccCutoff = 75;
+let skipPractice = false; // <- turn practice blocks on or off
 
 function ITIInterval(){
-  let itiMin = 100; //minimum ITI value 1200
-  let itiMax = 100; //maximum ITI value 1400
+  let itiMin = 1200; //minimum ITI value 1200
+  let itiMax = 1400; //maximum ITI value 1400
   let itiStep = 50; //step size
 
   // random number between itiMin and Max by step size
@@ -23,9 +24,9 @@ let stimArray = selectExperimentStimuli(); // establish stimuli set for task
 let stimClassification = defineStimuli(stimArray); // define characteristics of stimuli
 let taskStimuliSet, cuedTaskSet, actionSet; // global vars for task components
 let canvas, ctx; // global canvas variable
-let expStage = "prac1-1"; // default/initial value for experiment logic
+let expStage = (skipPractice == true) ? "main1" : "prac1-1";
 // vars for tasks (iterator, accuracy) and reaction times:
-let trialCount, acc, accCount, stimOnset, respOnset, respTime;
+let trialCount, acc, accCount, stimOnset, respOnset, respTime, block = 1;
 let stimTimeout, breakOn = false, repeatNecessary = false;
 let expType = 0; // see comments below
 
@@ -87,34 +88,46 @@ $(document).ready(function(){
     });
 
   // ----- Start with Practice Block Instructions ----- //
-    if (skipPractice) {expStage = "main1";}
+    loadImages();
     runInstructions();
-    // runTasks();
 });
 
 // ------- Misc Experiment Functions ------- //
-
-// function for wrapping text in Canvas
-// https://stackoverflow.com/questions/2936112/text-wrap-in-a-canvas-element
-function getLines(text, maxWidth) {
-    let words = text.split(" ");
-    let lines = [];
-    let currentLine = words[0];
-
-    for (let i = 1; i < words.length; i++) {
-        let word = words[i];
-        let width = ctx.measureText(currentLine + " " + word).width;
-        if (width < maxWidth) {
-            currentLine += " " + word;
-        } else {
-            lines.push(currentLine);
-            currentLine = word;
-        }
-    }
-    lines.push(currentLine);
-    return lines;
+let images = {
+  "F": {},
+  "C": {},
+  "S": {}
 }
 
-function getLinesForParagraphs(ctx, text, maxWidth){
-  return text.split("\n").map(para => getLines(ctx, para, maxWidth)).reduce([], (a, b) => a.concat(b))
+function loadImages(){
+  // these are indexes, not file names
+  let controlNums = [0,1,2,3,4,5,6,7,8,9];
+  let proFlexNums = [0,1,2,3,4,5,6,7,8,9];
+  let proStabNums = [0,1,2,3,4,5,6,7,8,9];
+  let numControl = 4, numFlex = 2, numStab = 2; // how many images needed per block
+  let currArr;
+
+  // get images numbers for control blocks
+  currArr = controlNums;
+  loopAndLoad(numControl,"C");
+
+  // get image numbers for pro flexibility blocks
+  currArr = proFlexNums;
+  loopAndLoad(numFlex,"F");
+
+  // get images numbers for pro stability blocks
+  currArr = proStabNums;
+  loopAndLoad(numStab,"S");
+
+  function loopAndLoad(numImgNeeded, blockType){
+    for (var i = 0; i < numImgNeeded; i++) {
+      images[blockType][i] = new Image();
+      images[blockType][i].src = feedbackImages[blockType][getRandomFromArr()];
+    }
+  }
+
+  function getRandomFromArr(){
+    let randIndex = Math.floor(Math.random() * currArr.length);
+    return currArr.splice(randIndex, 1)[0];
+  }
 }

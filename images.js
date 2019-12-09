@@ -1,16 +1,39 @@
 let feedbackImages = {
-  F: [
-    '../pics/finalpics/M31.jpg',
-    '../pics/finalpics/M42.jpg',
+  "F": [
+    'images/proFlex_1.png',
+    'images/proFlex_2.png',
+    'images/proFlex_3.png',
+    'images/proFlex_4.png',
+    'images/proFlex_5.png',
+    'images/proFlex_6.png',
+    'images/proFlex_7.png',
+    'images/proFlex_8.png',
+    'images/proFlex_9.png',
+    'images/proFlex_10.png'
   ],
-  S: [
-    '../pics/finalpics/M33.jpg',
-    '../pics/finalpics/M51.jpg',
+  "S": [
+    'images/proStab_1.png',
+    'images/proStab_2.png',
+    'images/proStab_3.png',
+    'images/proStab_4.png',
+    'images/proStab_5.png',
+    'images/proStab_6.png',
+    'images/proStab_7.png',
+    'images/proStab_8.png',
+    'images/proStab_9.png',
+    'images/proStab_10.png'
   ],
-  C: [
-    '../pics/finalpics/M190.jpg',
-    '../pics/finalpics/M152.jpg',
-    '../pics/finalpics/M136.jpg',
+  "C": [
+    'images/control_1.png',
+    'images/control_2.png',
+    'images/control_3.png',
+    'images/control_4.png',
+    'images/control_5.png',
+    'images/control_6.png',
+    'images/control_7.png',
+    'images/control_8.png',
+    'images/control_9.png',
+    'images/control_10.png'
   ]
 }
 

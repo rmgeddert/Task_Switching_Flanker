@@ -19,6 +19,7 @@ function runTasks(){
     countDown(3);
 
   } else if (expStage.indexOf("prac2") !== -1){
+
     trialCount = 0; accCount = 0;
 
     // create arrays for this practice block
@@ -44,6 +45,7 @@ function runTasks(){
     countDown(3);
 
   } else if (expStage.indexOf("main") !== -1) {
+
     trialCount = 0; accCount = 0;
 
     // code for main experiments here
@@ -51,6 +53,8 @@ function runTasks(){
     taskStimuliSet = getStimSet(taskStimuliPairs);
     cuedTaskSet = getTaskSet(taskStimuliPairs);
     actionSet = createActionArray();
+
+    // start countdown into main task
     countDown(3);
   }
 }
@@ -86,24 +90,33 @@ function runPracticeTrial(){
 }
 
 function runTrial(){
-  console.log(blockType);
-  if (trialCount % trialsPerBlock == 0 && !breakOn && trialCount != 0) {
+  if (trialCount < numBlocks * trialsPerBlock) {
 
-    breakOn = true; displayFeedbackScreen();
+    if (trialCount % trialsPerBlock == 0 && !breakOn && trialCount != 0) {
 
-  } else if (trialCount % miniBlockLength == 0 && !breakOn && trialCount != 0) {
+      breakOn = true; displayFeedbackScreen();
+      block++;
 
-    breakOn = true; miniBlockScreen();
+    } else if (trialCount % miniBlockLength == 0 && !breakOn && trialCount != 0) {
+
+      breakOn = true; miniBlockScreen();
+
+    } else {
+
+      console.log(block + "." + trialCount + "." + blockType);
+      breakOn = false;
+      if (expType == 3){
+        expType = 4;
+        promptLetGo();
+      } else {
+        // start trial cycle
+        fixationScreen();
+      }
+    }
 
   } else {
-    breakOn = false;
-    if (expType == 3){
-      expType = 4;
-      promptLetGo();
-    } else {
-      // start trial cycle
-      fixationScreen();
-    }
+    // end of experiment stuff
+    console.log("Finished Experiment!");
   }
 }
 
@@ -182,6 +195,8 @@ function itiScreen(){
   } else if (expType == 2) { //participant still holding down response key
     expType = 3;
   }
+
+  console.log(acc, respTime, stimOnset, respOnset,cuedTaskSet[trialCount]);
 
   // prepare ITI canvas
   ctx.fillStyle = accFeedbackColor();

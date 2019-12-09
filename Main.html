@@ -13,6 +13,7 @@
   </head>
 
   <body>
+    <!-- instruction elements for all text screens -->
     <div class="instructions">
       <div class="instruction-content">
         <div class="instruction-header">
@@ -39,38 +40,19 @@
     </div>
 
     <!--canvas element for displaying stimuli during the task and practice -->
-    <canvas id="myCanvas" width="600" height="500"></canvas>
+    <canvas id="myCanvas" width="900" height="900"></canvas>
 
     <!-- hidden html elements for uploading things to turk/getting turk data -->
-    <form id="mturk_form" method="POST" action="http://152.3.33.14/AMTSubmit/dataHandler.php">
+    <form id="mturk_form" method="POST" action="https://workersandbox.mturk.com/mturk/externalSubmit">
       <!-- <form id="mturk_form" method="POST" action="https://workersandbox.mturk.com/mturk/externalSubmit"> -->
       <!-- <form id="mturk_form" method="POST" action="https://wwww.mturk.com/mturk/externalSubmit"> -->
+      <!-- <form id="mturk_form" method="POST" action="http://152.3.33.14/AMTSubmit/dataHandler.php"> -->
       <input type="hidden" id="assignmentId" name="assignmentId" value="">
       <input type="hidden" id="workerId" name="workerId" value="">
       <input type="hidden" id="hitId" name="hitId" value="">
       <input type="hidden" id="RTs" name="RTs" value="">
-      <input type="hidden" id="demographics" name="demographics" value="Task_Switching_1">
-      <input type="hidden" id="ExpName" name="ExpName" value="Task_Switching_1">
+      <input type="hidden" id="demographics" name="demographics" value="Task_Switching_Flanker">
+      <input type="hidden" id="ExpName" name="ExpName" value="Task_Switching_Flanker">
     </form>
   </body>
 </html>
-
-<!--
-<!-- HTML objects for instruction (see instructions.js for relevant code) --
-<div id="instructions">
-  <h1 id="instructionHeader">Instructions</h1>
-  <p id="instructions0" class="instructions" style="font-weight: bold">Please read these instructions carefully.</p>
-  <p id="instructions1" class="instructions"></p>
-  <p id="instructions2" class="instructions"></p>
-  <p id="instructions3" class="instructions"></p>
-  <p id="instructions4" class="instructions"></p>
-  <p id="instructions5" class="instructions"></p>
-  <p id="instructions6" class="instructions"></p>
-  <p id="instructions7" class="instructions"></p>
-  <p id="instructions8" class="instructions"></p>
-  <div class="instructionButtons">
-    <button id="nextInstrButton" class="instructions" >Next</button>
-    <button id="startExpButton">Start Experiment</button>
-  </div>
-</div>
--->

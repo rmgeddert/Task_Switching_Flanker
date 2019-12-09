@@ -18,17 +18,34 @@ let instructions = {
 };
 let iterateAgain = false;
 
-function displayDefaults(stage){
-  // default values of instruction blocks. add any special cases
-  switch(stage){
-    case "prac1-1":
-    case "prac1-2":
-      $('.instruction-header').show();
-      break;
-    default:
-      showFirst();
-      $('.instruction-header').hide();
-      break;
+function navigateInstructionPath(repeat = false){
+  if (repeat == true) {
+    runInstructions();
+  } else {
+    switch(expStage){
+      case "prac1-1":
+        expStage = "prac1-2";
+        break;
+      case "prac1-2":
+        expStage = "prac2";
+        break;
+      case "prac2":
+        expStage = "prac3";
+        break;
+      case "prac3":
+        expStage = "main1";
+        break;
+      case "main1":
+        expStage = "main2";
+        break;
+      case "main2":
+        expStage = "main3";
+        break;
+      case "main3":
+        expStage = "main4";
+        break;
+    }
+    runInstructions();
   }
 }
 
@@ -45,10 +62,8 @@ function runInstructions(){
       $('#instructions' + i).text( getNextInstructions( i, expStage ));
     }
 
-    // FIX THIS
     $('.instructions').show();
-    $('#nextInstrButton').hide();
-    $('#startExpButton').show();
+    exitResponse();
 
   } else {
 
@@ -256,16 +271,7 @@ function iterateInstruction(){
   if (instrNum < instructions["max"][expStage]){
     instructions["iterator"][expStage]++;
   } else{
-    $('#nextInstrButton').hide();
-    if (instructions["exitResponse"][expStage] == "#startExpButton"){
-      $('#startExpButton').show();
-    } else if (instructions["exitResponse"][expStage] == "#nextSectionButton") {
-      $('#nextSectionButton').show();
-    } else if (instructions["exitResponse"][expStage] == "buttonPressStartTask"){
-      expType = 8;
-    } else if (instructions["exitResponse"][expStage] == "buttonPressNextSection"){
-      expType = 9;
-    }
+    exitResponse();
   }
 
   if (iterateAgain == true) {
@@ -274,34 +280,31 @@ function iterateInstruction(){
   }
 }
 
-function navigateInstructionPath(repeat = false){
-  if (repeat == true) {
-    runInstructions();
-  } else {
-    switch(expStage){
-      case "prac1-1":
-        expStage = "prac1-2";
-        break;
-      case "prac1-2":
-        expStage = "prac2";
-        break;
-      case "prac2":
-        expStage = "prac3";
-        break;
-      case "prac3":
-        expStage = "main1";
-        break;
-      case "main1":
-        expStage = "main2";
-        break;
-      case "main2":
-        expStage = "main3";
-        break;
-      case "main3":
-        expStage = "main4";
-        break;
-    }
-    runInstructions();
+function exitResponse(){
+  $('#nextInstrButton').hide();
+  if (instructions["exitResponse"][expStage] == "#startExpButton"){
+    $('#startExpButton').show();
+  } else if (instructions["exitResponse"][expStage] == "#nextSectionButton") {
+    $('#nextSectionButton').show();
+  } else if (instructions["exitResponse"][expStage] == "buttonPressStartTask"){
+    expType = 8;
+  } else if (instructions["exitResponse"][expStage] == "buttonPressNextSection"){
+    expType = 9;
+  }
+}
+
+function displayDefaults(stage){
+  // default values of instruction blocks. add any special cases
+  switch(stage){
+    case "prac1-2":
+      showFirst();
+    case "prac1-1":
+      $('.instruction-header').show();
+      break;
+    default:
+      showFirst();
+      $('.instruction-header').hide();
+      break;
   }
 }
 
