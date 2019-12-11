@@ -7,6 +7,8 @@ let iterators = {
   "C" : 0,
   "S" : 0,
 }
+// randomly pick one of the two block orders
+let blockOrder = (Math.round(Math.random()) == 0) ? blockOrder1 : blockOrder2;
 
 function displayFeedbackScreen(){
   setBlockType();
@@ -19,7 +21,7 @@ function displayFeedbackScreen(){
 }
 
 function setBlockType(){
-  blockType = blockOrder1[blockIterator];
+  blockType = blockOrder[blockIterator];
   blockIterator++;
 }
 

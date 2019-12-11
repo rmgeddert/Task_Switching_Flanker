@@ -4,29 +4,47 @@
 let instructions = {
   // contains the interator for each instruction block
   iterator: {
-    "prac1-1": 1, "prac1-2": 1, "prac2": 1, "prac3": 1, "main1": 1, "main2": 1, "main3": 1
+    "prac1-1": 3, "prac1-2": 2, "prac1-3": 4, "prac2": 1, "prac3": 1, "main1": 1, "main2": 1, "main3": 1
   },
   // contains the max value of each instruction iteration. iteration will STOP at max.
   max: {
-    "prac1-1": 3, "prac1-2": 6, "prac2": 6, "prac3": 8, "main1": 5, "main2": 3, "main3": 8
+    "prac1-1": 3, "prac1-2": 2, "prac1-3": 4, "prac2": 6, "prac3": 8, "main1": 5, "main2": 3, "main3": 8
   },
   // what does instruction section end with?
   // #nextSectionButton, #startExpButton, buttonPressNextSection, buttonPressStartTask
   exitResponse: {
-    "prac1-1": '#nextSectionButton', "prac1-2": 'buttonPressStartTask', prac2: 'buttonPressStartTask', prac3: 'buttonPressStartTask', main1: '#nextSectionButton', main2: '#nextSectionButton', main3: 'buttonPressStartTask'
+    "prac1-1": '#nextSectionButton',
+    "prac1-2": '#nextSectionButton',
+    "prac1-3": 'buttonPressStartTask',
+    "prac2": 'buttonPressStartTask',
+    "prac3": 'buttonPressStartTask',
+    "main1": '#nextSectionButton',
+    "main2": '#nextSectionButton',
+    "main3": 'buttonPressStartTask'
   }
 };
-let iterateAgain = false;
+let iterateAgain = false, task;
 
 function navigateInstructionPath(repeat = false){
   if (repeat == true) {
+    // if multi stage instructions, ensures it goes back to first not second
+    switch (expStage){
+      case "prac1-1":
+      case "prac1-2":
+      case "prac1-3":
+        expStage = "prac1-1";
+        break;
+    }
     runInstructions();
   } else {
-    switch(expStage){
+    switch (expStage){
       case "prac1-1":
         expStage = "prac1-2";
         break;
       case "prac1-2":
+        expStage = "prac1-3";
+        break;
+      case "prac1-3":
         expStage = "prac2";
         break;
       case "prac2":
@@ -41,22 +59,22 @@ function navigateInstructionPath(repeat = false){
       case "main2":
         expStage = "main3";
         break;
-      case "main3":
-        expStage = "main4";
-        break;
     }
     runInstructions();
   }
 }
 
 function runInstructions(){
-// main instruction function (come here at start of instruction block)
+  // main instruction function (come here at start of instruction block)
+
+  // hide/clear everything, just in case
+  hideInstructions();
 
   // hide canvas if visible
   canvas.style.display = "none";
 
   // if need to repeat instructions (e.g., participant failed to meet accuracy requirement), then reshow all instructions
-  if (instructions["iterator"][expStage] == instructions["max"][expStage]){
+  if (instructions["iterator"][expStage] >= instructions["max"][expStage]){
 
     for (var i = 1; i <= instructions["max"][expStage]; i++) {
       $('#instructions' + i).text( getNextInstructions( i, expStage ));
@@ -85,28 +103,28 @@ function runInstructions(){
     $('#nextSectionButton').hide();
     $('#startExpButton').hide();
     displayDefaults(expStage);
+  }
 
-    /* code for "Next" button click during instruction display
-          if running from Atom, need to use $(document).on, if through Duke Public Home Directory, either works.
-          https://stackoverflow.com/questions/19237235/jquery-button-click-event-not-firing
-    */
-    $(document).on("click", "#nextInstrButton", function(){
-    // $("#nextInstrButton").on('click', function(){
-      iterateInstruction();
-    });
+  /* code for "Next" button click during instruction display
+        if running from Atom, need to use $(document).on, if through Duke Public Home Directory, either works.
+        https://stackoverflow.com/questions/19237235/jquery-button-click-event-not-firing
+  */
+  $(document).on("click", "#nextInstrButton", function(){
+  // $("#nextInstrButton").on('click', function(){
+    iterateInstruction();
+  });
 
-    // code for click startExperiment button
-    $(document).on('click', '#startExpButton', function(){
-      $('.instructions').hide();
-      $('#startExpButton').hide();
-      $('.insertedImage').remove();
-      runTasks();
-    });
+  // code for click startExperiment button
+  $(document).on('click', '#startExpButton', function(){
+    $('.instructions').hide();
+    $('#startExpButton').hide();
+    $('.insertedImage').remove();
+    runTasks();
+  });
 
-    $(document).on('click', '#nextSectionButton', function(){
-      navigateInstructionPath();
-    });
-  };
+  $(document).on('click', '#nextSectionButton', function(){
+    navigateInstructionPath();
+  });
 };
 
 function getNextInstructions(slideNum, expStage){
@@ -126,9 +144,9 @@ function getNextInstructions(slideNum, expStage){
           $( getImageText(instructionImages[6]) ).insertBefore( "#instructions" + slideNum);
           return "In this task, you will see a number (1-9 excluding 5) appear in the middle of the screen.";
         case 2:
-          return "Press 'N' with your right hand index finger if the number is GREATER than 5.";
+          return "Press '" + getLetter(getHand(1),1) + "' with your " + getHand(1) + " hand " + getFinger(getHand(1),1) + " finger if the number is " + getTaskInstruction(getHand(1),1) + ".";
         case 3:
-          return "Press 'M' with your right hand middle finger if the number is LESS than 5.";
+          return "Press '" + getLetter(getHand(1),2) + "' with your " + getHand(1) + " hand " + getFinger(getHand(1),2) + " finger if the number is " + getTaskInstruction(getHand(1),2) + ".";
       }
     case "prac1-2":
       switch (slideNum){
@@ -137,33 +155,36 @@ function getNextInstructions(slideNum, expStage){
           return "Additionally, there will be 2 numbers on either side of the center number. These numbers will either be the same or different than the target number.";
         case 2:
           return "Do not respond to these numbers. You should only respond with respect to the target number.";
-        case 3:
+      }
+    case "prac1-3":
+      switch (slideNum){
+        case 1:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
           return "It is important that you respond as quickly and as accurately as possible.";
-        case 4:
+        case 2:
           return "Please enlarge this window to your entire screen and sit a comfortable distance from the computer screen. You must get at least " + practiceAccCutoff + "% correct in order to move on to the next practice block.";
-        case 5:
+        case 3:
           iterateAgain = true;
-          $( getImageText(instructionImages[3]) ).insertAfter( "#instructions" + slideNum);
-          return "This block contains 12 trials. Please place your right hand on the 'N' and 'M' keys as shown.";
-        case 6:
+          $( getImageText(instructionImages[getHandImageNum(1)]) ).insertAfter( "#instructions" + slideNum);
+          return "This block contains 12 trials. Please place your " + getHand(1) + " hand on the '" + getLetter(getHand(1),1) + "' and '" + getLetter(getHand(1),2) + "' keys as shown.";
+        case 4:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
           return "Press any button begin."
       }
     case "prac2":
       switch (slideNum){
         case 1:
-          return "In this next block, you will again see a number (1-9 excluding 5), but now you will indicate if the number is ODD or EVEN.";
+          return "In this next block, you will again see a number (1-9 excluding 5) appear in the middle of the screen.";
         case 2:
-          return "Press 'Z' with your left hand middle finger if the number is ODD.";
+          return "Press '" + getLetter(getHand(2),1) + "' with your " + getHand(2) + " hand " + getFinger(getHand(2),1) + " finger if the number is " + getTaskInstruction(getHand(2),1) + ".";
         case 3:
-          return "Press 'X' with your left hand index finger if the number is EVEN.";
+          return "Press '" + getLetter(getHand(1),2) + "' with your " + getHand(2) + " hand " + getFinger(getHand(2),2) + " finger if the number is " + getTaskInstruction(getHand(2),2) + ".";
         case 4:
           return "Remember to only respond to the center number, not the numbers on either side of it, and to respond as quickly and as accurately as possible. You must get at least " + practiceAccCutoff + "% correct in order to move on to the main task.";
         case 5:
           iterateAgain = true;
-          $( getImageText(instructionImages[4]) ).insertAfter( "#instructions" + slideNum);
-          return "This block contains 12 trials. Please place your left hand on the 'Z' and 'X' keys as shown.";
+          $( getImageText(instructionImages[getHandImageNum(2)]) ).insertAfter( "#instructions" + slideNum);
+          return "This block contains 12 trials. Please place your " + getHand(1) + " hand on the 'Z' and 'X' keys as shown.";
         case 6:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
           return "Press any button begin."
@@ -171,27 +192,29 @@ function getNextInstructions(slideNum, expStage){
     case "prac3":
       switch (slideNum){
         case 1:
-          return "In the final practice block, you will again see a number (1-9 excluding 5), but now you will either make a GREATER/LESS THAN or a ODD/EVEN decision, depending on the color of the text.";
-        case 2:
+          return "In the final practice block, you will again see a number (1-9 excluding 5), but now you will either make a GREATER THAN/LESS THAN or a ODD/EVEN decision, depending on the color of the text.";
+        case 2: // which ever was practiced first
           iterateAgain = true;
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          changeTextFormat('#instructions' + slideNum,'color','red');
+          changeTextFormat('#instructions' + slideNum,'color', colorFirstTask());
           changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
           changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
           changeTextFormat('#instructions' + slideNum,'font-size','60px');
           return "33633";
         case 3:
-          return "If the numbers are RED, indicate if the number is GREATER ('N' with right index finger) or LESS ('M' with right middle finger) than 5.";
-        case 4:
+          task = 1;
+          return "If the numbers are " + colorFirstTask() + ", indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
+        case 4: // which ever was practiced second
           iterateAgain = true;
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          changeTextFormat('#instructions' + slideNum,'color','blue');
+          changeTextFormat('#instructions' + slideNum,'color', colorSecondTask());
           changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
           changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
           changeTextFormat('#instructions' + slideNum,'font-size','60px');
           return "88388";
         case 5:
-          return "If the numbers are BLUE, indicate if the number is ODD ('Z' with left middle finger) or EVEN ('X' with left index finger).";
+          task = 2;
+          return "If the numbers are " + colorSecondTask() + ", indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
         case 6:
           return "Remember to only respond to the center number, not the numbers on either side of it, and to respond as quickly and as accurately as possible. You must get at least " + practiceAccCutoff + "% correct in order to move onto the next task.";
         case 7:
@@ -232,24 +255,26 @@ function getNextInstructions(slideNum, expStage){
           case 2:
             iterateAgain = true;
             changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-            changeTextFormat('#instructions' + slideNum,'color','red');
+            changeTextFormat('#instructions' + slideNum,'color', colorFirstTask());
             changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
             changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
             changeTextFormat('#instructions' + slideNum,'font-size','60px');
             return "33633";
           case 3:
-            return "If the number is red, indicate if it is greater or less than 5 using the 'N' and 'M' keys.";
+            task = 1;
+            return "If the numbers are " + colorFirstTask() + ", indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
             break;
           case 4:
             iterateAgain = true;
             changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-            changeTextFormat('#instructions' + slideNum,'color','blue');
+            changeTextFormat('#instructions' + slideNum,'color', colorSecondTask());
             changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
             changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
             changeTextFormat('#instructions' + slideNum,'font-size','60px');
             return "88388";
           case 5:
-            return "If the number is blue, indicate if it is odd or even using the 'Z' and 'X' keys.";
+            task = 2;
+            return "If the numbers are " + colorSecondTask() + ", indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
           case 6:
             return "The experiment will consist of " + numBlocks +" blocks of " + trialsPerBlock + " trials each. You will have a short rest break between each block, and you will receive feedback about your performance during these breaks.";
           case 7:
@@ -259,7 +284,7 @@ function getNextInstructions(slideNum, expStage){
           case 8:
             changeTextFormat('#instructions' + slideNum,'font-weight','bold');
             return "Press any button begin."
-        }
+      }
   }
 };
 
@@ -297,6 +322,7 @@ function displayDefaults(stage){
   // default values of instruction blocks. add any special cases
   switch(stage){
     case "prac1-2":
+    case "prac1-3":
       showFirst();
     case "prac1-1":
       $('.instruction-header').show();
@@ -321,9 +347,17 @@ function changeTextFormat(elementName, property ,changeTo){
 }
 
 function hideInstructions(){
+  // remove any previous click listeners, if any
+  $(document).off("click","#nextInstrButton");
+  $(document).off("click","#startExpButton");
+  $(document).off("click","#nextSectionButton");
+
+  // hide instruction DOMs
   $('.instructions').hide();
   $('#startExpButton').hide();
   $('#nextSectionButton').hide();
+
+  // clear text from instruction DOMs
   for (let i = 1; i <= 8; i++) {
     $('#instructions' + i).text("");
     resetDefaultStyles('#instructions' + i);

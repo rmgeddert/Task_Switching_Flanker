@@ -119,8 +119,8 @@ function createPairSet(tasks){
     // variables defined for readability.
     let stim = stimPair[0];
     let stimCongruency = stimPair[1];
-    let stimMag = stimClassification["m"][stim];
-    let stimPar = stimClassification["p"][stim];
+    let stimMag = expStimDict["m"][stim];
+    let stimPar = expStimDict["p"][stim];
     // add stim to taskStim
     taskStim[stimCongruency][stimMag][stimPar].push(stim);
   })
@@ -154,7 +154,7 @@ function responseOrderIsOk(stimPairArr){
   for (var i = 0; i < stimPairArr.length; i++) {
     stim = stimPairArr[i][0];
     task = stimPairArr[i][1];
-    taskResponse = stimClassification[task][stim];
+    taskResponse = expStimDict[task][stim];
 
     // check responses for repeats
     if (i != 0) {
@@ -216,7 +216,7 @@ function stimOrderIsOk(stimPairArr){
 
   //loop through array and
   for (let i = 0; i < stimPairArr.length; i++){
-    let stimCongruency = stimClassification["congruency"][stimPairArr[i][0]];
+    let stimCongruency = expStimDict["congruency"][stimPairArr[i][0]];
     if (i==0){
       prevItem = stimCongruency;
       continue;
@@ -270,16 +270,61 @@ function getTaskSet(arr){
 function createActionArray(){
   let actionArr = [];
   let responseMappings = {
-    odd : 122,
-    even : 120,
-    larger : 110,
-    smaller : 109
+    // see taskMapping in main.js
+    1: {
+      odd : 122,
+      even : 120,
+      larger : 110,
+      smaller : 109
+    },
+    2: {
+      odd : 122,
+      even : 120,
+      larger : 109,
+      smaller : 110
+    },
+    3: {
+      odd : 120,
+      even : 122,
+      larger : 110,
+      smaller : 109
+    },
+    4: {
+      odd : 120,
+      even : 122,
+      larger : 109,
+      smaller : 110
+    },
+    5: {
+      odd : 110,
+      even : 109,
+      larger : 120,
+      smaller : 122
+    },
+    6: {
+      odd : 109,
+      even : 110,
+      larger : 120,
+      smaller : 122
+    },
+    7: {
+      odd : 110,
+      even : 109,
+      larger : 122,
+      smaller : 120
+    },
+    8: {
+      odd : 109,
+      even : 110,
+      larger : 122,
+      smaller : 120
+    }
   };
 
   // for each stimulus and associated task, identify required action for correct response
   taskStimuliSet.forEach(function(taskStim, index){
     let task = cuedTaskSet[index]
-    actionArr.push(responseMappings[ stimClassification[task][taskStim] ]);
+    actionArr.push(responseMappings[taskMapping][ expStimDict[task][taskStim] ]);
   })
   return actionArr;
 }

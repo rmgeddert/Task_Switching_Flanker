@@ -5,58 +5,85 @@ function runTasks(){
   hideInstructions();
   canvas.style.display = "block";
 
-  if (expStage.indexOf("prac1") !== -1){
+  if (expStage.indexOf("prac1") != -1){
 
-    trialCount = 0; accCount = 0;
+    // reset values, only if this is first practice iteration
+    if (repeatNecessary != true){
+      trialCount = 0; accCount = 0, block = 1;
 
-    // create arrays for this practice block
-    taskStimuliPairs = createStimuliAndTaskSets(12, "m");
-    taskStimuliSet = getStimSet(taskStimuliPairs);
-    cuedTaskSet = getTaskSet(taskStimuliPairs);
-    actionSet = createActionArray();
+      // create new arrays for this practice block
+      createTaskArrays(12, getFirstPracticeTask());
+
+    } else {
+
+      //add to old task arrays
+      addToTaskArrays(12, getFirstPracticeTask());
+    }
 
     // start countdown into practice blockm
     countDown(3);
 
-  } else if (expStage.indexOf("prac2") !== -1){
+  } else if (expStage.indexOf("prac2") != -1){
 
-    trialCount = 0; accCount = 0;
+    // reset values, only if this is first practice iteration
+    if (repeatNecessary != true){
+      trialCount = 0; accCount = 0, block = 1;
 
-    // create arrays for this practice block
-    taskStimuliPairs = createStimuliAndTaskSets(12, "p");
-    taskStimuliSet = getStimSet(taskStimuliPairs);
-    cuedTaskSet = getTaskSet(taskStimuliPairs);
-    actionSet = createActionArray(taskStimuliSet, cuedTaskSet);
+      // create new arrays for this practice block
+      createTaskArrays(12, getSecondPracticeTask());
+    } else {
 
-    // start countdown into practice block
-    countDown(3);
-
-  } else if (expStage.indexOf("prac3") !== -1) {
-
-    trialCount = 0; accCount = 0;
-
-    // create arrays for this practice block
-    taskStimuliPairs = createStimuliAndTaskSets();
-    taskStimuliSet = getStimSet(taskStimuliPairs);
-    cuedTaskSet = getTaskSet(taskStimuliPairs);
-    actionSet = createActionArray(taskStimuliSet, cuedTaskSet);
+      //add to old task arrays
+      addToTaskArrays(12, getSecondPracticeTask());
+    }
 
     // start countdown into practice block
     countDown(3);
 
-  } else if (expStage.indexOf("main") !== -1) {
+  } else if (expStage.indexOf("prac3") != -1) {
 
-    trialCount = 0; accCount = 0;
+    // reset values, only if this is first practice iteration
+    if (repeatNecessary != true){
+      trialCount = 0; accCount = 0, block = 1;
 
-    // code for main experiments here
-    taskStimuliPairs = createStimuliAndTaskSets(numBlocks * trialsPerBlock);
-    taskStimuliSet = getStimSet(taskStimuliPairs);
-    cuedTaskSet = getTaskSet(taskStimuliPairs);
-    actionSet = createActionArray();
+      // create new arrays for this practice block
+      createTaskArrays(24);
+    } else {
+
+      //add to old task arrays
+      addToTaskArrays(24);
+    }
+
+    // start countdown into practice block
+    countDown(3);
+
+  } else if (expStage.indexOf("main") != -1) {
+
+    // reset values, only if this is first practice iteration
+    if (repeatNecessary != true){
+      trialCount = 0; accCount = 0, block = 1;
+    }
+
+    // create task arrays
+    createTaskArrays(numBlocks * trialsPerBlock);
 
     // start countdown into main task
     countDown(3);
   }
+}
+
+function createTaskArrays(numTrials, taskSpecification = ""){
+  taskStimuliPairs = createStimuliAndTaskSets(numTrials, taskSpecification);
+  taskStimuliSet = getStimSet(taskStimuliPairs);
+  cuedTaskSet = getTaskSet(taskStimuliPairs);
+  actionSet = createActionArray();
+}
+
+function addToTaskArrays(numTrials, taskSpecification = ""){
+  taskStimuliPairs = taskStimuliPairs.concat( createStimuliAndTaskSets(numTrials, taskSpecification));
+  taskStimuliSet = getStimSet(taskStimuliPairs);
+  cuedTaskSet = getTaskSet(taskStimuliPairs);
+  actionSet = createActionArray();
 }
 
 function countDown(seconds){
@@ -67,7 +94,7 @@ function countDown(seconds){
     ctx.fillText(seconds,canvas.width/2,canvas.height/2)
     setTimeout(function(){countDown(seconds - 1)},1000);
   } else {
-    if (expStage.indexOf("main") !== -1){
+    if (expStage.indexOf("main") != -1){
       trialFunc = runTrial;
     } else {
       trialFunc = runPracticeTrial;
@@ -103,7 +130,6 @@ function runTrial(){
 
     } else {
 
-      console.log(block + "." + trialCount + "." + blockType);
       breakOn = false;
       if (expType == 3){
         expType = 4;
@@ -137,6 +163,7 @@ function practiceAccuracyFeedback(accuracy){
     ctx.fillText("to the instructions and try again.",canvas.width/2,canvas.height/2 + 110);
 
     // prep key press/instruction logic
+    block++;
     repeatNecessary = true;
 
   } else {
@@ -170,10 +197,10 @@ function stimScreen(){
     promptLetGo();
 
   } else {
-    stimOnset = new Date().getTime();
+    stimOnset = new Date().getTime() - runStart;
 
     // prepare canvas for stimulus
-    ctx.fillStyle = (cuedTaskSet[trialCount] == "m") ? "red" : "blue";
+    ctx.fillStyle = (cuedTaskSet[trialCount] == "m") ? magColor() : parColor();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     //await trial response
@@ -196,7 +223,15 @@ function itiScreen(){
     expType = 3;
   }
 
-  console.log(acc, respTime, stimOnset, respOnset,cuedTaskSet[trialCount]);
+  // -- store data in logger -- //
+
+  // temp variables for readability
+  let stim = taskStimuliSet[trialCount];
+
+  // log data
+  data.push([expStage, block, trialCount, acc, respTime,
+    stim, expStimDict["target"][stim], expStimDict["distractor"][stim],
+    expStimDict["congruency"][stim], partResp, actionSet[trialCount], stimOnset, respOnset ]);
 
   // prepare ITI canvas
   ctx.fillStyle = accFeedbackColor();
@@ -205,8 +240,8 @@ function itiScreen(){
   // display response feedback (correct/incorrect)
   ctx.fillText(accFeedback(),canvas.width/2,canvas.height/2);
 
-  // trial iteration finished. iterate trialCount (unless finished)
-  if (trialCount < taskStimuliSet.length) {trialCount++;}
+  // trial iteration finished. iterate trialCount
+  trialCount++;
 
   // proceed to next trial or to next section
   setTimeout(trialFunc, ITIInterval());
