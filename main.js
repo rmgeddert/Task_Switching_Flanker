@@ -5,7 +5,7 @@
 let stimInterval = 20, fixInterval = 5; //2000, 500 ms
 let numBlocks = 8, trialsPerBlock = 48; // (multiples of 24) (48 usually)
 let miniBlockLength = 0; //when little breaks appear (doesn't need to be multiple of 24). 0 to turn offm
-let practiceAccCutoff = 75; // 75 acc%
+let practiceAccCutoff = 0; // 75 acc%
 let taskAccCutoff = 75; // 75 acc%
 let skipPractice = false; // <- turn practice blocks on or off
 function ITIInterval(){
@@ -44,14 +44,14 @@ let pracOrder = randIntFromInterval(1,2);
   // case 1: practice magnitude first
   // case 2: practice parity first
 let taskMapping = randIntFromInterval(1,8);
-  // case 1: LH [par_odd, par_even]  -  RH [mag_upper, mag_lower]
-  // case 2: LH [par_odd, par_even]  -  RH [mag_lower, mag_upper]
-  // case 3: LH [par_even, par_odd]  -  RH [mag_upper, mag_lower]
-  // case 4: LH [par_even, par_odd]  -  RH [mag_lower, mag_upper]
-  // case 5: LH [mag_lower, mag_upper]  -  RH [par_odd, par_even]
-  // case 6: LH [mag_lower, mag_upper]  -  RH [par_even, par_odd]
-  // case 7: LH [mag_upper, mag_lower]  -  RH [par_odd, par_even]
-  // case 8: LH [mag_upper, mag_lower]  -  RH [par_even, par_odd]
+  // case 1: LH [par_odd, par_even]  -  RH [mag_higher, mag_lower]
+  // case 2: LH [par_odd, par_even]  -  RH [mag_lower, mag_higher]
+  // case 3: LH [par_even, par_odd]  -  RH [mag_higher, mag_lower]
+  // case 4: LH [par_even, par_odd]  -  RH [mag_lower, mag_higher]
+  // case 5: LH [mag_lower, mag_higher]  -  RH [par_odd, par_even]
+  // case 6: LH [mag_lower, mag_higher]  -  RH [par_even, par_odd]
+  // case 7: LH [mag_higher, mag_lower]  -  RH [par_odd, par_even]
+  // case 8: LH [mag_higher, mag_lower]  -  RH [par_even, par_odd]
 let colorMapping = randIntFromInterval(1,2);
   // case 1: magnitude = Red, parity = Blue
   // case 2: magnitude = Blue, parity = Red
