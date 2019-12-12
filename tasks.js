@@ -1,5 +1,6 @@
 let trialFunc;
 function runTasks(){
+  sectionType = "task";
 
   //clear any instructions and show canvas
   hideInstructions();
@@ -42,7 +43,7 @@ function runTasks(){
 
   } else if (expStage.indexOf("prac3") != -1) {
 
-    // reset values, only if this is first practice iteration
+    // reset valusectionTypes, only if this is first practice iteration
     if (repeatNecessary != true){
       trialCount = 0; accCount = 0, block = 1;
 
@@ -60,9 +61,7 @@ function runTasks(){
   } else if (expStage.indexOf("main") != -1) {
 
     // reset values, only if this is first practice iteration
-    if (repeatNecessary != true){
-      trialCount = 0; accCount = 0, block = 1;
-    }
+    trialCount = 0; accCount = 0, block = 1;
 
     // create task arrays
     createTaskArrays(numBlocks * trialsPerBlock);
@@ -94,11 +93,7 @@ function countDown(seconds){
     ctx.fillText(seconds,canvas.width/2,canvas.height/2)
     setTimeout(function(){countDown(seconds - 1)},1000);
   } else {
-    if (expStage.indexOf("main") != -1){
-      trialFunc = runTrial;
-    } else {
-      trialFunc = runPracticeTrial;
-    }
+    trialFunc = (expStage.indexOf("main") != -1) ? runTrial : runPracticeTrial;
     trialFunc();
   }
 }
@@ -147,6 +142,9 @@ function runTrial(){
 }
 
 function practiceAccuracyFeedback(accuracy){
+  sectionStart = new Date().getTime() - runStart;
+  sectionType = "pracFeedback";
+
   // prepare canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
@@ -203,35 +201,32 @@ function stimScreen(){
     ctx.fillStyle = (cuedTaskSet[trialCount] == "m") ? magColor() : parColor();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    //await trial response
-    expType = 1; acc = 99;
+    //reset all response variables and await response
+    expType = 1; acc = 99, respTime = 99, partResp = 99, respOnset = 99;
 
     // display stimulus
     ctx.fillText(taskStimuliSet[trialCount],canvas.width/2,canvas.height/2);
 
     // proceed to ITI screen
     stimTimeout = setTimeout(itiScreen,stimInterval);
-
   }
 }
 
 function itiScreen(){
   if (expType == 1) { // participant didn't respond
     expType = 0;
-    respTime = null;
   } else if (expType == 2) { //participant still holding down response key
     expType = 3;
   }
-
-  // -- store data in logger -- //
 
   // temp variables for readability
   let stim = taskStimuliSet[trialCount];
 
   // log data
-  data.push([expStage, block, trialCount, acc, respTime,
+  data.push([expStage, sectionType, block, blockType, trialCount, acc, respTime,
     stim, expStimDict["target"][stim], expStimDict["distractor"][stim],
-    expStimDict["congruency"][stim], partResp, actionSet[trialCount], stimOnset, respOnset ]);
+    expStimDict["congruency"][stim], cuedTaskSet[trialCount], partResp, actionSet[trialCount], stimOnset, respOnset, 99, 99, 99]);
+  console.log(data);
 
   // prepare ITI canvas
   ctx.fillStyle = accFeedbackColor();
@@ -248,6 +243,8 @@ function itiScreen(){
 }
 
 function miniBlockScreen(){
+  sectionType = "miniblock";
+  sectionStart = new Date().getTime() - runStart;
   expType = 7;
 
   // prep canvas
@@ -263,7 +260,9 @@ function miniBlockScreen(){
   ctx.fillText("Remember, you need >80% accuracy to be paid.",canvas.width/2,canvas.height/2 + 50);
 }
 
-function blockFeedback(){
+function bigBlockScreen(){
+  sectionType = "bigBlock";
+  sectionStart = new Date().getTime() - runStart;
   expType = 7;
   // prep canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -310,4 +309,34 @@ function promptLetGo(){
   // show warning
   ctx.fillText("Please release key",canvas.width/2,canvas.height/2);
   ctx.fillText("immediately after responding.",canvas.width/2,canvas.height/2 + 30);
+}
+
+function promptCapsLock(){
+  //prepare canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "black";
+  ctx.font = "30px Arial";
+
+  // show warning
+  ctx.fillText("Caps lock appears to be on.",canvas.width/2,canvas.height/2);
+  ctx.fillText("Turn off caps lock, then.",canvas.width/2,canvas.height/2 + 40);
+  ctx.fillText("press any button to continue.",canvas.width/2,canvas.height/2 + 80);
+
+  CapsLock.addListener(function(isOn){
+    if (!isOn){
+      callAfterDelay(3,itiScreen);
+    }
+  });
+}
+
+function callAfterDelay(delay, func){
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "black";
+  ctx.font = "bold 60px Arial";
+  if (delay > 0){
+    ctx.fillText(delay,canvas.width/2,canvas.height/2)
+    setTimeout(function(){callAfterDelay(delay - 1, func)},1000);
+  } else {
+    func();
+  }
 }

@@ -189,10 +189,10 @@ function taskOrderIsOk(tasks, stimPairArr){
 
     // check if task switch/repeat and increment
     if (i != 0) {
-      if (stimPairArr[i][1] == prevTask) {
+      if (stimPairArr[i][1] == prevTask) { //trial is repeat
         countTaskSwitches = 0;
         countTaskRepeats++;
-      } else {
+      } else { //trial is switch
         countTaskRepeats = 0;
         countTaskSwitches++;
         overallSwitchCount++;

@@ -11,16 +11,21 @@ let iterators = {
 let blockOrder = (Math.round(Math.random()) == 0) ? blockOrder1 : blockOrder2;
 
 function displayFeedbackScreen(){
-  setBlockType();
+  sectionType = "taskFeedback";
+  sectionStart = new Date().getTime() - runStart;
+
+  // get feedback type
+  getBlockType();
 
   // code for displaying feedback here
   showFeedback(iterators[blockType]);
   iterators[blockType]++;
 
+  // prepare button press
   expType = 7;
 }
 
-function setBlockType(){
+function getBlockType(){
   blockType = blockOrder[blockIterator];
   blockIterator++;
 }

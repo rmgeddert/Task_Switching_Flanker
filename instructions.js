@@ -66,6 +66,8 @@ function navigateInstructionPath(repeat = false){
 
 function runInstructions(){
   // main instruction function (come here at start of instruction block)
+  sectionStart = new Date().getTime() - runStart;
+  sectionType = "instructions";
 
   // hide/clear everything, just in case
   hideInstructions();
@@ -119,10 +121,16 @@ function runInstructions(){
     $('.instructions').hide();
     $('#startExpButton').hide();
     $('.insertedImage').remove();
+    sectionEnd = new Date().getTime() - runStart;
+    data.push([expStage, sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+    console.log(data);
     runTasks();
   });
 
   $(document).on('click', '#nextSectionButton', function(){
+    sectionEnd = new Date().getTime() - runStart;
+    data.push([expStage, sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+    console.log(data);
     navigateInstructionPath();
   });
 };
