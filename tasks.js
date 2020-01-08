@@ -137,7 +137,15 @@ function runTrial(){
 
   } else {
     // end of experiment stuff
-    console.log("Finished Experiment!");
+
+    // upload data to menu.html's DOM elements
+    $("#RTs", opener.window.document).val(data.join(";"));
+
+    // call menu debriefing script
+    opener.updateMainMenu(2);
+
+    // close the experiment window
+    JavaScript:window.close();
   }
 }
 

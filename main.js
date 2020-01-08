@@ -2,7 +2,8 @@
 "use strict";
 
 // for testing
-let speed = "NORMAL" //fast
+let speed = "fast" //fast
+console.log("Update 1 worked");
 
 // ----- Experiment Paramenters (CHANGE ME) ----- //
 let stimInterval = (speed == "fast") ? 20 : 2000 //2000
