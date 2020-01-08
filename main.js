@@ -25,7 +25,7 @@ function ITIInterval(){
 //initialize global task variables
 let stimArray = selectExperimentStimuli(); // establish stimuli set for task
 let expStimDict = defineStimuli(stimArray); // define characteristics of stimuli
-let taskStimuliSet, cuedTaskSet, actionSet; // global vars for task components
+let taskStimuliSet, cuedTaskSet, actionSet; // global vars for task arrays
 let canvas, ctx; // global canvas variable
 let expStage = (skipPractice == true) ? "main1" : "prac1-1";
 // vars for tasks (iterator, accuracy) and reaction times:
@@ -113,7 +113,6 @@ $(document).ready(function(){
         sectionEnd = new Date().getTime() - runStart;
         data.push([expStage, sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
         console.log(data);
-
         // reset expStage and start task
         expType = 0;
         runTasks();
@@ -122,7 +121,6 @@ $(document).ready(function(){
         sectionEnd = new Date().getTime() - runStart;
         data.push([expStage, sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
         console.log(data);
-
         // reset expStage and proceed to next section
         expType = 0;
         navigateInstructionPath(repeatNecessary);

@@ -21,7 +21,7 @@ function runTasks(){
       addToTaskArrays(12, getFirstPracticeTask());
     }
 
-    // start countdown into practice blockm
+    // start countdown into practice block
     countDown(3);
 
   } else if (expStage.indexOf("prac2") != -1){

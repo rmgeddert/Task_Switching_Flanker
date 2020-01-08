@@ -15,7 +15,6 @@
   	function gup(name, tmpURL){
   		let regexS = "[\\?&]"+name+"=([^&#]*)";
   		let results = new RegExp(regexS).exec(tmpURL);
-
   		return (results == null) ? "" : results[1];
   	}
 
@@ -24,11 +23,14 @@
   		curStage = expStage;
 
   		switch(expStage){
-  		  case 0: //consent
+  		  case 0: // demographics
+					// call some function to display consent information
     			break;
   		  case 1: //main task
+					// call some function from main.js
     			break;
   		  case 2: //debriefing
+					//call some function for displaying debrief info
     			break;
   		}
   	}
@@ -38,69 +40,113 @@
       if (agreed){
         updateMainMenu(1);
       } else {
-        //tell participants what to do if they haven't given informed consent.
+        //tell participants what to do if they haven't given consent.
       }
     }
 
+		// prevent duplicate workers from completing task
     let worker_array = ['testing','testing2'];
 
     // checks if workerID exists in workerid array
     function checkWorkerID(workedID){
       workerId = gup('workerId', document.referrer);
-		  if (jQuery.inArray(workerId, worker_array)!=-1) {
+		  if (jQuery.inArray(workerId, worker_array)!=-1 && workerId != "") {
         // if found will return the index in the array
 			  duplicateWorker=1;
 		  } else {
 			  duplicateWorker=0;
       }
 
-  		if (workerId == ""){
-  			duplicateWorker=0;
-  		}
-
       return duplicateWorker;
     }
 
     $(document).ready(function(){
+			// gets MTurk Worker Information and assign to HTML elements
+			document.getElementById('assignmentId').value = gup('assignmentId', document.referrer);
+			document.getElementById('hitId').value = gup('hitId', document.referrer);
+			document.getElementById('workerId').value = gup('workerId', document.referrer);
 
-      //Stops backspace presses (8) and spaces (32);
-	    //from: http://stackoverflow.com/questions/1495219/how-can-i-prevent-the-backspace-key-from-navigating-back
-  	  $(function(){
-        let rx = /INPUT|SELECT|TEXTAREA/i;
-  	$(document).bind("keydown keypress", function(e){
-		if( e.which == 32 ||e.which == 8 )
-		{ // 8 == backspace
-			if(!rx.test(e.target.tagName) || e.target.disabled || e.target.readOnly )
-			{
-  				e.preventDefault();
+			// check worker ID
+			if (document.getElementById("assignmentId").value == "" || document.getElementById("assignmentId").value == "ASSIGNMENT_ID_NOT_AVAILABLE"){
+
+				// "Accept HIT first!"
+
+			} else {
+
+				updateMainMenu(0);
+
+				$("#myButton").click(function(){
+					switch(curStage){
+						case 0:
+							basicPopup("Demographics.html");
+							break;
+						case 1:
+							basicPopup("Instructions.html");
+							break;
+						case 2:
+							basicPopup("Task_Practice.html");
+							break;
+						case 3:
+							basicPopup("Task.html");
+							break;
+					}
+				});
 			}
-  		}
-  	});
-  	});
-    });
 
+			// //removes manually excluded participants, else continues to consent.
+			// if (checkWorkerId(workerId) == 1) {
+			// 	// show text to participants that have already compeleted the task
+			// } else {
+			// 	updateMainMenu(0); // need this, otherwise it's a blank screen
+			// }
+
+			// //http://stackoverflow.com/questions/8595909/how-to-completley-disable-any-mouse-click
+	   //  //disable right click
+	   //  $(document).bind('contextmenu', function(e) {
+	   //      e.stopPropagation();
+	   //      e.preventDefault();
+	   //      e.stopImmediatePropagation();
+	   //      return false;
+	   // });
+
+      // //Stops backspace presses (8) and spaces (32);
+	    // //http://stackoverflow.com/questions/1495219/how-can-i-prevent-the-backspace-key-from-navigating-back
+  	  // $(function(){
+      //   let rx = /INPUT|SELECT|TEXTAREA/i;
+  		// 	$(document).bind("keydown keypress", function(e){
+			// 		if( e.which == 32 ||e.which == 8 ){ // 8 == backspace
+			// 			if(!rx.test(e.target.tagName) || e.target.disabled || e.target.readOnly ){
+  		// 				e.preventDefault();
+			// 			}
+			// 		}
+			// 	});
+			// });
+    });
   </script>
+
 </head>
+
 <body>
+	<!-- why are the table, tr, and td elements necessary? Probably could remove all of them... -->
 	<table>
 		<tr>
 			<td>
 				<p id="instruction" style="font-family: arial; font-size: 40px; color: white;">Click the button to fill out demographics</p>
 				<button id="myButton"> Continue </button>
 				<button id="redo"> Redo </button>
-					<form id="mturk_form" method="POST" action="http://152.3.33.14/AMTSubmit/dataHandler.php">
-						<!-- <form id="mturk_form" method="POST" action="https://workersandbox.mturk.com/mturk/externalSubmit"> -->
-						<!-- <form id="mturk_form" method="POST" action="https://wwww.mturk.com/mturk/externalSubmit"> -->
-						<input type="hidden" id="assignmentId" name="assignmentId" value="">
-						<input type="hidden" id="workerId" name="workerId" value="">
-						<input type="hidden" id="hitId" name="hitId" value="">
-						<input type="hidden" id="RTs" name="RTs" value="">
-						<input type="hidden" id="demographics" name="demographics" value="SCSAswitch_2">
-						<input type="hidden" id="ExpName" name="ExpName" value="SCSAswitch_2">
-						<p style="font-family: Arial; color: white; font-size:24px">Click button to submit</p>
-						<p style="font-family: Arial; color: white; font-size:12px">“Thank you for participating in this study! Feel free to contact me at any time at email@duke.edu or tobias.egner@duke.edu. Again, thanks so much for your participation!”</p>
-						<input id="submitButton" type="submit" name="Finish" value="Submit">
-					</form>
+				<form id="mturk_form" method="POST" action="http://152.3.33.14/AMTSubmit/dataHandler.php">
+					<!-- <form id="mturk_form" method="POST" action="https://workersandbox.mturk.com/mturk/externalSubmit"> -->
+					<!-- <form id="mturk_form" method="POST" action="https://wwww.mturk.com/mturk/externalSubmit"> -->
+					<input type="hidden" id="assignmentId" name="assignmentId" value="">
+					<input type="hidden" id="workerId" name="workerId" value="">
+					<input type="hidden" id="hitId" name="hitId" value="">
+					<input type="hidden" id="RTs" name="RTs" value="">
+					<input type="hidden" id="demographics" name="demographics" value="SCSAswitch_2">
+					<input type="hidden" id="ExpName" name="ExpName" value="SCSAswitch_2">
+					<p style="font-family: Arial; color: white; font-size:24px">Click button to submit</p>
+					<p style="font-family: Arial; color: white; font-size:12px">“Thank you for participating in this study! Feel free to contact me at any time at email@duke.edu or tobias.egner@duke.edu. Again, thanks so much for your participation!”</p>
+					<input id="submitButton" type="submit" name="Finish" value="Submit">
+				</form>
 			</td>
 		</tr>
 	</table>

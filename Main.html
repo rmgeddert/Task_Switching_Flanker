@@ -11,7 +11,7 @@
     <script src ="blockOrder.js"></script>
     <script src ="counterbalancing.js"></script>
     <script src ="CapsLock.js"></script>
-    <title>MTurk Task</title>
+    <title>Parity Magnitude Task</title>
   </head>
 
   <body>
@@ -43,18 +43,5 @@
 
     <!--canvas element for displaying stimuli during the task and practice -->
     <canvas id="myCanvas" width="900" height="900"></canvas>
-
-    <!-- hidden html elements for uploading things to turk/getting turk data -->
-    <form id="mturk_form" method="POST" action="http://152.3.33.14/AMTSubmit/dataHandler.php">
-      <!-- <form id="mturk_form" method="POST" action="https://workersandbox.mturk.com/mturk/externalSubmit"> -->
-      <!-- <form id="mturk_form" method="POST" action="https://wwww.mturk.com/mturk/externalSubmit"> -->
-      <!-- <form id="mturk_form" method="POST" action="http://152.3.33.14/AMTSubmit/dataHandler.php"> -->
-      <input type="hidden" id="assignmentId" name="assignmentId" value="">
-      <input type="hidden" id="workerId" name="workerId" value="">
-      <input type="hidden" id="hitId" name="hitId" value="">
-      <input type="hidden" id="RTs" name="RTs" value="">
-      <input type="hidden" id="demographics" name="demographics" value="Task_Switching_Flanker">
-      <input type="hidden" id="ExpName" name="ExpName" value="Task_Switching_Flanker">
-    </form>
   </body>
 </html>
