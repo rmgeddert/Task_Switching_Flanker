@@ -36,19 +36,17 @@ function showFeedback(iterator){
   // prep canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
-  ctx.font = "25px Arial";
+  ctx.font = "22px Arial";
 
   // draw on canvas and add text
-  ctx.drawImage(img,canvas.width/2 - img.width/2,210);
-  ctx.fillText("Block Finished.",canvas.width/2,40);
-  ctx.fillText("Your overall accuracy so far is " + Math.round((accCount/trialCount)*100) + "%.",canvas.width/2,90);
+  ctx.drawImage(img,canvas.width/2 - img.width/2,100);
+  ctx.fillText("Block " + block + "/" + numBlocks +" Finished.",canvas.width/2,30);
+  ctx.fillText("Your overall accuracy so far is " + Math.round((accCount/trialCount)*100) + "%.",canvas.width/2,55);
+  ctx.fillText("Remember, you need > " + taskAccCutoff+ "% accuracy to be paid.",canvas.width/2,80);
 
-  ctx.font = "italic bold 22px Arial";
-  ctx.fillText("Remember, you need > " + taskAccCutoff+ "% accuracy to be paid.",canvas.width/2,140);
-
-  ctx.font = "bold 25px Arial";
-  ctx.fillText("Task Performance:",canvas.width/2,220);
-  ctx.fillText("Press any button to continue.",canvas.width/2,canvas.height/2 + 300);
+  ctx.font = "bold 22px Arial";
+  ctx.fillText("Task Performance:",canvas.width/2,120);
+  ctx.fillText("Press any button to continue.",canvas.width/2,canvas.height/2 + 290);
 }
 
 // // prep canvas

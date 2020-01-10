@@ -77,20 +77,8 @@ $(document).ready(function(){
 
   } else {
 
-    // update menu to first value
-    updateMainMenu(0);
+    prepareMenu(); //separate function to allow for manual running outside MTurk
 
-    // create button press code for switching between sections
-    $("#myButton").click(function(){
-      switch(curStage){
-        case 0:
-          basicPopup("demographics.html");
-          break;
-        case 1:
-          basicPopup("main.html");
-          break;
-      }
-    });
   }
 
   // //removes manually excluded participants, else continues to consent.
@@ -122,3 +110,20 @@ $(document).ready(function(){
   // 	});
   // });
 });
+
+function prepareMenu(){
+  // update menu to first value
+  updateMainMenu(0);
+
+  // create button press code for switching between sections
+  $("#myButton").click(function(){
+    switch(curStage){
+      case 0:
+        basicPopup("demographics.html");
+        break;
+      case 1:
+        basicPopup("main.html");
+        break;
+    }
+  });
+}

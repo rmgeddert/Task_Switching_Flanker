@@ -1,4 +1,9 @@
+// some tasks.js specific variables
 let trialFunc;
+let screenSizePromptCount = 0, numScreenSizeWarnings = 2;
+let capsLockPrompted = false;
+
+// main task preparation function
 function runTasks(){
   sectionType = "task";
 
@@ -60,11 +65,14 @@ function runTasks(){
 
   } else if (expStage.indexOf("main") != -1) {
 
-    // reset values, only if this is first practice iteration
+    // reset values
     trialCount = 0; accCount = 0, block = 1;
 
     // create task arrays
     createTaskArrays(numBlocks * trialsPerBlock);
+    console.log(cuedTaskSet);
+    switchRepeatList = getSwitchRepeatList(cuedTaskSet); //list of switches and repeats
+    console.log(switchRepeatList);
 
     // start countdown into main task
     countDown(3);
@@ -100,44 +108,61 @@ function countDown(seconds){
 
 function runPracticeTrial(){
   if (trialCount < taskStimuliSet.length){
-    if (expType == 3){
+    if (expType == 3){ //check fi key is being held down
       expType = 4;
       promptLetGo();
     } else {
-      fixationScreen();
+      // check if screen size is big enough
+      if (screenSizeIsOk()){
+        // start next trial cycle
+        fixationScreen();
+      } else {
+        promptScreenSize();
+      }
     }
-  } else {
+  } else { //if practice block is over, go to feedback screen
     practiceAccuracyFeedback( Math.round( accCount / (trialCount) * 100 ) );
   }
 }
 
 function runTrial(){
-  if (trialCount < numBlocks * trialsPerBlock) {
+  if (trialCount < numBlocks * trialsPerBlock) { //if exp isn't over yet
 
     if (trialCount % trialsPerBlock == 0 && !breakOn && trialCount != 0) {
 
+      //if arrived at big block break
       breakOn = true; displayFeedbackScreen();
       block++;
 
     } else if (trialCount % miniBlockLength == 0 && !breakOn && trialCount != 0) {
 
+      //if arrived at miniblock break
       breakOn = true; miniBlockScreen();
 
     } else {
 
       breakOn = false;
-      if (expType == 3){
+      if (expType == 3){ //if key is being held down still
         expType = 4;
         promptLetGo();
       } else {
-        // start trial cycle
-        fixationScreen();
+
+        // check if screen size is big enough
+        if (screenSizeIsOk()){
+
+          // start next trial cycle
+          fixationScreen();
+
+        } else {
+
+          promptScreenSize();
+
+        }
       }
     }
 
   } else {
     // end of experiment stuff
-
     // upload data to menu.html's DOM elements
     $("#RTs", opener.window.document).val(data.join(";"));
 
@@ -160,7 +185,7 @@ function practiceAccuracyFeedback(accuracy){
   expType = 9;
 
   // display feedback
-  if (accuracy < practiceAccCutoff) {
+  if (accuracy < practiceAccCutoff) { //if accuracy is too low
 
     // display feedback text
     ctx.fillText("You got " + accuracy + "% correct in this practice block.",canvas.width/2,canvas.height/2 - 50);
@@ -172,7 +197,7 @@ function practiceAccuracyFeedback(accuracy){
     block++;
     repeatNecessary = true;
 
-  } else {
+  } else { //otherwise proceed to next section
 
     // display feedback text
     ctx.fillText("You got " + accuracy + "% correct in this practice block.",canvas.width/2,canvas.height/2 - 50);
@@ -192,7 +217,7 @@ function fixationScreen(){
   // display fixation
   ctx.fillText("+",canvas.width/2,canvas.height/2);
 
-  // display stimulus
+  // display stimulus after delay interval
   setTimeout(stimScreen, fixInterval);
 }
 
@@ -233,7 +258,8 @@ function itiScreen(){
   // log data
   data.push([expStage, sectionType, block, blockType, trialCount, acc, respTime,
     stim, expStimDict["target"][stim], expStimDict["distractor"][stim],
-    expStimDict["congruency"][stim], cuedTaskSet[trialCount], partResp, actionSet[trialCount], stimOnset, respOnset, 99, 99, 99]);
+    expStimDict["congruency"][stim], cuedTaskSet[trialCount], switchRepeatList[trialCount],
+    partResp, actionSet[trialCount], stimOnset, respOnset, 99, 99, 99]);
   console.log(data);
 
   // prepare ITI canvas
@@ -265,7 +291,7 @@ function miniBlockScreen(){
   ctx.fillText("Your overall accuracy so far is " + Math.round((accCount/trialCount)*100) + "%.",canvas.width/2,canvas.height/2);
   ctx.fillText("Press any button to continue.",canvas.width/2,canvas.height/2 + 100);
   ctx.font = "italic bold 22px Arial";
-  ctx.fillText("Remember, you need >80% accuracy to be paid.",canvas.width/2,canvas.height/2 + 50);
+  ctx.fillText("Remember, you need >" + taskAccCutoff + "% accuracy to be paid.",canvas.width/2,canvas.height/2 + 50);
 }
 
 function bigBlockScreen(){
@@ -277,13 +303,12 @@ function bigBlockScreen(){
   ctx.fillStyle = "black";
   ctx.font = "30px Arial";
 
-  // display feedback
-  // display miniblock text
+  // display big  block text
   ctx.fillText("You are "+ Math.round((trialCount / (trialsPerBlock * numBlocks) ) * 100)+"% through this experiment.",canvas.width/2,canvas.height/2 - 50);
   ctx.fillText("Your overall accuracy so far is " + Math.round((accCount / trialCount) * 100) + "%.",canvas.width/2,canvas.height/2);
   ctx.fillText("Press any button to continue.",canvas.width/2,canvas.height/2 + 100);
   ctx.font = "italic bold 22px Arial";
-  ctx.fillText("Remember, you need >80% accuracy to be paid.",canvas.width/2,canvas.height/2 + 50);
+  ctx.fillText("Remember, you need >" + taskAccCutoff + "% accuracy to be paid.",canvas.width/2,canvas.height/2 + 50);
 }
 
 // functions for determining ITI feedback depending on accuracy
@@ -330,14 +355,20 @@ function promptCapsLock(){
   ctx.fillText("Turn off caps lock, then.",canvas.width/2,canvas.height/2 + 40);
   ctx.fillText("press any button to continue.",canvas.width/2,canvas.height/2 + 80);
 
-  CapsLock.addListener(function(isOn){
-    if (!isOn){
-      callAfterDelay(3,itiScreen);
-    }
-  });
+  if (capsLockPrompted == false){
+    capsLockPrompted = true;
+
+    // check for button response where capslock is off
+    CapsLock.addListener(function(isOn){
+      if (!isOn){
+        callAfterDelay(3,itiScreen);
+      }
+    });
+  }
 }
 
 function callAfterDelay(delay, func){
+  // generic function for calling a function func after a given time period delay
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
   ctx.font = "bold 60px Arial";
@@ -346,5 +377,44 @@ function callAfterDelay(delay, func){
     setTimeout(function(){callAfterDelay(delay - 1, func)},1000);
   } else {
     func();
+  }
+}
+
+function screenSizeIsOk(){
+  let w = window.innerWidth;
+  let h = window.innerHeight;
+  return (w >= 800 && h >= 600); // 800 by 600 is the lowest resolution on my laptop; seems like a good "minimum" (basically need 500 x 500 at least)
+};
+
+function promptScreenSize(){
+  // set key press experiment type
+  expType = 10;
+
+  // prepare canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "black";
+  ctx.font = "25px Arial";
+
+  if (screenSizePromptCount < numScreenSizeWarnings) {
+    screenSizePromptCount++;
+
+    // display screen size prompt
+    ctx.font = "25px Arial";
+    ctx.fillText("Your screen is not full screen or the",myCanvas.width/2,myCanvas.height/2);
+    ctx.fillText("screen size on your device is too small.",myCanvas.width/2,(myCanvas.height/2) + 40);
+    ctx.fillText("If this issue persists, you will need",myCanvas.width/2,(myCanvas.height/2)+160);
+    ctx.fillText("to restart the experiment and will ",myCanvas.width/2,(myCanvas.height/2)+200);
+    ctx.fillText("not be paid for your previous time.",myCanvas.width/2,(myCanvas.height/2)+240);
+    ctx.font = "bold 25px Arial";
+    ctx.fillText("Please correct this and press any button to continue.",myCanvas.width/2,(myCanvas.height/2)+100);
+
+  } else {
+
+    // display screen size prompt
+    ctx.fillText("Your screen is not full screen",myCanvas.width/2,myCanvas.height/2);
+    ctx.fillText("or the screen size on your device is too small.",myCanvas.width/2,(myCanvas.height/2)+50);
+    ctx.font = "bold 25px Arial";
+    ctx.fillText("Please refresh the page to restart the experiment.",myCanvas.width/2,(myCanvas.height/2)+100);
+
   }
 }

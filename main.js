@@ -2,14 +2,13 @@
 "use strict";
 
 // for testing
-let speed = "fast" //fast
-console.log("Update 1 worked");
+let speed = "fast"; //fast
 
 // ----- Experiment Paramenters (CHANGE ME) ----- //
 let stimInterval = (speed == "fast") ? 20 : 2000 //2000
 let fixInterval = (speed == "fast") ? 20 : 500; //500 ms
 let numBlocks = 8, trialsPerBlock = 48; // (multiples of 24) (48 usually)
-let miniBlockLength = 0; //when little breaks appear (doesn't need to be multiple of 24). 0 to turn offm
+let miniBlockLength = 0; //when little breaks appear (doesn't need to be multiple of 24). 0 to turn off
 let practiceAccCutoff = 0; // 75 acc%
 let taskAccCutoff = 75; // 75 acc%
 let skipPractice = false; // <- turn practice blocks on or off
@@ -26,7 +25,7 @@ function ITIInterval(){
 //initialize global task variables
 let stimArray = selectExperimentStimuli(); // establish stimuli set for task
 let expStimDict = defineStimuli(stimArray); // define characteristics of stimuli
-let taskStimuliSet, cuedTaskSet, actionSet; // global vars for task arrays
+let taskStimuliSet, cuedTaskSet, actionSet, switchRepeatList; // global vars for task arrays
 let canvas, ctx; // global canvas variable
 let expStage = (skipPractice == true) ? "main1" : "prac1-1";
 // vars for tasks (iterator, accuracy) and reaction times:
@@ -45,6 +44,7 @@ let expType = 0; // see comments below
       7: mini block screen/feedback. Awaiting key press to continue, keyup resets to 0 and goes to next trial.
       8: instruction start task "press to continue"
       9: proceed to next instruction "press to continue"
+      10: Screen Size too small, "press any button to continue"
 */
 let pracOrder = randIntFromInterval(1,2);
   // case 1: practice magnitude first
@@ -99,20 +99,20 @@ $(document).ready(function(){
         }
       } else if (expType == 3 || expType == 5) {
         expType = 0;
-      } else if (expType == 4 || expType == 6 ) {
+      } else if (expType == 4 || expType == 6 || expType == 10) {
         expType = 0;
         countDown(3);
       } else if (expType == 7) {
         // 7: feedback - press button to start next block
         sectionEnd = new Date().getTime() - runStart;
-        data.push(["Feedback", sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+        data.push(["Feedback", sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
         console.log(data);
         expType = 0;
         countDown(3);
       } else if (expType == 8) { // 8: "press button to start task"
         // log how much time was spent in this section
         sectionEnd = new Date().getTime() - runStart;
-        data.push([expStage, sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+        data.push([expStage, sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
         console.log(data);
         // reset expStage and start task
         expType = 0;
@@ -120,7 +120,7 @@ $(document).ready(function(){
       } else if (expType == 9) { // 9: "press button to start next section"
         // log how much time was spent in this section
         sectionEnd = new Date().getTime() - runStart;
-        data.push([expStage, sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+        data.push([expStage, sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
         console.log(data);
         // reset expStage and proceed to next section
         expType = 0;
