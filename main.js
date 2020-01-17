@@ -2,14 +2,14 @@
 "use strict";
 
 // for testing
-let speed = "fast"; //fast
+let speed = "normal"; //fast
 
 // ----- Experiment Paramenters (CHANGE ME) ----- //
-let stimInterval = (speed == "fast") ? 20 : 2000 //2000
+let stimInterval = (speed == "fast") ? 20 : 2000; //2000
 let fixInterval = (speed == "fast") ? 20 : 500; //500 ms
 let numBlocks = 8, trialsPerBlock = 48; // (multiples of 24) (48 usually)
 let miniBlockLength = 0; //when little breaks appear (doesn't need to be multiple of 24). 0 to turn off
-let practiceAccCutoff = 0; // 75 acc%
+let practiceAccCutoff = 75; // 75 acc%
 let taskAccCutoff = 75; // 75 acc%
 let skipPractice = false; // <- turn practice blocks on or off
 function ITIInterval(){
@@ -105,7 +105,7 @@ $(document).ready(function(){
       } else if (expType == 7) {
         // 7: feedback - press button to start next block
         sectionEnd = new Date().getTime() - runStart;
-        data.push(["Feedback", sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+        data.push(["feedback", sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
         console.log(data);
         expType = 0;
         countDown(3);

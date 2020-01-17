@@ -36,16 +36,22 @@ function showFeedback(iterator){
   // prep canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
-  ctx.font = "22px Arial";
+  ctx.font = "20px Arial";
 
-  // draw on canvas and add text
-  ctx.drawImage(img,canvas.width/2 - img.width/2,100);
-  ctx.fillText("Block " + block + "/" + numBlocks +" Finished.",canvas.width/2,30);
-  ctx.fillText("Your overall accuracy so far is " + Math.round((accCount/trialCount)*100) + "%.",canvas.width/2,55);
-  ctx.fillText("Remember, you need > " + taskAccCutoff+ "% accuracy to be paid.",canvas.width/2,80);
+  // draw feedback image
+  ctx.drawImage(img,canvas.width/2 - img.width/2,90);
 
-  ctx.font = "bold 22px Arial";
-  ctx.fillText("Task Performance:",canvas.width/2,120);
+  // add text
+  ctx.fillText("You finished block " + block + "/" + numBlocks + "!",canvas.width/2,30);
+
+  ctx.font = "bold 18px Arial";
+  ctx.fillText("Below is your performance on the previous block. Your score",canvas.width/2,60);
+  ctx.fillText("is based on both your accuracy and your response speed.",canvas.width/2,80);
+
+  ctx.font = "20px Arial";
+  ctx.fillText("Your accuracy is " + Math.round((accCount/trialCount)*100) + "%. Remember, you need >"+ taskAccCutoff+ "% accuracy to be paid.",canvas.width/2, canvas.height/2 + 245);
+
+  ctx.font = "bold 20px Arial";
   ctx.fillText("Press any button to continue.",canvas.width/2,canvas.height/2 + 290);
 }
 

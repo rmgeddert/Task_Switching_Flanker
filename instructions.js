@@ -8,7 +8,7 @@ let instructions = {
   },
   // contains the max value of each instruction iteration. iteration will STOP at max.
   max: {
-    "prac1-1": 3, "prac1-2": 2, "prac1-3": 4, "prac2": 6, "prac3": 8, "main1": 5, "main2": 3, "main3": 8
+    "prac1-1": 3, "prac1-2": 3, "prac1-3": 4, "prac2": 6, "prac3": 8, "main1": 5, "main2": 3, "main3": 8
   },
   // what does instruction section end with?
   // #nextSectionButton, #startExpButton, buttonPressNextSection, buttonPressStartTask
@@ -160,18 +160,20 @@ function getNextInstructions(slideNum, expStage){
       switch (slideNum){
         case 1:
           $( getImageText(instructionImages[5]) ).insertBefore( "#instructions" + slideNum);
-          return "Additionally, there will be 2 numbers on either side of the center number. These numbers will either be the same or different than the target number.";
+          return "There will be 2 numbers on either side of the center number. These numbers will either be the same or different than the target number.";
         case 2:
           return "Do not respond to these numbers. You should only respond with respect to the target number.";
+        case 3:
+          changeTextFormat('#instructions' + slideNum,'font-weight','bold');
+          return "It is important that you respond as quickly and as accurately as possible.";
       }
     case "prac1-3":
       task = 1;
       switch (slideNum){
         case 1:
-          changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          return "It is important that you respond as quickly and as accurately as possible.";
-        case 2:
           return "Please enlarge this window to your entire screen and sit a comfortable distance from the computer screen. You must get at least " + practiceAccCutoff + "% correct in order to move on to the next practice block.";
+        case 2:
+          return "Remember, press '" + getLetter(getHand(1),1) + "' with your " + getHand(1) + " hand " + getFinger(getHand(1),1) + " finger if the number is " + getTaskInstruction(getHand(1),1) + " and '" + getLetter(getHand(1),2) + "' with your " + getHand(1) + " hand " + getFinger(getHand(1),2) + " finger if the number is " + getTaskInstruction(getHand(1),2) + "."
         case 3:
           iterateAgain = true;
           $( getImageText(instructionImages[getHandImageNum(1)]) ).insertAfter( "#instructions" + slideNum);
@@ -190,7 +192,7 @@ function getNextInstructions(slideNum, expStage){
         case 3:
           return "Press '" + getLetter(getHand(task),2) + "' with your " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger if the number is " + getTaskInstruction( getHand(task),2) + ".";
         case 4:
-          return "Remember to only respond to the center number, not the numbers on either side of it, and to respond as quickly and as accurately as possible. You must get at least " + practiceAccCutoff + "% correct in order to move on to the main task.";
+          return "Remember to only respond to the center number and to respond as quickly and as accurately as possible. You must get at least " + practiceAccCutoff + "% correct in order to move on to the next section.";
         case 5:
           iterateAgain = true;
           $( getImageText(instructionImages[getHandImageNum(2)]) ).insertAfter( "#instructions" + slideNum);
@@ -202,7 +204,7 @@ function getNextInstructions(slideNum, expStage){
     case "prac3":
       switch (slideNum){
         case 1:
-          return "In the final practice block, you will again see a number (1-9 excluding 5), but now you will either make a GREATER THAN/LESS THAN or a ODD/EVEN decision, depending on the color of the text.";
+          return "In the final practice block, you will indicate if the number is greater or less than 5 OR odd or even, depending on the color of the text.";
         case 2: // which ever was practiced first
           iterateAgain = true;
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
@@ -226,11 +228,11 @@ function getNextInstructions(slideNum, expStage){
           task = 2;
           return "If the numbers are " + colorSecondTask() + ", indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
         case 6:
-          return "Remember to only respond to the center number, not the numbers on either side of it, and to respond as quickly and as accurately as possible. You must get at least " + practiceAccCutoff + "% correct in order to move onto the next task.";
+          return "Remember to only respond to the center number and to respond as quickly and as accurately as possible. You must get at least " + practiceAccCutoff + "% correct in order to move on to the main task.";
         case 7:
           iterateAgain = true;
           $( getImageText(instructionImages[2]) ).insertAfter( "#instructions" + slideNum);
-          return "This block contains 24 trials. Please place your right hand on the 'N' and 'M' keys and left hand on the 'Z' and 'X' keys.";
+          return "This block contains 24 trials. Please place your hands on the 'Z' and 'X' keys and 'N' and 'M' keys as shown.";
         case 8:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
           return "Press any button begin."

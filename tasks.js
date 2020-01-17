@@ -5,8 +5,6 @@ let capsLockPrompted = false;
 
 // main task preparation function
 function runTasks(){
-  sectionType = "task";
-
   //clear any instructions and show canvas
   hideInstructions();
   canvas.style.display = "block";
@@ -70,9 +68,6 @@ function runTasks(){
 
     // create task arrays
     createTaskArrays(numBlocks * trialsPerBlock);
-    console.log(cuedTaskSet);
-    switchRepeatList = getSwitchRepeatList(cuedTaskSet); //list of switches and repeats
-    console.log(switchRepeatList);
 
     // start countdown into main task
     countDown(3);
@@ -84,12 +79,14 @@ function createTaskArrays(numTrials, taskSpecification = ""){
   taskStimuliSet = getStimSet(taskStimuliPairs);
   cuedTaskSet = getTaskSet(taskStimuliPairs);
   actionSet = createActionArray();
+  switchRepeatList = getSwitchRepeatList(cuedTaskSet); //list of switches and repeats
 }
 
 function addToTaskArrays(numTrials, taskSpecification = ""){
   taskStimuliPairs = taskStimuliPairs.concat( createStimuliAndTaskSets(numTrials, taskSpecification));
   taskStimuliSet = getStimSet(taskStimuliPairs);
   cuedTaskSet = getTaskSet(taskStimuliPairs);
+  switchRepeatList = getSwitchRepeatList(cuedTaskSet);
   actionSet = createActionArray();
 }
 
@@ -107,6 +104,7 @@ function countDown(seconds){
 }
 
 function runPracticeTrial(){
+  sectionType = "pracTask";
   if (trialCount < taskStimuliSet.length){
     if (expType == 3){ //check fi key is being held down
       expType = 4;
@@ -126,6 +124,7 @@ function runPracticeTrial(){
 }
 
 function runTrial(){
+  sectionType = "mainTask";
   if (trialCount < numBlocks * trialsPerBlock) { //if exp isn't over yet
 
     if (trialCount % trialsPerBlock == 0 && !breakOn && trialCount != 0) {
