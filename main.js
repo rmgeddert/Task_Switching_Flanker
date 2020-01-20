@@ -29,7 +29,7 @@ let taskStimuliSet, cuedTaskSet, actionSet, switchRepeatList; // global vars for
 let canvas, ctx; // global canvas variable
 let expStage = (skipPractice == true) ? "main1" : "prac1-1";
 // vars for tasks (iterator, accuracy) and reaction times:
-let trialCount, acc, accCount, stimOnset, respOnset, respTime, block = 1, partResp, runStart;
+let trialCount, blockTrialCount, acc, accCount, stimOnset, respOnset, respTime, block = 1, partResp, runStart;
 let stimTimeout, breakOn = false, repeatNecessary = false, data=[];
 let sectionStart, sectionEnd, sectionType;
 let expType = 0; // see comments below
@@ -105,14 +105,14 @@ $(document).ready(function(){
       } else if (expType == 7) {
         // 7: feedback - press button to start next block
         sectionEnd = new Date().getTime() - runStart;
-        data.push(["feedback", sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+        data.push(["feedback", sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
         console.log(data);
         expType = 0;
         countDown(3);
       } else if (expType == 8) { // 8: "press button to start task"
         // log how much time was spent in this section
         sectionEnd = new Date().getTime() - runStart;
-        data.push([expStage, sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+        data.push([expStage, sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
         console.log(data);
         // reset expStage and start task
         expType = 0;
@@ -120,7 +120,7 @@ $(document).ready(function(){
       } else if (expType == 9) { // 9: "press button to start next section"
         // log how much time was spent in this section
         sectionEnd = new Date().getTime() - runStart;
-        data.push([expStage, sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+        data.push([expStage, sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
         console.log(data);
         // reset expStage and proceed to next section
         expType = 0;

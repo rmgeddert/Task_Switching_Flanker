@@ -146,11 +146,11 @@ function createPairSet(tasks){
   return stimTaskPairs;
 }
 
-function getSwitchRepeatList(taskArr){
+function getSwitchRepeatList(taskArr, blockTrialLength){
   let switchRepeatArr = [], prevTask;
   for (let i = 0; i < taskArr.length; i++){
     // check if task switch/repeat and increment
-    if ((i % trialsPerBlock != 0) && (i % miniBlockLength != 0)) {
+    if ((i % trialsPerBlock != 0) && (i % miniBlockLength != 0) && (i % blockTrialLength != 0)) {
       //if not first trial of block
       if (taskArr[i] == prevTask) { //trial is repeat
         switchRepeatArr.push("r");
@@ -158,7 +158,7 @@ function getSwitchRepeatList(taskArr){
         switchRepeatArr.push("s");
       }
     } else {
-      //not switch or repeat, classify as "n"
+      //first trial so not switch or repeat, classify as "n"
       switchRepeatArr.push("n");
     }
 

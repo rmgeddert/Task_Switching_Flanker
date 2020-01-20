@@ -9,11 +9,19 @@ function runTasks(){
   hideInstructions();
   canvas.style.display = "block";
 
+  // clear any instruction button press listeners
+  $(document).off("click","#nextInstrButton");
+  $(document).off("click","#startExpButton");
+  $(document).off("click","#nextSectionButton");
+
+  //reset accuracy every time
+  accCount = 0; blockTrialCount = 0;
+
   if (expStage.indexOf("prac1") != -1){
 
     // reset values, only if this is first practice iteration
     if (repeatNecessary != true){
-      trialCount = 0; accCount = 0, block = 1;
+      trialCount = 0; block = 1;
 
       // create new arrays for this practice block
       createTaskArrays(12, getFirstPracticeTask());
@@ -31,7 +39,7 @@ function runTasks(){
 
     // reset values, only if this is first practice iteration
     if (repeatNecessary != true){
-      trialCount = 0; accCount = 0, block = 1;
+      trialCount = 0; block = 1;
 
       // create new arrays for this practice block
       createTaskArrays(12, getSecondPracticeTask());
@@ -48,7 +56,7 @@ function runTasks(){
 
     // reset valusectionTypes, only if this is first practice iteration
     if (repeatNecessary != true){
-      trialCount = 0; accCount = 0, block = 1;
+      trialCount = 0; block = 1;
 
       // create new arrays for this practice block
       createTaskArrays(24);
@@ -64,7 +72,7 @@ function runTasks(){
   } else if (expStage.indexOf("main") != -1) {
 
     // reset values
-    trialCount = 0; accCount = 0, block = 1;
+    trialCount = 0; block = 1;
 
     // create task arrays
     createTaskArrays(numBlocks * trialsPerBlock);
@@ -79,14 +87,14 @@ function createTaskArrays(numTrials, taskSpecification = ""){
   taskStimuliSet = getStimSet(taskStimuliPairs);
   cuedTaskSet = getTaskSet(taskStimuliPairs);
   actionSet = createActionArray();
-  switchRepeatList = getSwitchRepeatList(cuedTaskSet); //list of switches and repeats
+  switchRepeatList = getSwitchRepeatList(cuedTaskSet, numTrials); //list of switches and repeats
 }
 
 function addToTaskArrays(numTrials, taskSpecification = ""){
   taskStimuliPairs = taskStimuliPairs.concat( createStimuliAndTaskSets(numTrials, taskSpecification));
   taskStimuliSet = getStimSet(taskStimuliPairs);
   cuedTaskSet = getTaskSet(taskStimuliPairs);
-  switchRepeatList = getSwitchRepeatList(cuedTaskSet);
+  switchRepeatList = getSwitchRepeatList(cuedTaskSet, numTrials);
   actionSet = createActionArray();
 }
 
@@ -104,6 +112,7 @@ function countDown(seconds){
 }
 
 function runPracticeTrial(){
+  console.log(accCount + "/" + blockTrialCount);
   sectionType = "pracTask";
   if (trialCount < taskStimuliSet.length){
     if (expType == 3){ //check fi key is being held down
@@ -119,7 +128,7 @@ function runPracticeTrial(){
       }
     }
   } else { //if practice block is over, go to feedback screen
-    practiceAccuracyFeedback( Math.round( accCount / (trialCount) * 100 ) );
+    practiceAccuracyFeedback( Math.round( accCount / (blockTrialCount) * 100 ) );
   }
 }
 
@@ -132,6 +141,7 @@ function runTrial(){
       //if arrived at big block break
       breakOn = true; displayFeedbackScreen();
       block++;
+      blockTrialCount = 0;
 
     } else if (trialCount % miniBlockLength == 0 && !breakOn && trialCount != 0) {
 
@@ -255,8 +265,8 @@ function itiScreen(){
   let stim = taskStimuliSet[trialCount];
 
   // log data
-  data.push([expStage, sectionType, block, blockType, trialCount, acc, respTime,
-    stim, expStimDict["target"][stim], expStimDict["distractor"][stim],
+  data.push([expStage, sectionType, block, blockType, trialCount + 1, blockTrialCount + 1,
+    acc, respTime, stim, expStimDict["target"][stim], expStimDict["distractor"][stim],
     expStimDict["congruency"][stim], cuedTaskSet[trialCount], switchRepeatList[trialCount],
     partResp, actionSet[trialCount], stimOnset, respOnset, 99, 99, 99]);
   console.log(data);
@@ -268,8 +278,8 @@ function itiScreen(){
   // display response feedback (correct/incorrect)
   ctx.fillText(accFeedback(),canvas.width/2,canvas.height/2);
 
-  // trial iteration finished. iterate trialCount
-  trialCount++;
+  // trial iteration finished. iterate trial counters
+  trialCount++; blockTrialCount++;
 
   // proceed to next trial or to next section
   setTimeout(trialFunc, ITIInterval());
@@ -351,7 +361,7 @@ function promptCapsLock(){
 
   // show warning
   ctx.fillText("Caps lock appears to be on.",canvas.width/2,canvas.height/2);
-  ctx.fillText("Turn off caps lock, then.",canvas.width/2,canvas.height/2 + 40);
+  ctx.fillText("Turn off caps lock and then",canvas.width/2,canvas.height/2 + 40);
   ctx.fillText("press any button to continue.",canvas.width/2,canvas.height/2 + 80);
 
   if (capsLockPrompted == false){

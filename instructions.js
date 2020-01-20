@@ -78,10 +78,15 @@ function runInstructions(){
   // if need to repeat instructions (e.g., participant failed to meet accuracy requirement), then reshow all instructions
   if (instructions["iterator"][expStage] >= instructions["max"][expStage]){
 
+    // loop through instructions and show
     for (var i = 1; i <= instructions["max"][expStage]; i++) {
       $('#instructions' + i).text( getNextInstructions( i, expStage ));
     }
 
+    // reset iterateAgain incase looping turned it on by accident
+    iterateAgain = false;
+
+    // display instructions and prepare exit response mapping
     $('.instructions').show();
     exitResponse();
 
@@ -121,16 +126,29 @@ function runInstructions(){
     $('.instructions').hide();
     $('#startExpButton').hide();
     $('.insertedImage').remove();
+
+    // log data for time spent on this section
     sectionEnd = new Date().getTime() - runStart;
-    data.push([expStage, sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+    data.push([expStage, sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
     console.log(data);
+
+    // clear all button press listeners
+    $(document).off("click","#nextInstrButton");
+    $(document).off("click","#startExpButton");
+    $(document).off("click","#nextSectionButton");
     runTasks();
   });
 
   $(document).on('click', '#nextSectionButton', function(){
+    // log data for time spent on this section
     sectionEnd = new Date().getTime() - runStart;
-    data.push([expStage, sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+    data.push([expStage, sectionType, block, blockType, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, sectionStart, sectionEnd, sectionEnd - sectionStart]);
     console.log(data);
+
+    // clear all button press listeners
+    $(document).off("click","#nextInstrButton");
+    $(document).off("click","#startExpButton");
+    $(document).off("click","#nextSectionButton");
     navigateInstructionPath();
   });
 };
