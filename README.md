@@ -12,7 +12,7 @@ Notably, several flanker congruency types are ommitted from this initial realiza
 
 `menu.html` calls `menu.js`, the main experiment script which calls the demographics, task, and submission scripts. `main.html` is the main task html file, and recruits a variety of scripts, including `main.js`, `instructions.js`, and `tasks.js`, which together run the task.
 
-To see the main experiment flow, run `menu.html` and then call the script `updateMenu()` using your browsers DevTools console. This will override the initial MTurk script that requires an MTurk ID.
+To see the main experiment flow, run `menu.html` and then call the script `updateMenu()` using your browser's DevTools console. This will override the initial MTurk script that requires an MTurk ID.
 
 To see the main experiment, including instructions, practice, and the main task, run `main.html`.
 
