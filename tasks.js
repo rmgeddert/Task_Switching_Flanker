@@ -70,6 +70,8 @@ function runTasks(){
     countDown(3);
 
   } else if (expStage.indexOf("main") != -1) {
+    // set blockType for first block of real task (see blockFeedback.js)
+    blockType = "N";
 
     // reset values
     trialCount = 0; block = 1;
@@ -243,13 +245,13 @@ function stimScreen(){
     ctx.fillStyle = (cuedTaskSet[trialCount] == "m") ? magColor() : parColor();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    //reset all response variables and await response
-    expType = 1; acc = 99, respTime = 99, partResp = 99, respOnset = 99;
+    //reset all response variables and await response (expType = 1)
+    expType = 1; acc = NaN, respTime = NaN, partResp = NaN, respOnset = NaN;
 
     // display stimulus
     ctx.fillText(taskStimuliSet[trialCount],canvas.width/2,canvas.height/2);
 
-    // proceed to ITI screen
+    // proceed to ITI screen after timeout
     stimTimeout = setTimeout(itiScreen,stimInterval);
   }
 }
@@ -261,27 +263,27 @@ function itiScreen(){
     expType = 3;
   }
 
-  // temp variables for readability
+  // variable for readability below
   let stim = taskStimuliSet[trialCount];
 
   // log data
-  data.push([expStage, sectionType, block, blockType, trialCount + 1, blockTrialCount + 1,
-    acc, respTime, stim, expStimDict["target"][stim], expStimDict["distractor"][stim],
+  data.push(["task", sectionType, block, blockType, trialCount + 1, blockTrialCount + 1,
+    getAccuracy(acc), respTime, stim, expStimDict["target"][stim], expStimDict["distractor"][stim],
     expStimDict["congruency"][stim], cuedTaskSet[trialCount], switchRepeatList[trialCount],
-    partResp, actionSet[trialCount], stimOnset, respOnset, 99, 99, 99]);
+    partResp, actionSet[trialCount], stimOnset, respOnset, NaN, NaN, NaN]);
   console.log(data);
 
   // prepare ITI canvas
   ctx.fillStyle = accFeedbackColor();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // display response feedback (correct/incorrect)
+  // display response feedback (correct/incorrect/too slow)
   ctx.fillText(accFeedback(),canvas.width/2,canvas.height/2);
 
-  // trial iteration finished. iterate trial counters
+  // trial finished. iterate trial counters
   trialCount++; blockTrialCount++;
 
-  // proceed to next trial or to next section
+  // proceed to next trial or to next section after delay
   setTimeout(trialFunc, ITIInterval());
 }
 
@@ -341,7 +343,12 @@ function accFeedbackColor(){
   }
 }
 
-// functions for edge cases (too fast, button mashing, pressing and not letting go)
+function getAccuracy(accValue){
+  //normalizes accuracy values into 0 or 1 (NaN becomes 0)
+  return accValue == 1 ? 1 : 0;
+}
+
+// --- misc functions for edge cases (pressing and not letting go, caps lock, screensize) ---
 function promptLetGo(){
   //prepare canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -404,6 +411,7 @@ function promptScreenSize(){
   ctx.fillStyle = "black";
   ctx.font = "25px Arial";
 
+  // allows up to two warnings before terminating experiment
   if (screenSizePromptCount < numScreenSizeWarnings) {
     screenSizePromptCount++;
 

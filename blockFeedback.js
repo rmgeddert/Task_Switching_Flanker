@@ -1,7 +1,7 @@
 let blockOrder1 = ["F","C","S","C","F","C","S"];
 let blockOrder2 = ["S","C","F","C","S","C","F"];
 let blockIterator = 0;
-let blockType = "N/A";
+let blockType = NaN;
 let iterators = {
   "F" : 0,
   "C" : 0,
