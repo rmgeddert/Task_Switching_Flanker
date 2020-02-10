@@ -1,14 +1,22 @@
 //https://javascript.info/strict-mode
 "use strict";
 
+/* Version Info
+  Task Switching Flanker task with explicit text cues
+  - Customizable task cue texts
+  - customizable cue stimulus interval
+*/
+
 // for testing
 let speed = "normal"; //fast, normal
 
 // ----- Experiment Paramenters (CHANGE ME) ----- //
 let stimInterval = (speed == "fast") ? 20 : 2000; //2000
 let fixInterval = (speed == "fast") ? 20 : 500; //500 ms
-let earlyFlankerInterval = 200; //200; if flanker should precede stimulus onset. 0 ms turns off.
-let numBlocks = 8, trialsPerBlock = 48; // (multiples of 24) (48 usually)
+let cueStimulusInterval = 500;
+let magnitudeCueText = "Magnitude";
+let parityCueText = "Parity";
+let numBlocks = 8, trialsPerBlock = 48; // (multiples of 16) (48 usually)
 let numPracticeTrials = 16;
 let miniBlockLength = 0; //doesn't need to be multiple of 24. 0 to turn off
 let practiceAccCutoff = 75; // 75 acc%

@@ -1,6 +1,4 @@
-# Task Switching Flanker - Version 2.1.0
-
-Update to TSF 2.0 - early flankers.
+# Task Switching Flanker - Version 2.2.0
 
 **Task Description**
 
@@ -10,7 +8,7 @@ Additionally, each number stimulus is flanked by distractor digits, that are eit
 
 # Version changes from previous
 
-Pilot testing of TSF version 2.0.0 revealed a robust switch cost but a very weak congruency/flanker effect. This version adds a 200 ms window **where only the flankers are presented.** The flankers preceding the target in this way is meant to increase flanker incongruency effects.
+Version 2.2.0 uses explicit pre-cues instead of an implicit colored/rectangle cues. Cue-Stimulus Interval is adjustable in `main.js`. This version also allows for early flankers that precede the target, but does not allow for informative task cues or colored task stimuli.
 
 # Repo Contents
 

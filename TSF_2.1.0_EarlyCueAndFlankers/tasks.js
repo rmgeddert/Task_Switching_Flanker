@@ -212,8 +212,15 @@ function fixationScreen(){
   // display fixation
   ctx.fillText("+",canvas.width/2,canvas.height/2);
 
-  // display stimulus after delay interval
-  let nextScreenFunc = (earlyFlankerInterval == 0) ? stimScreen : earlyFlanker;
+  // determine which function is next
+  let nextScreenFunc;
+  if (earlyFlankerInterval > 0 | earlyCueInterval > 0){
+    nextScreenFunc = (earlyCueInterval > earlyFlankerInterval) ? earlyTaskCue : earlyFlanker;
+  } else {
+    nextScreenFunc = stimScreen();
+  }
+
+  // go to next after appropriate time
   setTimeout(nextScreenFunc, fixInterval);
 }
 
@@ -225,10 +232,16 @@ function stimScreen(){
 
   } else {
     stimOnset = new Date().getTime() - runStart;
-
-    // prepare canvas for stimulus
-    ctx.fillStyle = (cuedTaskSet[trialCount] == "m") ? magColor() : parColor();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // set color, unless rectangular cue is needed.
+    if (rectangleCue == false) {
+      ctx.fillStyle = (cuedTaskSet[trialCount] == "m") ? magColor() : parColor();
+    } else {
+      // if so, set fillstyle to black and draw rectangular cue
+      ctx.fillStyle = "black";
+      drawRect();
+    }
 
     //reset all response variables and await response (expType = 1)
     expType = 1; acc = NaN, respTime = NaN, partResp = NaN, respOnset = NaN;
@@ -248,19 +261,90 @@ function earlyFlanker(){
     promptLetGo();
 
   } else {
-
-    // prepare canvas for early flankers
-    ctx.fillStyle = "black";
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // display flankers
-    let flanker = expStimDict['distractor'][taskStimuliSet[trialCount]];
-    let justFlankers = flanker + flanker + " " + flanker + flanker;
-    ctx.fillText(justFlankers,canvas.width/2,canvas.height/2);
+    // if flankers are informative and there is no rectangle cue
+    if (informativeEarlyFlankers == true && rectangleCue == false) {
+        ctx.fillStyle = (cuedTaskSet[trialCount] == "m") ? magColor() : parColor();
+    } else { //if not, fillStyle = "black"
+      ctx.fillStyle = "black";
+    }
 
-    // proceed to stim screen after timeout
-    setTimeout(stimScreen,earlyFlankerInterval);
+    // draw flanker
+    drawFlankers();
+
+    // if rectangle cue is needed and cue precedes stimulus
+    if (rectangleCue == true && earlyCueInterval > 0) {
+      // if rectangle cue should be there right now
+      if (earlyCueInterval >= earlyFlankerInterval) {
+        drawRect();
+      } else { //proceed to task cue
+        setTimeout(stimScreen, earlyFlankerInterval)
+      }
+    } else {
+      setTimeout(stimScreen, earlyFlankerInterval);
+    }
+
+    // if flanker precedes early cue (and early cue is needed)
+    if (earlyCueInterval > 0 && earlyFlankerInterval > earlyCueInterval) {
+      setTimeout(earlyTaskCue, earlyFlankerInterval - earlyCueInterval);
+    } else {
+      if (earlyCueInterval > 0) {
+        drawRect();
+      }
+      setTimeout(stimScreen, earlyFlankerInterval);
+    }
   }
+}
+
+function earlyTaskCue(){
+  if (expType == 5) {
+
+    expType = 6;
+    promptLetGo();
+
+  } else {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // if cue precedes early flanker (and  early flanker is needed)
+    if (earlyFlankerInterval > 0 && earlyCueInterval > earlyFlankerInterval) {
+      setTimeout(earlyFlanker, earlyCueInterval - earlyFlankerInterval);
+    } else {
+      if (earlyFlankerInterval > 0) {
+        // necessarily any flanker is drawn in black
+        ctx.fillStyle = "black";
+        drawFlankers();
+      }
+      setTimeout(stimScreen, earlyCueInterval);
+    }
+
+    // if preceded by early flanker
+    drawRect();
+  }
+}
+
+function drawFlankers(){
+  // display flankers
+  let flanker = expStimDict['distractor'][taskStimuliSet[trialCount]];
+  let justFlankers = flanker + flanker + "  " + flanker + flanker;
+  ctx.fillText(justFlankers,canvas.width/2,canvas.height/2);
+}
+
+function drawRect(){
+  // text margin
+  let borderMargin = 40;
+
+  // measure text
+  let stimWidth = ctx.measureText(taskStimuliSet[trialCount]).width;
+  let frameWidth = stimWidth + borderMargin;
+  let frameHeight = 100; //unmeasurable, https://stackoverflow.com/questions/1134586/how-can-you-find-the-height-of-text-on-an-html-canvas
+
+  // draw box
+  ctx.beginPath();
+  ctx.lineWidth = "6";
+  ctx.strokeStyle = (cuedTaskSet[trialCount] == "m") ? magColor() : parColor();
+  ctx.rect((canvas.width/2) - (frameWidth/2), (canvas.height/2) - (frameHeight/2) - 5, frameWidth, frameHeight);
+  ctx.stroke();
 }
 
 function itiScreen(){
