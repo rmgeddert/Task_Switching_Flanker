@@ -12,7 +12,7 @@ Additionally, each number stimulus is flanked by distractor digits, that are eit
 
 TSF 2.0.0 fixes several issues in the flanker congruency manipulations. Specifically, incongruent stimuli are now either parity incongruent (e.g., '33433') or magnitude incongruent (e.g., '88488'), *depending on the cued task.* That is, on incongruent flanker trials, if the cued task is parity, then the stimulus will be parity incongruent, and vice versa. 
 
-The rate of incongruent and congruent trials is now 50%/50%, fixing an another issue in flanker proportions of version 1.0.0.
+The rate of incongruent and congruent trials is now 50%/50%, fixing another issue in flanker proportions of version 1.0.0.
 
 # Repo Contents
 
