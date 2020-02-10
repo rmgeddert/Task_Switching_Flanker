@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <link rel="stylesheet" href="styles.css">
+    <script src="jquery-3.4.1.js"></script>
+    <script src="prepareTask.js"></script>
+    <script src="instructions.js"></script>
+    <script src ="tasks.js"></script>
+    <script src ="main.js"></script>
+    <script src ="images.js"></script>
+    <script src ="blockFeedback.js"></script>
+    <script src ="counterbalancing.js"></script>
+    <script src ="CapsLock.js"></script>
+    <title>Parity Magnitude Task</title>
+  </head>
+
+  <body>
+    <!-- instruction elements for all text screens -->
+    <div class="instructions">
+      <div class="instruction-content">
+        <div class="instruction-header">
+          <h1>Instructions </h1>
+          <p style="font-weight: bold">Please read these instructions carefully.</p>
+        </div>
+        <div class="instruction-body">
+          <p id="instructions1" ></p>
+          <p id="instructions2" ></p>
+          <p id="instructions3" ></p>
+          <p id="instructions4" ></p>
+          <p id="instructions5" ></p>
+          <p id="instructions6" ></p>
+          <p id="instructions7" ></p>
+          <p id="instructions8" ></p>
+          <p id="instructions9" ></p>
+        </div>
+        <div class="instruction-buttons">
+          <button id="nextInstrButton">Next</button>
+          <button id="startExpButton">Start Experiment</button>
+          <button id="nextSectionButton">Next Section</button>
+        </div>
+      </div>
+    </div>
+    <!--canvas element for displaying stimuli during the task and practice -->
+    <canvas id="myCanvas" width="800" height="600"></canvas>
+  </body>
+</html>
