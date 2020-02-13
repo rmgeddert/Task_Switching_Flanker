@@ -8,7 +8,7 @@ let instructions = {
   },
   // contains the max value of each instruction iteration. iteration will STOP at max.
   max: {
-    "prac1-1": 3, "prac1-2": 3, "prac1-3": 4, "prac2": 6, "prac3": 8, "main1": 5, "main2": 3, "main3": 8
+    "prac1-1": 3, "prac1-2": 3, "prac1-3": 4, "prac2": 6, "prac3": 6, "main1": 5, "main2": 3, "main3": 6
   },
   // what does instruction section end with?
   // #nextSectionButton, #startExpButton, buttonPressNextSection, buttonPressStartTask
@@ -222,36 +222,20 @@ function getNextInstructions(slideNum, expStage){
     case "prac3":
       switch (slideNum){
         case 1:
-          return "In the final practice block, you will indicate if the number is greater or less than 5 OR odd or even, depending on the color of the text.";
-        case 2: // which ever was practiced first
-          iterateAgain = true;
-          changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          changeTextFormat('#instructions' + slideNum,'color', colorFirstTask());
-          changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
-          changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
-          changeTextFormat('#instructions' + slideNum,'font-size','60px');
-          return "33633";
-        case 3:
+          return "In the final practice block, you will indicate if the number is greater or less than 5 OR odd or even, depending on the prompt that precedes the numbers.";
+        case 2:
           task = 1;
-          return "If the numbers are " + colorFirstTask() + ", indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
-        case 4: // which ever was practiced second
-          iterateAgain = true;
-          changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          changeTextFormat('#instructions' + slideNum,'color', colorSecondTask());
-          changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
-          changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
-          changeTextFormat('#instructions' + slideNum,'font-size','60px');
-          return "88388";
-        case 5:
+          return "If the prompt says '" + getFirstCue() + "', indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
+        case 3:
           task = 2;
-          return "If the numbers are " + colorSecondTask() + ", indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
-        case 6:
+          return "If the prompt says '" + getSecondCue() + "', indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
+        case 4:
           return "Remember to only respond to the center number and to respond as quickly and as accurately as possible. You must get at least " + practiceAccCutoff + "% correct in order to move on to the main task.";
-        case 7:
+        case 5:
           iterateAgain = true;
           $( getImageText(instructionImages[2]) ).insertAfter( "#instructions" + slideNum);
           return "This block contains "+numPracticeTrials+" trials. Please place your hands on the 'Z' and 'X' keys and 'N' and 'M' keys as shown.";
-        case 8:
+        case 6:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
           return "Press any button begin."
       }
@@ -283,35 +267,18 @@ function getNextInstructions(slideNum, expStage){
           case 1:
             return "Remember, respond greater/less than 5 or odd/even based on the color of the stimuli."
           case 2:
-            iterateAgain = true;
-            changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-            changeTextFormat('#instructions' + slideNum,'color', colorFirstTask());
-            changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
-            changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
-            changeTextFormat('#instructions' + slideNum,'font-size','60px');
-            return "33633";
-          case 3:
             task = 1;
-            return "If the numbers are " + colorFirstTask() + ", indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
-            break;
-          case 4:
-            iterateAgain = true;
-            changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-            changeTextFormat('#instructions' + slideNum,'color', colorSecondTask());
-            changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
-            changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
-            changeTextFormat('#instructions' + slideNum,'font-size','60px');
-            return "88388";
-          case 5:
+            return "If the prompt says '" + getFirstCue() + "', indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
+          case 3:
             task = 2;
-            return "If the numbers are " + colorSecondTask() + ", indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
-          case 6:
+            return "If the prompt says '" + getSecondCue() + "', indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
+          case 4:
             return "The experiment will consist of " + numBlocks +" blocks of " + trialsPerBlock + " trials each. You will have a short rest break between each block, and you will receive feedback about your performance during these breaks.";
-          case 7:
+          case 5:
             iterateAgain = true;
             $( getImageText(instructionImages[2]) ).insertAfter( "#instructions" + slideNum);
             return "Please place your right hand on the 'N' and 'M' keys and left hand on the 'Z' and 'X' keys as shown.";
-          case 8:
+          case 6:
             changeTextFormat('#instructions' + slideNum,'font-weight','bold');
             return "Press any button begin."
       }

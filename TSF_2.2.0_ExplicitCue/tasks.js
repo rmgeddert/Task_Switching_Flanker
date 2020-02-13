@@ -125,7 +125,7 @@ function runTrial(){
     if (trialCount % trialsPerBlock == 0 && !breakOn && trialCount != 0) {
 
       //if arrived at big block break
-      breakOn = true; displayFeedbackScreen();
+      breakOn = true; bigBlockScreen();
       block++;
       blockTrialCount = 0;
 
@@ -158,14 +158,18 @@ function runTrial(){
 
   } else {
     // end of experiment stuff
-    // upload data to menu.html's DOM elements
-    $("#RTs", opener.window.document).val(data.join(";"));
+    try {
+      // upload data to menu.html's DOM elements
+      $("#RTs", opener.window.document).val(data.join(";"));
 
-    // call menu debriefing script
-    opener.updateMainMenu(2);
+      // call menu debriefing script
+      opener.updateMainMenu(2);
 
-    // close the experiment window
-    JavaScript:window.close();
+      // close the experiment window
+      JavaScript:window.close();
+    } catch (e) {
+      alert("Data upload failed. Aborting experiment.");
+    }
   }
 }
 
@@ -304,17 +308,32 @@ function bigBlockScreen(){
   sectionType = "bigBlock";
   sectionStart = new Date().getTime() - runStart;
   expType = 7;
+
   // prep canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
-  ctx.font = "30px Arial";
 
   // display big  block text
-  ctx.fillText("You are "+ Math.round((trialCount / (trialsPerBlock * numBlocks) ) * 100)+"% through this experiment.",canvas.width/2,canvas.height/2 - 50);
-  ctx.fillText("Your overall accuracy so far is " + Math.round((accCount / trialCount) * 100) + "%.",canvas.width/2,canvas.height/2);
-  ctx.fillText("Press any button to continue.",canvas.width/2,canvas.height/2 + 100);
+  ctx.font = "25px Arial";
+  ctx.fillText("You finished block " + block + "/" + numBlocks + "!",canvas.width/2,canvas.height/2 - 100);
+  ctx.fillText("Your overall accuracy so far is " + Math.round((accCount / trialCount) * 100) + "%.",canvas.width/2,canvas.height/2 - 50);
+
+  // display accuracy reminder based on current accuracy
   ctx.font = "italic bold 22px Arial";
-  ctx.fillText("Remember, you need >" + taskAccCutoff + "% accuracy to be paid.",canvas.width/2,canvas.height/2 + 50);
+  if (Math.round((accCount / trialCount) * 100) < 75) {
+    ctx.fillStyle = "red";
+    ctx.fillText("You need >" + taskAccCutoff + "% accuracy in the task.",canvas.width/2,canvas.height/2);
+  } else {
+    ctx.fillStyle = "black";
+    ctx.fillText("You need >" + taskAccCutoff + "% accuracy in the task.",canvas.width/2,canvas.height/2);
+  }
+  ctx.fillStyle = "black";
+
+  ctx.font = "25px Arial";
+  ctx.fillText("Always respond as quickly and as accurately as possible.",canvas.width/2,canvas.height/2 + 50);
+
+  ctx.font = "bold 25px Arial";
+  ctx.fillText("Press any button to continue.",canvas.width/2,canvas.height/2 + 150);
 }
 
 // functions for determining ITI feedback depending on accuracy

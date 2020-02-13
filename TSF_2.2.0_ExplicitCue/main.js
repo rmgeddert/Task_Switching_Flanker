@@ -8,20 +8,23 @@
 */
 
 // for testing
+let testMode = false;
 let speed = "normal"; //fast, normal
+speed = (testMode == true) ? "fast" : speed; //testMode defaults to "fast"
+let skipPractice = false; // <- turn practice blocks on or off
 
 // ----- Experiment Paramenters (CHANGE ME) ----- //
 let stimInterval = (speed == "fast") ? 20 : 2000; //2000
 let fixInterval = (speed == "fast") ? 20 : 500; //500 ms
-let cueStimulusInterval = 500;
+let cueStimulusInterval = (speed == "fast") ? 20 : 400;
 let magnitudeCueText = "Magnitude";
 let parityCueText = "Parity";
 let numBlocks = 8, trialsPerBlock = 48; // (multiples of 16) (48 usually)
 let numPracticeTrials = 16;
 let miniBlockLength = 0; //doesn't need to be multiple of 24. 0 to turn off
 let practiceAccCutoff = 75; // 75 acc%
+practiceAccCutoff = (testMode == true) ? 0 : practiceAccCutoff; //testMode defaults to 0 cutoff
 let taskAccCutoff = 75; // 75 acc%
-let skipPractice = false; // <- turn practice blocks on or off
 function ITIInterval(){
   let itiMin = (speed == "fast") ? 20 : 1200; //1200
   let itiMax = (speed == "fast") ? 20 : 1400; //1400

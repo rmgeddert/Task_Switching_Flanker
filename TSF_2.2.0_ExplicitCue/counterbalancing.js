@@ -81,12 +81,16 @@ function getHandImageNum(identifier){
   }
 }
 
+function getFirstCue(){
+  return (pracOrder == 1) ? magnitudeCueText : parityCueText;
+}
+
+function getSecondCue(){
+  return (pracOrder == 1) ? parityCueText : magnitudeCueText;
+}
+
 function colorFirstTask(){
-  if (pracOrder == 1){ //mag first
-    return magColor();
-  } else { // par first
-    return parColor();
-  }
+  return (pracOrder == 1) ? magColor() : parColor();
 }
 
 function colorSecondTask(){

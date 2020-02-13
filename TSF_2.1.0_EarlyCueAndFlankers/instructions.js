@@ -8,7 +8,7 @@ let instructions = {
   },
   // contains the max value of each instruction iteration. iteration will STOP at max.
   max: {
-    "prac1-1": 3, "prac1-2": 3, "prac1-3": 4, "prac2": 6, "prac3": 8, "main1": 5, "main2": 3, "main3": 8
+    "prac1-1": 3, "prac1-2": 3, "prac1-3": 4, "prac2": 6, "prac3": 8, "main1": 3, "main2": 8
   },
   // what does instruction section end with?
   // #nextSectionButton, #startExpButton, buttonPressNextSection, buttonPressStartTask
@@ -19,8 +19,7 @@ let instructions = {
     "prac2": 'buttonPressStartTask',
     "prac3": 'buttonPressStartTask',
     "main1": '#nextSectionButton',
-    "main2": '#nextSectionButton',
-    "main3": 'buttonPressStartTask'
+    "main2": 'buttonPressStartTask'
   }
 };
 let iterateAgain = false, task;
@@ -55,9 +54,6 @@ function navigateInstructionPath(repeat = false){
         break;
       case "main1":
         expStage = "main2";
-        break;
-      case "main2":
-        expStage = "main3";
         break;
     }
     runInstructions();
@@ -222,29 +218,45 @@ function getNextInstructions(slideNum, expStage){
     case "prac3":
       switch (slideNum){
         case 1:
-          return "In the final practice block, you will indicate if the number is greater or less than 5 OR odd or even, depending on the color of the text.";
+          return "In the final practice block, you will indicate if the number is greater or less than 5 OR odd or even, depending on the color of the rectangle around the numbers.";
         case 2: // which ever was practiced first
-          iterateAgain = true;
-          changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          changeTextFormat('#instructions' + slideNum,'color', colorFirstTask());
-          changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
-          changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
-          changeTextFormat('#instructions' + slideNum,'font-size','60px');
-          return "33633";
+          if (rectangleCue == true) {
+            iterateAgain = true;
+            let imageNum = (colorFirstTask() == "blue") ? 7 : 8;
+            $( getImageText(instructionImages[imageNum]) ).insertAfter( "#instructions" + slideNum);
+            return "";
+          } else {
+            iterateAgain = true;
+            changeTextFormat('#instructions' + slideNum,'font-weight','bold');
+            changeTextFormat('#instructions' + slideNum,'color', colorFirstTask());
+            changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
+            changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
+            changeTextFormat('#instructions' + slideNum,'font-size','60px');
+            return "33633";
+          }
         case 3:
           task = 1;
-          return "If the numbers are " + colorFirstTask() + ", indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
+          changeTextFormat('#instructions' + slideNum,'margin-top', '0px');
+          return "If the rectangle is " + colorFirstTask() + ", indicate if the target number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
         case 4: // which ever was practiced second
-          iterateAgain = true;
-          changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          changeTextFormat('#instructions' + slideNum,'color', colorSecondTask());
-          changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
-          changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
-          changeTextFormat('#instructions' + slideNum,'font-size','60px');
-          return "88388";
+          if (rectangleCue == true) {
+            iterateAgain = true;
+            let imageNum = (colorFirstTask() == "blue") ? 8 : 7;
+            $( getImageText(instructionImages[imageNum]) ).insertAfter( "#instructions" + slideNum);
+            return "";
+          } else {
+            iterateAgain = true;
+            changeTextFormat('#instructions' + slideNum,'font-weight','bold');
+            changeTextFormat('#instructions' + slideNum,'color', colorSecondTask());
+            changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
+            changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
+            changeTextFormat('#instructions' + slideNum,'font-size','60px');
+            return "33633";
+          }
         case 5:
           task = 2;
-          return "If the numbers are " + colorSecondTask() + ", indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
+          changeTextFormat('#instructions' + slideNum,'margin-top', '0px');
+          return "If the rectangle is " + colorSecondTask() + ", indicate if the target number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
         case 6:
           return "Remember to only respond to the center number and to respond as quickly and as accurately as possible. You must get at least " + practiceAccCutoff + "% correct in order to move on to the main task.";
         case 7:
@@ -260,29 +272,21 @@ function getNextInstructions(slideNum, expStage){
         case 1:
           return "Great job! You are now ready to begin the main experiment.";
         case 2:
-          return "In this task, participants often struggle with:";
+          return "We ask that you get > 75% correct over the course of the experiment. Performing worse may impact whether you are compensated.";
         case 3:
-          iterateAgain = true;
-          return "1) Switching between the two tasks, and";
-        case 4:
-          return "2) Ignoring the distractor numbers.";
-        case 5:
-          return "As you complete the experiment, try your best to avoid distraction from the side numbers and switch well between the two tasks. We will let you know how you are doing compared to previous participants.";
-        }
-      case "main2":
-        switch (slideNum){
-          case 1:
-            return "This feedback is based on both your accuracy and reaction time during the task. Remember to respond as quickly and as accuractely as possible.";
-          case 2:
-            return "Please note that you are not required to perform as well as or better than previous participants, and you will be compensated no matter how well you perform relative to other participants.";
-          case 3:
-            return "However, we do ask that you get > 75% correct over the course of the experiment. Performing worse may impact whether you are compensated.";
-        }
-      case "main3":
-        switch (slideNum){
-          case 1:
-            return "Remember, respond greater/less than 5 or odd/even based on the color of the stimuli."
-          case 2:
+          return "Please also try to respond as quickly and as accuractely as possible.";
+      }
+    case "main2":
+      switch (slideNum){
+        case 1:
+          return "Remember, respond greater/less than 5 or odd/even based on the color of the rectangle around the numbers."
+        case 2:
+          if (rectangleCue == true) {
+            iterateAgain = true;
+            let imageNum = (colorFirstTask() == "blue") ? 7 : 8;
+            $( getImageText(instructionImages[imageNum]) ).insertAfter( "#instructions" + slideNum);
+            return "";
+          } else {
             iterateAgain = true;
             changeTextFormat('#instructions' + slideNum,'font-weight','bold');
             changeTextFormat('#instructions' + slideNum,'color', colorFirstTask());
@@ -290,30 +294,39 @@ function getNextInstructions(slideNum, expStage){
             changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
             changeTextFormat('#instructions' + slideNum,'font-size','60px');
             return "33633";
-          case 3:
-            task = 1;
-            return "If the numbers are " + colorFirstTask() + ", indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
-            break;
-          case 4:
+          }
+        case 3:
+          task = 1;
+          changeTextFormat('#instructions' + slideNum,'margin-top', '0px');
+          return "If the rectangle is " + colorFirstTask() + ", indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
+        case 4:
+          if (rectangleCue == true) {
+            iterateAgain = true;
+            let imageNum = (colorFirstTask() == "blue") ? 8 : 7;
+            $( getImageText(instructionImages[imageNum]) ).insertAfter( "#instructions" + slideNum);
+            return "";
+          } else {
             iterateAgain = true;
             changeTextFormat('#instructions' + slideNum,'font-weight','bold');
             changeTextFormat('#instructions' + slideNum,'color', colorSecondTask());
             changeTextFormat('#instructions' + slideNum,'margin-top', '20px');
             changeTextFormat('#instructions' + slideNum,'margin-bottom', '20px');
             changeTextFormat('#instructions' + slideNum,'font-size','60px');
-            return "88388";
-          case 5:
-            task = 2;
-            return "If the numbers are " + colorSecondTask() + ", indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
-          case 6:
-            return "The experiment will consist of " + numBlocks +" blocks of " + trialsPerBlock + " trials each. You will have a short rest break between each block, and you will receive feedback about your performance during these breaks.";
-          case 7:
-            iterateAgain = true;
-            $( getImageText(instructionImages[2]) ).insertAfter( "#instructions" + slideNum);
-            return "Please place your right hand on the 'N' and 'M' keys and left hand on the 'Z' and 'X' keys as shown.";
-          case 8:
-            changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-            return "Press any button begin."
+            return "33633";
+          }
+        case 5:
+          task = 2;
+          changeTextFormat('#instructions' + slideNum,'margin-top', '0px');
+          return "If the rectangle is " + colorSecondTask() + ", indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
+        case 6:
+          return "The experiment will consist of " + numBlocks +" blocks of " + trialsPerBlock + " trials each. You will have a short rest break between each block.";
+        case 7:
+          iterateAgain = true;
+          $( getImageText(instructionImages[2]) ).insertAfter( "#instructions" + slideNum);
+          return "Please place your right hand on the 'N' and 'M' keys and left hand on the 'Z' and 'X' keys as shown.";
+        case 8:
+          changeTextFormat('#instructions' + slideNum,'font-weight','bold');
+          return "Press any button begin."
       }
   }
 };
@@ -365,7 +378,13 @@ function displayDefaults(stage){
 }
 
 function getImageText(imageURL){
-  return "<img src='" + imageURL + "' class='insertedImage'>";
+  let fileName = getFileName(imageURL);
+  return "<img src='" + imageURL + "' class='insertedImage' id='"+ fileName +"'>";
+}
+
+function getFileName(path){
+  let n = path.lastIndexOf('/');
+  return path.substring(n + 1);
 }
 
 function showFirst() {
