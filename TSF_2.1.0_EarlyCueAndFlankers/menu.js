@@ -1,3 +1,4 @@
+// updated: 2/17 11:06
 // create global curStage variable
 let curStage = 0;
 
@@ -12,6 +13,17 @@ function gup(name, tmpURL){
   let regexS = "[\\?&]"+name+"=([^&#]*)";
   let results = new RegExp(regexS).exec(tmpURL);
   return (results == null) ? "" : results[1];
+}
+
+// stop users from closing the menu.html window
+window.onbeforeunload = function() {
+    return 'You have unsaved changes!';
+}
+
+// for testing, gets experiment set up immediately
+function startExperiment(){
+  prepareMenu();
+  updateMainMenu(1);
 }
 
 // function for navigating experiment stages
@@ -33,6 +45,10 @@ function updateMainMenu(expStage){
       $("#instruction").show();
       break;
     case 2: //debriefing
+    // remove onbeforeunload listener
+      window.onbeforeunload = function () {
+        // blank function do nothing
+      }
       $("#instruction").hide();
       $("#myButton").hide();
       $("#redo").hide();
@@ -42,9 +58,7 @@ function updateMainMenu(expStage){
 }
 
 // prevent duplicate workers from completing task
-let workerArr = ['A3PK3QF2HEYZ0N','A141QUHWYCE2E','A25PFSORDO3SWQ','A1AJ2G7JXXJ8UJ',
-  'A2FL477TMKC91L','A22DVMN2Y3XHWA','A1GLY95E6HRTCD','A1ROEDVMTO9Y3X','A37OUZOGQKGMW0',
-'A3S0CAN1GKD8I4','A3VP27UUQ34OXK','A37L7WFHSC4RNF','A3R168GJZRF7KU','AROZ6EDDUGTLP','AKFJYQX7VPPW','AMPMTF5IAAMK8','A2FWZR12905V6J','A2NAKIXS3DVGAA','AUFUUD4WG9CVO','A2O2Y99RA9GFUJ','AQWH9UY6FVU21','A2QBFXY9UQMJTT','A3NUUMHNIE3XHA','A1MMLN9XGYXF7M','A1JKHGRDXU18PM','A2MOC4PTJYY15B','A21OKN7OJOFG2P','A10JXOU89D5RXR','A1198W1SPF1R4','A2LVCS009DMEAT','A19S4W3QLLQJ0T','A2BBDH8DZD77AU','A1RV2LERVS0A4H','AMV1E7FFPVAW4'];
+let workerArr = ['A1E8ZYOQSGKTP8', 'A3NMQ3019X6YE0', 'A2IO83300NZCUE', 'A222XREQ12K58P', 'A1YC558J4E5KZ', 'A3GHPWV5J07UE8', 'A2V27A9GZA1NR2', 'A1CY7IOJ9YH136', 'A3PIJN4LHKKNPH', 'A3S0CAN1GKD8I4', 'A3R168GJZRF7KU', 'A2FWZR12905V6J', 'A2NAKIXS3DVGAA', 'A2O2Y99RA9GFUJ', 'AQWH9UY6FVU21', 'A1MMLN9XGYXF7M', 'A19S4W3QLLQJ0T', 'A1RV2LERVS0A4H', 'A37L7WFHSC4RNF', 'AROZ6EDDUGTLP', 'AKFJYQX7VPPW', 'AMPMTF5IAAMK8', 'A3NUUMHNIE3XHA', 'A1JKHGRDXU18PM', 'A21OKN7OJOFG2P', 'A2YWSSQEXXCRGK', 'A2LVCS009DMEAT', 'A3VP27UUQ34OXK', 'AUFUUD4WG9CVO', 'A3GHPWV5J07UE8', 'A2QBFXY9UQMJTT', 'A2MOC4PTJYY15B', 'A10JXOU89D5RXR', 'A1198W1SPF1R4', 'A2BBDH8DZD77AU', 'AMV1E7FFPVAW4', 'A1GLY95E6HRTCD', 'A25PFSORDO3SWQ', 'A37OUZOGQKGMW0', 'A141QUHWYCE2E', 'A1AJ2G7JXXJ8UJ', 'A1ROEDVMTO9Y3X', 'A2FL477TMKC91L', 'A22DVMN2Y3XHWA', 'A3PK3QF2HEYZ0N'];
 
 // checks if workerID exists in workerid array
 function duplicateWorker(workedID){

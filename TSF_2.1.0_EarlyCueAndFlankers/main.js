@@ -6,6 +6,7 @@ let testMode = false;
 let speed = "normal"; //fast, normal
 speed = (testMode == true) ? "fast" : speed; //testMode defaults to "fast"
 let skipPractice = false; // <- turn practice blocks on or off
+let openerNeeded = true; //true
 
 // ----- Experiment Paramenters (CHANGE ME) ----- //
 let rectangleCue = true; // if true, colored rectangular cue signals task, else the numbers themselves are colored
@@ -37,7 +38,7 @@ let canvas, ctx; // global canvas variable
 let expStage = (skipPractice == true) ? "main1" : "prac1-1";
 // vars for tasks (iterator, accuracy) and reaction times:
 let trialCount, blockTrialCount, acc, accCount, stimOnset, respOnset, respTime, block = 1, partResp, runStart;
-let stimTimeout, breakOn = false, repeatNecessary = false, data=[];
+let stimTimeout, breakOn = false, capslockOn = false, repeatNecessary = false, data=[];
 let sectionStart, sectionEnd, sectionType;
 let expType = 0; // see below
 /*  expType explanations:
@@ -73,72 +74,74 @@ let colorMapping = randIntFromInterval(1,2);
 // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv //
 $(document).ready(function(){
 
-    // prepare task canvas
-    canvas = document.getElementById('myCanvas');
-    ctx = canvas.getContext('2d');
-    ctx.font = "bold 60px Arial";
-    ctx.textBaseline= "middle";
-    ctx.textAlign="center";
+  // prepare task canvas
+  canvas = document.getElementById('myCanvas');
+  ctx = canvas.getContext('2d');
+  ctx.font = "bold 60px Arial";
+  ctx.textBaseline= "middle";
+  ctx.textAlign="center";
 
-    // create key press listener
-    $("body").keypress(function(event){
-      if (expType == 0) {
-        expType = 5; //keydown when not needed. Keyup will reset to 0.
-      } else if (expType == 1){
-        expType = 2; //prevent additional responses during this trial (i.e. holding down key)
-        partResp = event.which;
-        acc = (partResp == actionSet[trialCount]) ? 1 : 0;
-        if (acc == 1){accCount++;}
-        respOnset = new Date().getTime() - runStart;
-        respTime = respOnset - stimOnset;
-      }
-    })
+  // create key press listener
+  $("body").keypress(function(event){
+    if (expType == 0) {
+      expType = 5; //keydown when not needed. Keyup will reset to 0.
+    } else if (expType == 1){
+      expType = 2; //prevent additional responses during this trial (i.e. holding down key)
+      partResp = event.which;
+      acc = (partResp == actionSet[trialCount]) ? 1 : 0;
+      if (acc == 1){accCount++;}
+      respOnset = new Date().getTime() - runStart;
+      respTime = respOnset - stimOnset;
+    }
+  })
 
-    // create key release listener
-    $("body").keyup(function(event){
-      if (expType == 2){
-        expType = 0;
-        clearTimeout(stimTimeout);
-        if (CapsLock.isOn()){
-          promptCapsLock();
-        } else {
-          itiScreen();
-        }
-      } else if (expType == 3 || expType == 5) {
-        expType = 0;
-      } else if (expType == 4 || expType == 6 || expType == 10) {
-        expType = 0;
-        countDown(3);
-      } else if (expType == 7) {
-        // 7: feedback - press button to start next block
-        sectionEnd = new Date().getTime() - runStart;
-        data.push(["feedback", sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
-        console.log(data);
-        expType = 0;
-        countDown(3);
-      } else if (expType == 8) { // 8: "press button to start task"
-        // log how much time was spent in this section
-        sectionEnd = new Date().getTime() - runStart;
-        data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
-        console.log(data);
-        // reset expStage and start task
-        expType = 0;
-        runTasks();
-      } else if (expType == 9) { // 9: "press button to start next section"
-        // log how much time was spent in this section
-        sectionEnd = new Date().getTime() - runStart;
-        data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
-        console.log(data);
-        // reset expStage and proceed to next section
-        expType = 0;
-        navigateInstructionPath(repeatNecessary);
-      }
-    });
+  // create key release listener
+  $("body").keyup(function(event){
+    if (expType == 2){
+      expType = 0;
+      clearTimeout(stimTimeout);
+      capslockOn = CapsLock.isOn();
+      itiScreen();
+    } else if (expType == 3 || expType == 5) {
+      expType = 0;
+    } else if (expType == 4 || expType == 6 || expType == 10) {
+      expType = 0;
+      countDown(3);
+    } else if (expType == 7) {
+      // 7: feedback - press button to start next block
+      sectionEnd = new Date().getTime() - runStart;
+      data.push(["feedback", sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      console.log(data);
+      expType = 0;
+      countDown(3);
+    } else if (expType == 8) { // 8: "press button to start task"
+      // log how much time was spent in this section
+      sectionEnd = new Date().getTime() - runStart;
+      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      console.log(data);
+      // reset expStage and start task
+      expType = 0;
+      runTasks();
+    } else if (expType == 9) { // 9: "press button to start next section"
+      // log how much time was spent in this section
+      sectionEnd = new Date().getTime() - runStart;
+      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      console.log(data);
+      // reset expStage and proceed to next section
+      expType = 0;
+      navigateInstructionPath(repeatNecessary);
+    }
+  });
 
-  // ----- Start with instructions after loading ----- //
+  // see if menu.html is still open
+  if (openerNeeded == true && opener == null) {
+    promptMenuClosed();
+  } else {
+    // start experiment
     runStart = new Date().getTime();
     loadImages();
     runInstructions();
+  }
 });
 
 // ------- Misc Experiment Functions ------- //
@@ -183,4 +186,8 @@ function loadImages(){
 
 function randIntFromInterval(min, max) { // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function promptMenuClosed(){
+  $('.MenuClosedPrompt').show();
 }
