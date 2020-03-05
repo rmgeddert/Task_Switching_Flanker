@@ -1,30 +1,28 @@
 //https://javascript.info/strict-mode
 "use strict";
 
-/* Version Info
-  Task Switching Flanker task with explicit text cues
-  - Customizable task cue texts
-  - customizable cue stimulus interval
-*/
-
 // for testing
 let testMode = false;
 let speed = "normal"; //fast, normal
 speed = (testMode == true) ? "fast" : speed; //testMode defaults to "fast"
 let skipPractice = false; // <- turn practice blocks on or off
+let openerNeeded = false; //true
 
 // ----- Experiment Paramenters (CHANGE ME) ----- //
 let stimInterval = (speed == "fast") ? 20 : 2000; //2000
 let fixInterval = (speed == "fast") ? 20 : 500; //500 ms
-let cueStimulusInterval = (speed == "fast") ? 20 : 400;
-let magnitudeCueText = "Magnitude";
-let parityCueText = "Parity";
+let cueStimulusInterval = (speed == "fast") ? 20 : 200;
+let cuePresentationInterval = (speed == "fast") ? 20 : 200;
+let magnitudeCueText = "greater/less";
+let parityCueText = "odd/even";
 let numBlocks = 8, trialsPerBlock = 48; // (multiples of 16) (48 usually)
 let numPracticeTrials = 16;
 let miniBlockLength = 0; //doesn't need to be multiple of 24. 0 to turn off
 let practiceAccCutoff = 75; // 75 acc%
 practiceAccCutoff = (testMode == true) ? 0 : practiceAccCutoff; //testMode defaults to 0 cutoff
 let taskAccCutoff = 75; // 75 acc%
+taskAccCutoff = (testMode == true) ? 0 : taskAccCutoff; //testMode defaults to 0 cutoff
+let distractorsPerSide = 1;
 function ITIInterval(){
   let itiMin = (speed == "fast") ? 20 : 1200; //1200
   let itiMax = (speed == "fast") ? 20 : 1400; //1400
@@ -41,7 +39,7 @@ let canvas, ctx; // global canvas variable
 let expStage = (skipPractice == true) ? "main1" : "prac1-1";
 // vars for tasks (iterator, accuracy) and reaction times:
 let trialCount, blockTrialCount, acc, accCount, stimOnset, respOnset, respTime, block = 1, partResp, runStart;
-let stimTimeout, breakOn = false, repeatNecessary = false, data=[];
+let stimTimeout, breakOn = false, capslockOn = false, repeatNecessary = false, data=[];
 let sectionStart, sectionEnd, sectionType;
 let expType = 0; // see below
 /*  expType explanations:
@@ -103,11 +101,8 @@ $(document).ready(function(){
       if (expType == 2){
         expType = 0;
         clearTimeout(stimTimeout);
-        if (CapsLock.isOn()){
-          promptCapsLock();
-        } else {
-          itiScreen();
-        }
+        capslockOn = CapsLock.isOn();
+        itiScreen();
       } else if (expType == 3 || expType == 5) {
         expType = 0;
       } else if (expType == 4 || expType == 6 || expType == 10) {
@@ -139,10 +134,15 @@ $(document).ready(function(){
       }
     });
 
-  // ----- Start with instructions after loading ----- //
-    runStart = new Date().getTime();
-    loadImages();
-    runInstructions();
+    // see if menu.html is still open
+    if (openerNeeded == true && opener == null) {
+      promptMenuClosed();
+    } else {
+      // start experiment
+      runStart = new Date().getTime();
+      loadImages();
+      runInstructions();
+    }
 });
 
 // ------- Misc Experiment Functions ------- //
@@ -187,4 +187,8 @@ function loadImages(){
 
 function randIntFromInterval(min, max) { // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function promptMenuClosed(){
+  $('.MenuClosedPrompt').show();
 }

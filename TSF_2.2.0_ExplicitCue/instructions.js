@@ -1,4 +1,4 @@
-// see function navigateInstructionPath() in tasks.js for naviagtion code
+// see function navigateInstructionPath() in tasks.js for navigation code
 
 // global instruction iterator information. Change as needed
 let instructions = {
@@ -63,95 +63,6 @@ function navigateInstructionPath(repeat = false){
     runInstructions();
   }
 }
-
-function runInstructions(){
-  // main instruction function (come here at start of instruction block)
-  sectionStart = new Date().getTime() - runStart;
-  sectionType = "instructions";
-
-  // hide/clear everything, just in case
-  hideInstructions();
-
-  // hide canvas if visible
-  canvas.style.display = "none";
-
-  // if need to repeat instructions (e.g., participant failed to meet accuracy requirement), then reshow all instructions
-  if (instructions["iterator"][expStage] >= instructions["max"][expStage]){
-
-    // loop through instructions and show
-    for (var i = 1; i <= instructions["max"][expStage]; i++) {
-      $('#instructions' + i).text( getNextInstructions( i, expStage ));
-    }
-
-    // reset iterateAgain incase looping turned it on by accident
-    iterateAgain = false;
-
-    // display instructions and prepare exit response mapping
-    $('.instructions').show();
-    exitResponse();
-
-  } else {
-
-    // remove any previous click listeners, if any
-    $(document).off("click","#nextInstrButton");
-    $(document).off("click","#startExpButton");
-    $(document).off("click","#nextSectionButton");
-
-    // clear all previous instructions, reset styles, and remove pictures
-    for (let i = 1; i <= 8; i++) {
-      $('#instructions' + i).text("");
-      resetDefaultStyles('#instructions' + i);
-      $('.insertedImage').remove();
-    }
-
-    // display proper instruction components, in case they are hidden
-    $('.instructions').show();
-    $('#nextInstrButton').show();
-    $('#nextSectionButton').hide();
-    $('#startExpButton').hide();
-    displayDefaults(expStage);
-  }
-
-  /* code for "Next" button click during instruction display
-        if running from Atom, need to use $(document).on, if through Duke Public Home Directory, either works.
-        https://stackoverflow.com/questions/19237235/jquery-button-click-event-not-firing
-  */
-  $(document).on("click", "#nextInstrButton", function(){
-  // $("#nextInstrButton").on('click', function(){
-    iterateInstruction();
-  });
-
-  // code for click startExperiment button
-  $(document).on('click', '#startExpButton', function(){
-    $('.instructions').hide();
-    $('#startExpButton').hide();
-    $('.insertedImage').remove();
-
-    // log data for time spent on this section
-    sectionEnd = new Date().getTime() - runStart;
-    data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
-    console.log(data);
-
-    // clear all button press listeners
-    $(document).off("click","#nextInstrButton");
-    $(document).off("click","#startExpButton");
-    $(document).off("click","#nextSectionButton");
-    runTasks();
-  });
-
-  $(document).on('click', '#nextSectionButton', function(){
-    // log data for time spent on this section
-    sectionEnd = new Date().getTime() - runStart;
-    data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
-    console.log(data);
-
-    // clear all button press listeners
-    $(document).off("click","#nextInstrButton");
-    $(document).off("click","#startExpButton");
-    $(document).off("click","#nextSectionButton");
-    navigateInstructionPath();
-  });
-};
 
 function getNextInstructions(slideNum, expStage){
 /* use the following options when modifying text appearance
@@ -283,6 +194,95 @@ function getNextInstructions(slideNum, expStage){
             return "Press any button begin."
       }
   }
+}
+
+function runInstructions(){
+  // main instruction function (come here at start of instruction block)
+  sectionStart = new Date().getTime() - runStart;
+  sectionType = "instructions";
+
+  // hide/clear everything, just in case
+  hideInstructions();
+
+  // hide canvas if visible
+  canvas.style.display = "none";
+
+  // if need to repeat instructions (e.g., participant failed to meet accuracy requirement), then reshow all instructions
+  if (instructions["iterator"][expStage] >= instructions["max"][expStage]){
+
+    // loop through instructions and show
+    for (var i = 1; i <= instructions["max"][expStage]; i++) {
+      $('#instructions' + i).text( getNextInstructions( i, expStage ));
+    }
+
+    // reset iterateAgain incase looping turned it on by accident
+    iterateAgain = false;
+
+    // display instructions and prepare exit response mapping
+    $('.instructions').show();
+    exitResponse();
+
+  } else {
+
+    // remove any previous click listeners, if any
+    $(document).off("click","#nextInstrButton");
+    $(document).off("click","#startExpButton");
+    $(document).off("click","#nextSectionButton");
+
+    // clear all previous instructions, reset styles, and remove pictures
+    for (let i = 1; i <= 8; i++) {
+      $('#instructions' + i).text("");
+      resetDefaultStyles('#instructions' + i);
+      $('.insertedImage').remove();
+    }
+
+    // display proper instruction components, in case they are hidden
+    $('.instructions').show();
+    $('#nextInstrButton').show();
+    $('#nextSectionButton').hide();
+    $('#startExpButton').hide();
+    displayDefaults(expStage);
+  }
+
+  /* code for "Next" button click during instruction display
+        if running from Atom, need to use $(document).on, if through Duke Public Home Directory, either works.
+        https://stackoverflow.com/questions/19237235/jquery-button-click-event-not-firing
+  */
+  $(document).on("click", "#nextInstrButton", function(){
+  // $("#nextInstrButton").on('click', function(){
+    iterateInstruction();
+  });
+
+  // code for click startExperiment button
+  $(document).on('click', '#startExpButton', function(){
+    $('.instructions').hide();
+    $('#startExpButton').hide();
+    $('.insertedImage').remove();
+
+    // log data for time spent on this section
+    sectionEnd = new Date().getTime() - runStart;
+    data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+    console.log(data);
+
+    // clear all button press listeners
+    $(document).off("click","#nextInstrButton");
+    $(document).off("click","#startExpButton");
+    $(document).off("click","#nextSectionButton");
+    runTasks();
+  });
+
+  $(document).on('click', '#nextSectionButton', function(){
+    // log data for time spent on this section
+    sectionEnd = new Date().getTime() - runStart;
+    data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+    console.log(data);
+
+    // clear all button press listeners
+    $(document).off("click","#nextInstrButton");
+    $(document).off("click","#startExpButton");
+    $(document).off("click","#nextSectionButton");
+    navigateInstructionPath();
+  });
 };
 
 function iterateInstruction(){

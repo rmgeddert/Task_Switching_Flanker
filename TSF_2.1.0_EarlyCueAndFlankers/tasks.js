@@ -513,7 +513,6 @@ function promptCapsLock(){
 
     // check for button response where capslock is off
     CapsLock.addListener(function(isOn){
-      console.log("listener ran");
       if (!isOn){
         callAfterDelay(3,trialFunc);
       }

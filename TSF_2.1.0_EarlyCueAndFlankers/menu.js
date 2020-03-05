@@ -45,10 +45,8 @@ function updateMainMenu(expStage){
       $("#instruction").show();
       break;
     case 2: //debriefing
-    // remove onbeforeunload listener
-      window.onbeforeunload = function () {
-        // blank function do nothing
-      }
+      // remove onbeforeunload listener
+      window.onbeforeunload = function (){}
       $("#instruction").hide();
       $("#myButton").hide();
       $("#redo").hide();

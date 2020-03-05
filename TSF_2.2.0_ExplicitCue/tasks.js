@@ -99,77 +99,126 @@ function countDown(seconds){
 }
 
 function runPracticeTrial(){
-  sectionType = "pracTask";
-  if (trialCount < taskStimuliSet.length){
-    if (expType == 3){ //check fi key is being held down
-      expType = 4;
-      promptLetGo();
-    } else {
-      // check if screen size is big enough
-      if (screenSizeIsOk()){
-        // start next trial cycle
-        fixationScreen();
+  if (openerNeeded == false || opener != null) {
+    sectionType = "pracTask";
+    if (trialCount < taskStimuliSet.length){
+      if (expType == 3){ //check fi key is being held down
+        expType = 4;
+        promptLetGo();
       } else {
-        promptScreenSize();
+        // check if screen size is big enough
+        if (screenSizeIsOk()){
+          // start next trial cycle
+          fixationScreen();
+        } else {
+          promptScreenSize();
+        }
       }
+    } else { //if practice block is over, go to feedback screen
+      practiceAccuracyFeedback( Math.round( accCount / (blockTrialCount) * 100 ) );
     }
-  } else { //if practice block is over, go to feedback screen
-    practiceAccuracyFeedback( Math.round( accCount / (blockTrialCount) * 100 ) );
+
+  } else {
+    // if menu is closed, hide other elements and show menu closed prompt
+    hideInstructions();
+    canvas.style.display = "none";
+    promptMenuClosed();
   }
 }
 
 function runTrial(){
-  sectionType = "mainTask";
-  if (trialCount < numBlocks * trialsPerBlock) { //if exp isn't over yet
-
-    if (trialCount % trialsPerBlock == 0 && !breakOn && trialCount != 0) {
-
-      //if arrived at big block break
-      breakOn = true; bigBlockScreen();
-      block++;
-      blockTrialCount = 0;
-
-    } else if (trialCount % miniBlockLength == 0 && !breakOn && trialCount != 0) {
-
-      //if arrived at miniblock break
-      breakOn = true; miniBlockScreen();
-
-    } else {
-
-      breakOn = false;
-      if (expType == 3){ //if key is being held down still
+  if (openerNeeded == false || opener != null) {
+    sectionType = "pracTask";
+    if (trialCount < taskStimuliSet.length){
+      if (expType == 3){ //check fi key is being held down
         expType = 4;
         promptLetGo();
       } else {
-
         // check if screen size is big enough
         if (screenSizeIsOk()){
-
           // start next trial cycle
           fixationScreen();
-
         } else {
-
           promptScreenSize();
-
         }
       }
+    } else { //if practice block is over, go to feedback screen
+      practiceAccuracyFeedback( Math.round( accCount / (blockTrialCount) * 100 ) );
     }
 
   } else {
-    // end of experiment stuff
-    try {
-      // upload data to menu.html's DOM elements
-      $("#RTs", opener.window.document).val(data.join(";"));
+    // if menu is closed, hide other elements and show menu closed prompt
+    hideInstructions();
+    canvas.style.display = "none";
+    promptMenuClosed();
+  }
+}
 
-      // call menu debriefing script
-      opener.updateMainMenu(2);
+function runTrial(){
+  // make sure opener (menu.html) is still open
+  if (openerNeeded == false || opener != null) {
+    sectionType = "mainTask";
+    if (trialCount < numBlocks * trialsPerBlock) { //if exp isn't over yet
 
-      // close the experiment window
-      JavaScript:window.close();
-    } catch (e) {
-      alert("Data upload failed. Aborting experiment.");
+      if (trialCount % trialsPerBlock == 0 && !breakOn && trialCount != 0) {
+
+        //if arrived at big block break
+        breakOn = true; bigBlockScreen();
+        block++;
+        blockTrialCount = 0;
+
+      } else if (trialCount % miniBlockLength == 0 && !breakOn && trialCount != 0) {
+
+        //if arrived at miniblock break
+        breakOn = true; miniBlockScreen();
+
+      } else {
+
+        breakOn = false;
+        if (expType == 3){ //if key is being held down still
+          expType = 4;
+          promptLetGo();
+        } else {
+
+          // check if screen size is big enough
+          if (screenSizeIsOk()){
+
+            // start next trial cycle
+            fixationScreen();
+
+          } else {
+
+            promptScreenSize();
+
+          }
+        }
+      }
+
+    } else {
+      endOfExperiment();
     }
+
+  } else {
+    // if menu is closed, hide other elements and show menu closed prompt
+    hideInstructions();
+    canvas.style.display = "none";
+    promptMenuClosed();
+  }
+}
+
+function endOfExperiment(){
+  // end of experiment stuff
+  try {
+    // upload data to menu.html's DOM element
+    $("#RTs", opener.window.document).val(data.join(";"));
+
+    // call menu debriefing script
+    opener.updateMainMenu(2);
+
+    // close the experiment window
+    JavaScript:window.close();
+  } catch (e) {
+    alert("Data upload failed. Did you close the previous window?");
   }
 }
 
@@ -221,6 +270,7 @@ function fixationScreen(){
 }
 
 function taskCue(){
+  // prepare canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
 
@@ -229,8 +279,19 @@ function taskCue(){
   ctx.fillText(cue,canvas.width/2,canvas.height/2);
 
   // proceed to ITI screen after timeout
-  stimTimeout = setTimeout(stimScreen,cueStimulusInterval);
+  stimTimeout = setTimeout(cueStimInterval,cuePresentationInterval);
+}
 
+function cueStimInterval(){
+  // prepare canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "black";
+
+  // display task cue
+  ctx.fillText("+",canvas.width/2,canvas.height/2);
+
+  // proceed to ITI screen after timeout
+  stimTimeout = setTimeout(stimScreen,cueStimulusInterval);
 }
 
 function stimScreen(){
@@ -245,13 +306,19 @@ function stimScreen(){
     ctx.fillStyle = "black";
 
     //reset all response variables and await response (expType = 1)
-    expType = 1; acc = NaN, respTime = NaN, partResp = NaN, respOnset = NaN;
+      expType = 1; acc = NaN, respTime = NaN, partResp = NaN, respOnset = NaN;
 
     // display stimulus
-    ctx.fillText(taskStimuliSet[trialCount],canvas.width/2,canvas.height/2);
+      let distractor = expStimDict["distractor"][taskStimuliSet[trialCount]];
+      // distractors above
+      ctx.fillText(distractor.repeat(2*distractorsPerSide + 1),canvas.width/2,canvas.height/2 - 50);
+      // stim in middle
+      ctx.fillText(taskStimuliSet[trialCount],canvas.width/2,canvas.height/2);
+      // distractors below
+      ctx.fillText(distractor.repeat(2*distractorsPerSide + 1),canvas.width/2,canvas.height/2 + 50);
 
     // proceed to ITI screen after timeout
-    stimTimeout = setTimeout(itiScreen,stimInterval);
+      stimTimeout = setTimeout(itiScreen,stimInterval);
   }
 }
 
@@ -282,8 +349,12 @@ function itiScreen(){
   // trial finished. iterate trial counters
   trialCount++; blockTrialCount++;
 
-  // proceed to next trial or to next section after delay
-  setTimeout(trialFunc, ITIInterval());
+  // proceed to next trial or to next section after delay, unless capslock is on
+  if (capslockOn){
+    setTimeout(promptCapsLock, ITIInterval());
+  } else {
+    setTimeout(trialFunc, ITIInterval());
+  }
 }
 
 function miniBlockScreen(){
@@ -391,7 +462,7 @@ function promptCapsLock(){
     // check for button response where capslock is off
     CapsLock.addListener(function(isOn){
       if (!isOn){
-        callAfterDelay(3,itiScreen);
+        callAfterDelay(3,trialFunc);
       }
     });
   }

@@ -14,6 +14,11 @@ function gup(name, tmpURL){
   return (results == null) ? "" : results[1];
 }
 
+// stop users from closing the menu.html window
+window.onbeforeunload = function() {
+    return 'Please do not close this window!';
+}
+
 // function for navigating experiment stages
 function updateMainMenu(expStage){
   // update global curstage variable
@@ -33,6 +38,8 @@ function updateMainMenu(expStage){
       $("#instruction").show();
       break;
     case 2: //debriefing
+      // remove onbeforeunload listener
+      window.onbeforeunload = function (){}
       $("#instruction").hide();
       $("#myButton").hide();
       $("#redo").hide();

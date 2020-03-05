@@ -61,7 +61,7 @@ function defineStimuli(stimDict){
   function addStimToDict(target, congruency){
     // get flanker and build stimulus
     let flanker = stimDict[target][congruency];
-    let stimulus = flanker+flanker+target+flanker+flanker;
+    let stimulus = flanker.repeat(distractorsPerSide)+target+flanker.repeat(distractorsPerSide);
     // build dictionary entry
     dict['target'][stimulus] = target;
     dict['distractor'][stimulus] = flanker;
@@ -135,11 +135,7 @@ function createStimTaskBatch(tasks){
     let target = targetArr[i];
     // determine flanker
     if (congruenciesArr[i] == "i") {
-      if (taskArr[i] == "p") {
-        flanker = selectedStimDict[target]["parityInc"];
-      } else {
-        flanker = selectedStimDict[target]["magnitudeInc"];
-      }
+      flanker = (taskArr[i] == "p") ? selectedStimDict[target]["parityInc"] : selectedStimDict[target]["magnitudeInc"];
     } else {
       flanker = target;
     }
@@ -149,7 +145,7 @@ function createStimTaskBatch(tasks){
         return undefined;
       }
     }
-    stimulusTaskPair.push([flanker + flanker + target + flanker + flanker,taskArr[i]]);
+    stimulusTaskPair.push([flanker.repeat(distractorsPerSide) + target + flanker.repeat(distractorsPerSide),taskArr[i]]);
     prevFlanker = flanker;
     prevTarget = target;
   }

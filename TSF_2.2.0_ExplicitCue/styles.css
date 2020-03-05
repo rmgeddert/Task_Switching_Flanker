@@ -44,6 +44,7 @@ canvas {
 
 /* instruction screen styles */
 .instructions {
+  display: none;
   color: black;
   text-align: center;
   max-width: 900px;
@@ -93,4 +94,12 @@ canvas {
 
 #startExpButton:active {
   border: 3px inset grey;
+}
+
+/* menu closed styles */
+.MenuClosedPrompt{
+  display: none;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
 }
