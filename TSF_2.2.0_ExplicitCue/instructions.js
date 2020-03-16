@@ -1,5 +1,3 @@
-// see function navigateInstructionPath() in tasks.js for navigation code
-
 // global instruction iterator information. Change as needed
 let instructions = {
   // contains the interator for each instruction block
@@ -64,6 +62,23 @@ function navigateInstructionPath(repeat = false){
   }
 }
 
+function displayDefaults(stage){
+  // default values of instruction blocks. add any special cases
+  switch(stage){
+    case "prac1-2":
+    case "prac1-3":
+      showFirst();
+    case "prac1-1":
+    case "prac2";
+      $('.instruction-header').show();
+      break;
+    default:
+      showFirst();
+      $('.instruction-header').hide();
+      break;
+  }
+}
+
 function getNextInstructions(slideNum, expStage){
 /* use the following options when modifying text appearance
     -  iterateAgain = true;
@@ -89,7 +104,7 @@ function getNextInstructions(slideNum, expStage){
       switch (slideNum){
         case 1:
           $( getImageText(instructionImages[5]) ).insertBefore( "#instructions" + slideNum);
-          return "There will be 2 numbers on either side of the center number. These numbers will either be the same or different than the target number.";
+          return "There will be numbers in a circle around the center number. These numbers will either be the same or different than the target number.";
         case 2:
           return "Do not respond to these numbers. You should only respond with respect to the target number.";
         case 3:
@@ -109,7 +124,7 @@ function getNextInstructions(slideNum, expStage){
           return "This block contains "+numPracticeTrials+" trials. Please place your " + getHand(task) + " hand on the '" + getLetter(getHand(task),1) + "' and '" + getLetter(getHand(task),2) + "' keys as shown.";
         case 4:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          return "Press any button begin."
+          return "Press any button to begin."
       }
     case "prac2":
       task = 2;
@@ -128,7 +143,7 @@ function getNextInstructions(slideNum, expStage){
           return "This block contains "+numPracticeTrials+" trials. Please place your " + getHand(task) + " hand on the '" + getLetter(getHand(task),1) + "' and '" + getLetter(getHand(task),2) + "' keys as shown.";
         case 6:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          return "Press any button begin."
+          return "Press any button to begin."
       }
     case "prac3":
       switch (slideNum){
@@ -148,7 +163,7 @@ function getNextInstructions(slideNum, expStage){
           return "This block contains "+numPracticeTrials+" trials. Please place your hands on the 'Z' and 'X' keys and 'N' and 'M' keys as shown.";
         case 6:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          return "Press any button begin."
+          return "Press any button to begin."
       }
     case "main1":
       switch (slideNum){
@@ -191,7 +206,7 @@ function getNextInstructions(slideNum, expStage){
             return "Please place your right hand on the 'N' and 'M' keys and left hand on the 'Z' and 'X' keys as shown.";
           case 6:
             changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-            return "Press any button begin."
+            return "Press any button to begin."
       }
   }
 }
@@ -312,22 +327,6 @@ function exitResponse(){
     expType = 8;
   } else if (instructions["exitResponse"][expStage] == "buttonPressNextSection"){
     expType = 9;
-  }
-}
-
-function displayDefaults(stage){
-  // default values of instruction blocks. add any special cases
-  switch(stage){
-    case "prac1-2":
-    case "prac1-3":
-      showFirst();
-    case "prac1-1":
-      $('.instruction-header').show();
-      break;
-    default:
-      showFirst();
-      $('.instruction-header').hide();
-      break;
   }
 }
 

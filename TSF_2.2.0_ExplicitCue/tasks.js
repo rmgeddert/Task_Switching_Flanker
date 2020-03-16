@@ -261,6 +261,7 @@ function fixationScreen(){
   // prepare canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
+  ctx.font = "bold 60px Arial";
 
   // display fixation
   ctx.fillText("+",canvas.width/2,canvas.height/2);
@@ -273,6 +274,7 @@ function taskCue(){
   // prepare canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
+  ctx.font = "bold 60px Arial";
 
   // display task cue
   let cue = (cuedTaskSet[trialCount] == "m") ? magnitudeCueText : parityCueText;
@@ -286,6 +288,7 @@ function cueStimInterval(){
   // prepare canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
+  ctx.font = "bold 60px Arial";
 
   // display task cue
   ctx.fillText("+",canvas.width/2,canvas.height/2);
@@ -304,6 +307,7 @@ function stimScreen(){
     stimOnset = new Date().getTime() - runStart;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "black";
+    ctx.font = "bold 70px Arial";
 
     //reset all response variables and await response (expType = 1)
       expType = 1; acc = NaN, respTime = NaN, partResp = NaN, respOnset = NaN;
@@ -311,11 +315,11 @@ function stimScreen(){
     // display stimulus
       let distractor = expStimDict["distractor"][taskStimuliSet[trialCount]];
       // distractors above
-      ctx.fillText(distractor.repeat(2*distractorsPerSide + 1),canvas.width/2,canvas.height/2 - 50);
+      ctx.fillText(distractor.repeat(2*distractorsPerSide + 1),canvas.width/2,canvas.height/2 - 60);
       // stim in middle
       ctx.fillText(taskStimuliSet[trialCount],canvas.width/2,canvas.height/2);
       // distractors below
-      ctx.fillText(distractor.repeat(2*distractorsPerSide + 1),canvas.width/2,canvas.height/2 + 50);
+      ctx.fillText(distractor.repeat(2*distractorsPerSide + 1),canvas.width/2,canvas.height/2 + 60);
 
     // proceed to ITI screen after timeout
       stimTimeout = setTimeout(itiScreen,stimInterval);
@@ -342,6 +346,7 @@ function itiScreen(){
   // prepare ITI canvas
   ctx.fillStyle = accFeedbackColor();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.font = "bold 60px Arial";
 
   // display response feedback (correct/incorrect/too slow)
   ctx.fillText(accFeedback(),canvas.width/2,canvas.height/2);

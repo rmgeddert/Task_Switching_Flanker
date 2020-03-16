@@ -3,10 +3,10 @@
 
 // for testing
 let testMode = false;
-let speed = "normal"; //fast, normal
+let speed = "fast"; //fast, normal
 speed = (testMode == true) ? "fast" : speed; //testMode defaults to "fast"
 let skipPractice = false; // <- turn practice blocks on or off
-let openerNeeded = false; //true
+let openerNeeded = true; //true
 
 // ----- Experiment Paramenters (CHANGE ME) ----- //
 let stimInterval = (speed == "fast") ? 20 : 2000; //2000
@@ -46,7 +46,7 @@ let expType = 0; // see below
       0: No key press expected/needed
       1: Key press expected (triggered by stimScreen() func that presents stimuli)
       2: Key press from 1 received. Awaiting keyup event, which resets to 0 and calls itiScreen() function immediately.
-      3: Parcticipant still holding keypress from 1 during ITI. Awaitng keyup event, which resets to 0 but doesn't call itiScreen() function.
+      3: Participant still holding keypress from 1 during ITI. Awaitng keyup event, which resets to 0 but doesn't call itiScreen() function.
       4: Participant still holding keypress from 1 at start of next Trial. Call promptLetGo() func to get participant to let go. After keyup resume experiment and reset to 0.
       5: Key press from 0 still being held down. On keyup, reset to 0.
       6: Key press from 0 still being held down when stimScreen() func is called. Call promptLetGo() func. After keyup resume and reset to 0.
@@ -140,7 +140,6 @@ $(document).ready(function(){
     } else {
       // start experiment
       runStart = new Date().getTime();
-      loadImages();
       runInstructions();
     }
 });
@@ -150,39 +149,6 @@ let images = {
   "F": {},
   "C": {},
   "S": {}
-}
-
-function loadImages(){
-  // these are indexes, not file names
-  let controlNums = [0,1,2,3,4,5,6,7,8,9];
-  let proFlexNums = [0,1,2,3,4,5,6,7,8,9];
-  let proStabNums = [0,1,2,3,4,5,6,7,8,9];
-  let numControl = 4, numFlex = 2, numStab = 2; // how many images needed per block
-  let currArr;
-
-  // get images numbers for control blocks
-  currArr = controlNums;
-  loopAndLoad(numControl,"C");
-
-  // get image numbers for pro flexibility blocks
-  currArr = proFlexNums;
-  loopAndLoad(numFlex,"F");
-
-  // get images numbers for pro stability blocks
-  currArr = proStabNums;
-  loopAndLoad(numStab,"S");
-
-  function loopAndLoad(numImgNeeded, blockType){
-    for (var i = 0; i < numImgNeeded; i++) {
-      images[blockType][i] = new Image();
-      images[blockType][i].src = feedbackImages[blockType][getRandomFromArr()];
-    }
-  }
-
-  function getRandomFromArr(){
-    let randIndex = Math.floor(Math.random() * currArr.length);
-    return currArr.splice(randIndex, 1)[0];
-  }
 }
 
 function randIntFromInterval(min, max) { // min and max included
