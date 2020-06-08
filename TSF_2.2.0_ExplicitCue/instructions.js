@@ -69,7 +69,7 @@ function displayDefaults(stage){
     case "prac1-3":
       showFirst();
     case "prac1-1":
-    case "prac2";
+    case "prac2":
       $('.instruction-header').show();
       break;
     default:
