@@ -174,7 +174,7 @@ function getNextInstructions(slideNum, expStage){
       switch (slideNum){
         case 1:
           $( getImageText(instructionImages[5]) ).insertBefore( "#instructions" + slideNum);
-          return "There will be 2 numbers on either side of the center number. These numbers will either be the same or different than the target number.";
+          return "There will be numbers on both sides of the center number. These numbers will either be the same or different than the target number.";
         case 2:
           return "Do not respond to these numbers. You should only respond with respect to the target number.";
         case 3:
@@ -218,7 +218,7 @@ function getNextInstructions(slideNum, expStage){
     case "prac3":
       switch (slideNum){
         case 1:
-          return "In the final practice block, you will indicate if the number is greater or less than 5 OR odd or even, depending on the color of the rectangle around the numbers.";
+          return "In the final practice block, you will indicate if the number is greater or less than 5 OR odd or even, depending on the color of the numbers.";
         case 2: // which ever was practiced first
           if (rectangleCue == true) {
             iterateAgain = true;
@@ -237,7 +237,7 @@ function getNextInstructions(slideNum, expStage){
         case 3:
           task = 1;
           changeTextFormat('#instructions' + slideNum,'margin-top', '0px');
-          return "If the rectangle is " + colorFirstTask() + ", indicate if the target number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
+          return "If the numbers are " + colorFirstTask() + ", indicate if the target number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
         case 4: // which ever was practiced second
           if (rectangleCue == true) {
             iterateAgain = true;
@@ -256,7 +256,7 @@ function getNextInstructions(slideNum, expStage){
         case 5:
           task = 2;
           changeTextFormat('#instructions' + slideNum,'margin-top', '0px');
-          return "If the rectangle is " + colorSecondTask() + ", indicate if the target number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
+          return "If the numbers are " + colorSecondTask() + ", indicate if the target number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
         case 6:
           return "Remember to only respond to the center number and to respond as quickly and as accurately as possible. You must get at least " + practiceAccCutoff + "% correct in order to move on to the main task.";
         case 7:
@@ -274,12 +274,13 @@ function getNextInstructions(slideNum, expStage){
         case 2:
           return "We ask that you get > 75% correct over the course of the experiment. Performing worse may impact whether you are compensated.";
         case 3:
-          return "Please also try to respond as quickly and as accuractely as possible.";
+          changeTextFormat('#instructions' + slideNum,'font-weight','bold');
+          return "Remember to respond as quickly and as accuractely as possible.";
       }
     case "main2":
       switch (slideNum){
         case 1:
-          return "Remember, respond greater/less than 5 or odd/even based on the color of the rectangle around the numbers."
+          return "Remember, respond greater/less than 5 or odd/even based on the color of the the numbers."
         case 2:
           if (rectangleCue == true) {
             iterateAgain = true;
@@ -298,7 +299,7 @@ function getNextInstructions(slideNum, expStage){
         case 3:
           task = 1;
           changeTextFormat('#instructions' + slideNum,'margin-top', '0px');
-          return "If the rectangle is " + colorFirstTask() + ", indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
+          return "If the numbers are " + colorFirstTask() + ", indicate if the target number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
         case 4:
           if (rectangleCue == true) {
             iterateAgain = true;
@@ -317,7 +318,7 @@ function getNextInstructions(slideNum, expStage){
         case 5:
           task = 2;
           changeTextFormat('#instructions' + slideNum,'margin-top', '0px');
-          return "If the rectangle is " + colorSecondTask() + ", indicate if the number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
+          return "If the numbers are " + colorSecondTask() + ", indicate if the target number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
         case 6:
           return "The experiment will consist of " + numBlocks +" blocks of " + trialsPerBlock + " trials each. You will have a short rest break between each block.";
         case 7:
@@ -367,12 +368,9 @@ function displayDefaults(stage){
     case "prac1-2":
     case "prac1-3":
       showFirst();
-    case "prac1-1":
-      $('.instruction-header').show();
-      break;
     default:
       showFirst();
-      $('.instruction-header').hide();
+      $('.instruction-header').show();
       break;
   }
 }
