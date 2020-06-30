@@ -1,4 +1,6 @@
-# Task Switching Flanker - Version 2.2.0
+# Task Switching Flanker - Version 2.1.0
+
+Update to TSF 2.0.0 - early flankers and cues.
 
 **Task Description**
 
@@ -8,7 +10,13 @@ Additionally, each number stimulus is flanked by distractor digits, that are eit
 
 # Version changes from previous
 
-Version 2.2.0 uses explicit pre-cues instead of an implicit colored/rectangle cues. Cue-Stimulus Interval is adjustable in `main.js`. This version also allows for early flankers that precede the target, but does not allow for informative task cues or colored task stimuli.
+In all previous versions, task selection was cued by the numbers themselves being highlighted in a color. Crucially, this prevents early cues (cues that precede target presentation and allow for preparation) since the stimuli themselves cue the task.
+
+Pilot testing of TSF version 2.0.0 revealed a robust switch cost but weak congruency/flanker effects. One possibility is that task set selection (which color?) and target selection (which number to focus on) happened concurrently, resulting in no flanker effect. In order to increase the flexibility of the task, Version 2.1.0 allows for the presentation of a rectangular cue that cues the task. Importantly, this cue can precede target presentation, allowing for task set preparation. Task set preparation is a classic component of task switching experiments, and while it reduces switch costs it does not erase them (see Kiesel et al. 2010, "residual cost").
+
+Additionally, not only can the cue now precede the target, flankers can also precede the target. This generally enhances flanker effects (Wyatt & Machado 2013). The preceding flankers can be task informative (colored red/blue), indicating the cued task and in effect precuing the task in a manner similar to the rectangle cue above, or noninformative (colored "black"). In the case of an early colored rectangular cue AND early flankers, the flanker will be uninformative regardless of variable settings.
+
+These settings can all be customized in `main.js`.
 
 # Repo Contents
 

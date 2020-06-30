@@ -10,7 +10,7 @@ Additionally, each number stimulus is flanked by distractor digits, that are eit
 
 # Version changes from previous
 
-TSF 2.0.0 fixes several issues in the flanker congruency manipulations. Specifically, incongruent stimuli are now either parity incongruent (e.g., '33433') or magnitude incongruent (e.g., '88488'), *depending on the cued task.* That is, on incongruent flanker trials, if the cued task is parity, then the stimulus will be parity incongruent, and vice versa. 
+TSF 2.0.0 fixes several issues in the flanker congruency manipulations. Specifically, incongruent stimuli are now either parity incongruent (e.g., '33433') or magnitude incongruent (e.g., '88488'), *depending on the cued task.* That is, on incongruent flanker trials, if the cued task is parity, then the stimulus will be parity incongruent, and vice versa.
 
 The rate of incongruent and congruent trials is now 50%/50%, fixing another issue in flanker proportions of version 1.0.0.
 
@@ -18,8 +18,8 @@ The rate of incongruent and congruent trials is now 50%/50%, fixing another issu
 
 `menu.html` calls `menu.js`, the main experiment script which calls the demographics, task, and submission scripts. `main.html` is the main task html file, and recruits a variety of scripts, including `main.js`, `instructions.js`, and `tasks.js`, which together run the task.
 
-To see the main experiment flow, run `menu.html` and then call the script `updateMenu()` using your browser's DevTools console. This will override the initial MTurk script that requires an MTurk ID.
+To run the entire MTurk experiment, run `menu.html` and then run the function `updateMenu()` in your browser's DevTools console. This will procede past the initial MTurk script that requires an MTurk ID.
 
-To see the main experiment, including instructions, practice, and the main task, run `main.html`.
+To see the main task itself, including instructions, practice, and the main task, run `main.html`.
 
 Email any questions or comments to raphael (dot) geddert (at) duke (dot) edu
