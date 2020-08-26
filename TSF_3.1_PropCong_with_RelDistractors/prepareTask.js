@@ -23,7 +23,7 @@ let magnitudeIncStim = {
 }
 
 function selectStimuli(){
-  let dict = {}, target;
+  let dict = {};
   let targets = ["1","2","3","4","6","7","8","9"];
 
   // create dictionary for target characteristics
@@ -40,13 +40,15 @@ function selectStimuli(){
   return dict;
 }
 
-// create look up dictionary for each full stimulus "33233" that describes its components and characteristics
+// create look up dictionary for each full stimulus (e.g. "33233") that describes its components and characteristics
 function defineStimuli(stimDict){
   let dict = {
     target: {},
     p: {},
     m: {},
     distractor: {},
+    dist_p: {},
+    dist_m:{},
     congruency: {}
   };
 
@@ -69,25 +71,103 @@ function defineStimuli(stimDict){
     dict['distractor'][stimulus] = flanker;
     dict['p'][stimulus] = stimDict[target]["p"];
     dict['m'][stimulus] = stimDict[target]["m"];
+    dict['dist_p'][stimulus] = stimDict[flanker]["p"];
+    dict['dist_m'][stimulus] = stimDict[flanker]["m"];
     dict['congruency'][stimulus] = congruency;
   }
 }
 
 // ------------------------------------- //
-//         Create arrays for task        //
+//      Create arrays for prac task      //
 // ------------------------------------- //
-createStimuliAndTaskSets(nTrials, blockLetter){
+// uses some prac specific functions and the rest are from main task functions below
+
+function createPracticeTaskPairs(nTrials, task){
+  let targetArr = createTargetArr(nTrials);
+  let flankerCongruenciesArr = createPracticeFlankersArr(nTrials);
+  let taskArr = createPracTaskArray(nTrials, task);
+  let stimArr = createStimArray(taskArr, flankerCongruenciesArr, targetArr);
+  return stimTaskPairArr = stimArr.map((s, i) => [s, taskArr[i]]);
+}
+
+function createPracticeFlankersArr(nTrials){
+  // calc how mnay congruent/incongruent trials are needed
+  let nConTrials = Math.ceil(nTrials * 0.5);
+  let nIncTrials = nTrials - nConTrials;
+
+  // array of congruent and incongruent trials
+  let congruenciesArr = new Array(nConTrials).fill("c").concat(new Array(nIncTrials).fill("i"));
+
+  // return shuffled array
+  return shuffle(congruenciesArr);
+}
+
+function createPracTaskArray(nTrials, task){
+  if (task == "") {
+    let taskA = "p", taskB = "m";
+
+    // calc how many switch and repeat trials needed
+    let nSwitchTrials = Math.ceil(nTrials * 0.5);
+    let nRepeatTrials = nTrials - nSwitchTrials;
+
+    // choose which task is first
+    let task1 = (Math.random() > 0.5) ? taskA : taskB;
+    let task2 = (task1 == taskA) ? taskB : taskA;
+
+    //build array with switch trial pairs ("A", "B") x ###
+    let switchArr = [];
+    for (let i = 0; i < Math.ceil((nTrials * 0.5) / 2); i++) {
+      switchArr.push(task1);
+      switchArr.push(task2);
+    }
+
+    // get number of switches
+    nSwitches = switchArr.length;
+
+    //function to get all indices of a certain value(val) in an array (arr)
+    function getAllIndexes(arr, val) {
+      var indexes = [];
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] === val) {indexes.push(i);}
+      }
+      return indexes;
+    }
+
+    // insert repeat trials into switchArr
+    for (let i = 0; i < Math.ceil((nTrials - nSwitches) / 2); i++) {
+      // insert an A task
+      let a_indexes = getAllIndexes(switchArr,taskA);
+      let repeatloc_a = a_indexes[Math.floor(Math.random()*a_indexes.length)];
+      switchArr.splice(repeatloc_a, 0, taskA);
+
+      // insert task B
+      let b_indexes = getAllIndexes(switchArr,taskB);
+      let repeatloc_b = b_indexes[Math.floor(Math.random()*b_indexes.length)];
+      switchArr.splice(repeatloc_b, 0, taskB);
+    }
+
+    return switchArr;
+  } else {
+    return new Array(nTrials).fill(task);
+  }
+}
+
+// ------------------------------------- //
+//      Create arrays for main task      //
+// ------------------------------------- //
+function createStimuliAndTaskSets(nTrials, blockLetter){
   let targetArr, flankerCongruenciesArr, taskArr, stimArr;
+  let iterationCount = 1;
   do {
-    targetArr = createTargetArr(nTrials)
+    targetArr = createTargetArr(nTrials);
     flankerCongruenciesArr = createFlankersArray(nTrials, blockLetter);
     taskArr = createTaskArray(nTrials, blockLetter);
-    stimArr = createStimArray(taskArr, flankerCongruenciesArr);
-  } while (stimArr == undefined)
+    stimArr = createStimArray(taskArr, flankerCongruenciesArr, targetArr);
+    iterationCount++;
+  } while (stimArr == undefined && iterationCount < 100)
 
   // return zipped task and stim arr into one variable
   return stimTaskPairArr = stimArr.map((s, i) => [s, taskArr[i]]);
-});
 }
 
 function createTargetArr(nTrials){
@@ -104,7 +184,7 @@ function createTargetArr(nTrials){
 
 function createTargetBatch(){
   let targets = ["1","2","3","4","6","7","8","9"];
-  let targetArr = targets.concat(targets);
+  let targetArr = targets.concat(targets); //one batch has 2 sets of targets
 
   // shuffle targets
   do {
@@ -182,9 +262,10 @@ function createTaskArray(batchSize, blockLetter){
   return switchArr;
 }
 
-function createStimArray(taskArr, flankerCongruencies){
+function createStimArray(taskArr, flankerCongruencies, targetArr){
   let stimulusArr = [], flanker;
   for (let i = 0; i < taskArr.length; i++) {
+    let target = targetArr[i];
     // determine flanker based on task and congruency
     if (flankerCongruencies[i] == "i") {
       if (taskArr[i] == "p") {
@@ -196,12 +277,12 @@ function createStimArray(taskArr, flankerCongruencies){
       flanker = target;
     }
 
-    // check if flankers repeat from previous trial
-    if (i != 0) {
-      if (flanker == prevFlanker | flanker == prevTarget){
-        return undefined;
-      }
-    }
+    // // check if flankers repeat from previous trial
+    // if (i != 0) {
+    //   if (flanker == prevFlanker | flanker == prevTarget){
+    //     return undefined;
+    //   }
+    // }
 
     // add stimulus to arr
     stimulusArr.push(flanker + flanker + target + flanker + flanker);
@@ -212,6 +293,63 @@ function createStimArray(taskArr, flankerCongruencies){
   }
 
   return stimulusArr;
+}
+
+function getRelevancyArray(nTrials){
+  let relevancyArr = [], newBatch;
+  let batchesNeeded = Math.ceil(nTrials/16);
+  for (let i = 0; i < batchesNeeded; i++) {
+    newBatch = createRelevancyBatch(16);
+    relevancyArr = relevancyArr.concat(newBatch);
+  }
+  return relevancyArr;
+}
+
+function createRelevancyBatch(batchSize){
+  let nTaskRelTrials = Math.floor(batchSize * 0.9)
+  let nDistRelTrials = batchSize - nTaskRelTrials
+
+  let relevancyArr = new Array(nTaskRelTrials).fill("t").concat(new Array(nDistRelTrials).fill("d"));
+
+  do {
+    shuffle(relevancyArr)
+  } while (!relOrderOk(relevancyArr))
+
+  return relevancyArr;
+
+  function relOrderOk(arr){
+    // check if "d" indices repeat, or are in index positions 0 or 1
+    let d_indices = getAllIndexes(arr, "d")
+
+    for (var i = 0; i < d_indices.length; i++) {
+      if (d_indices[i] == d_indices[i+1] - 1 || d_indices.indexOf(0) != -1 || d_indices.indexOf(1) != -1) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+  //function to get all indices of a certain value(val) in an array (arr)
+  function getAllIndexes(arr, val) {
+    var indexes = [];
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] === val) {indexes.push(i);}
+    }
+    return indexes;
+  }
+}
+
+function createPracticeFlankersArr(nTrials){
+  // calc how mnay congruent/incongruent trials are needed
+  let nConTrials = Math.ceil(nTrials * 0.5);
+  let nIncTrials = nTrials - nConTrials;
+
+  // array of congruent and incongruent trials
+  let congruenciesArr = new Array(nConTrials).fill("c").concat(new Array(nIncTrials).fill("i"));
+
+  // return shuffled array
+  return shuffle(congruenciesArr);
 }
 
 // determine if trial is switch or repeat (first trials in blocks are "n")
@@ -311,7 +449,11 @@ function createActionArray(){
   let actionArr = [];
   taskStimuliSet.forEach(function(taskStim, index){
     let task = cuedTaskSet[index];
-    actionArr.push(responseMappings[taskMapping][expStimDict[task][taskStim]]);
+    if (relevancyArr[index] == "t" || (expStage.indexOf("prac") != -1 && expStage.indexOf("prac4") == -1)) { //if trial is target trial
+      actionArr.push(responseMappings[taskMapping][expStimDict[task][taskStim]]);
+    } else { //if trial is distractor trial  
+      actionArr.push(responseMappings[taskMapping][expStimDict["dist_" + task][taskStim]])
+    }
   })
   return actionArr;
 }

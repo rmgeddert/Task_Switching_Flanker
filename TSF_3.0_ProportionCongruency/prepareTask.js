@@ -180,7 +180,7 @@ function createTargetArr(nTrials){
 
 function createTargetBatch(){
   let targets = ["1","2","3","4","6","7","8","9"];
-  let targetArr = targets.concat(targets);
+  let targetArr = targets.concat(targets); //one batch has 2 sets of targets
 
   // shuffle targets
   do {

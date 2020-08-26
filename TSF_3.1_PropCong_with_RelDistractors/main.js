@@ -9,13 +9,13 @@ let skipPractice = false; // turn practice blocks on or off
 let openerNeeded = false; //true
 
 // ----- Experiment Paramenters (CHANGE ME) ----- //
-let rectangleCue = false; // if true, colored rectangular cue signals task, else the numbers themselves are colored
+let rectangleCue = true; // if true, colored rectangular cue signals task, else the numbers themselves are colored
 let earlyDistractors = false; //if true, flankers precede target presentation
 let stimInterval = (speed == "fast") ? 10 : 2000; //2000 stimulus interval
 let fixInterval = (speed == "fast") ? 10 : 500; //500 ms intertrial interval
 let earlyFlankerInterval = (earlyDistractors == false) ? 0 : ((speed == "fast") ? 10 : 300); //200; early flanker (relative to target presentation)
-let informativeEarlyFlankers = true; //if informative, early flankers colored like task
-let earlyCueInterval = (rectangleCue != true) ? 0 : ((speed == "fast") ? 20 : 200); //100; early cue (relative to target presentation), 0 makes cue concurrant with target presentation. only valid with rectangle cue
+let informativeEarlyFlankers = false; //if informative, early flankers colored like task
+let earlyCueInterval = (rectangleCue != true) ? 0 : ((speed == "fast") ? 0 : 0); //100; early cue (relative to target presentation), 0 makes cue concurrant with target presentation. only valid with rectangle cue
 let numBlocks = 4, trialsPerBlock = 128; // (multiples of 16) (48 usually)
 let numPracticeTrials = 16;
 let miniBlockLength = 0; //doesn't need to be multiple of 24. 0 to turn off
@@ -33,7 +33,7 @@ function ITIInterval(){
 //initialize global task variables
 let selectedStimDict = selectStimuli(); // establish stimuli set for task
 let expStimDict = defineStimuli(selectedStimDict); //build reference dictionary for stimuli
-let taskStimuliSet, cuedTaskSet, actionSet, switchRepeatList; // global vars for task arrays
+let taskStimuliSet, cuedTaskSet, actionSet, switchRepeatList, relevancyArr; // global vars for task arrays
 let canvas, ctx; // global canvas variable
 let expStage = (skipPractice == true) ? "main1" : "prac1-1";
 // vars for tasks (iterator, accuracy) and reaction times:
@@ -79,7 +79,6 @@ let blockOrder = getBlockOrder(randIntFromInterval(1,4));
   // Congruency manipulations
   // A: H Fl L TS, B: H FL H TS, C: L Fl L TS, D: L Fl L TS
   // high 75% (H), low 25% (L), Flanker Inc (Fl), Task Switch (TS)
-
 
 // ------ EXPERIMENT STARTS HERE ------ //
 $(document).ready(function(){
