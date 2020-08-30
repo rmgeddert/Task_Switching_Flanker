@@ -6,5 +6,7 @@ let instructionImages = {
   5: 'images/distractorNumbers.png',
   6: 'images/targetNumber.png',
   7: 'images/blueRect.png',
-  8: 'images/redRect.png'
+  8: 'images/redRect.png',
+  9: 'images/targetColored.png',
+  10: 'images/distractorsColored.png'
 }

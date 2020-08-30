@@ -8,7 +8,7 @@ let instructions = {
   },
   // contains the max value of each instruction iteration. iteration will STOP at max.
   max: {
-    "prac1-1": 3, "prac1-2": 3, "prac1-3": 4, "prac2": 6, "prac3": 8, "prac4": 8, "main1": 3, "main2": 8
+    "prac1-1": 3, "prac1-2": 3, "prac1-3": 4, "prac2": 6, "prac3": 8, "prac4": 7, "main1": 3, "main2": 8
   },
   // what does instruction section end with?
   // #nextSectionButton, #startExpButton, buttonPressNextSection, buttonPressStartTask
@@ -222,7 +222,7 @@ function getNextInstructions(slideNum, expStage){
     case "prac3":
       switch (slideNum){
         case 1:
-          return "In the main task, you will need to respond if the number is greater or less than 5 or odd/even, depending on the color of the numbers.";
+          return "In the main task, you will need to respond if the number is greater or less than 5 or odd/even, depending on the color of the rectangle around the numbers.";
         case 2: // which ever was practiced first
           if (rectangleCue == true) {
             iterateAgain = true;
@@ -241,7 +241,7 @@ function getNextInstructions(slideNum, expStage){
         case 3:
           task = 1;
           changeTextFormat('#instructions' + slideNum,'margin-top', '0px');
-          return "If the numbers are " + colorFirstTask() + ", indicate if the target number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
+          return "If the rectangle is " + colorFirstTask() + ", indicate if the target number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
         case 4: // which ever was practiced second
           if (rectangleCue == true) {
             iterateAgain = true;
@@ -260,7 +260,7 @@ function getNextInstructions(slideNum, expStage){
         case 5:
           task = 2;
           changeTextFormat('#instructions' + slideNum,'margin-top', '0px');
-          return "If the numbers are " + colorSecondTask() + ", indicate if the target number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
+          return "If the rectangle is " + colorSecondTask() + ", indicate if the target number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
         case 6:
           return "Remember to only respond to the center number and to respond as quickly and as accurately as possible. You must get at least " + practiceAccCutoff + "% correct in order to move on to the main task.";
         case 7:
@@ -274,12 +274,26 @@ function getNextInstructions(slideNum, expStage){
     case "prac4":
       switch (slideNum){
         case 1:
-          return "Great job! You are now ready to begin the main experiment.";
+          return "Great job! This is the final practice task before the main task.";
         case 2:
-          return "We ask that you get > 75% correct over the course of the experiment. Performing worse may impact whether you are compensated.";
+          return "In the main task, you will respond to the center target number on most trials, but not always.";
         case 3:
+          $( getImageText(instructionImages[9]) ).insertBefore( "#instructions" + slideNum);
+          return "If the central number is colored black, indicate if the center number is greater/ess than 5 or odd/even based on the color of the rectangle as you just practiced.";
+        case 3:
+          $( getImageText(instructionImages[10]) ).insertBefore( "#instructions" + slideNum);
+          return "However, if the central number is colored grey, you need to respond in relation to the outside numbers that are colored black, not the central number. Indicate if the outside numbers are greater/less than 5 or odd/even, depending on the color of the rectangle.";
+        case 4:
+          return "Remember, if the rectangle is " + colorFirstTask() + ", indicate if the number in black is " + getTaskInstruction(getHand(1),1) + "using the " + getHand(1) + " hand."
+        case 5:
+          return "If the rectangle is " + colorSecondTask() + ", indicate if the number in black is " + getTaskInstruction(getHand(2),2) + "using the " + getHand(2) + " hand."
+        case 6:
+          iterateAgain = true;
+          $( getImageText(instructionImages[2]) ).insertAfter( "#instructions" + slideNum);
+          return "This block contains "+numPracticeTrials+" trials. You must get " + practiceAccCutoff + "% correct to move on to the main task. Please place your hands on the 'Z' and 'X' keys and 'N' and 'M' keys as shown.";
+        case 7:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          return "Remember to respond as quickly and as accuractely as possible.";
+          return "Press any button begin.";
       }
     case "main1":
       switch (slideNum){
@@ -379,9 +393,9 @@ function exitResponse(){
 function displayDefaults(stage){
   // default values of instruction blocks. add any special cases
   switch(stage){
-    case "prac1-2":
-    case "prac1-3":
-      showFirst();
+    // case "prac1-2":
+    // case "prac1-3":
+    //   showFirst();
     default:
       showFirst();
       $('.instruction-header').show();
