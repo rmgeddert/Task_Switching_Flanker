@@ -8,7 +8,7 @@ let instructions = {
   },
   // contains the max value of each instruction iteration. iteration will STOP at max.
   max: {
-    "prac1-1": 3, "prac1-2": 3, "prac1-3": 4, "prac2": 6, "prac3": 8, "prac4": 7, "main1": 3, "main2": 8
+    "prac1-1": 3, "prac1-2": 3, "prac1-3": 4, "prac2": 6, "prac3": 8, "prac4": 7, "main1": 3, "main2": 9
   },
   // what does instruction section end with?
   // #nextSectionButton, #startExpButton, buttonPressNextSection, buttonPressStartTask
@@ -276,17 +276,15 @@ function getNextInstructions(slideNum, expStage){
         case 1:
           return "Great job! This is the final practice task before the main task.";
         case 2:
-          return "In the main task, you will respond to the center target number on most trials, but not always.";
+          return "In the main task, you will respond to the center number on most trials, but not always.";
         case 3:
           $( getImageText(instructionImages[9]) ).insertBefore( "#instructions" + slideNum);
-          return "If the central number is colored black, indicate if the center number is greater/ess than 5 or odd/even based on the color of the rectangle as you just practiced.";
-        case 3:
-          $( getImageText(instructionImages[10]) ).insertBefore( "#instructions" + slideNum);
-          return "However, if the central number is colored grey, you need to respond in relation to the outside numbers that are colored black, not the central number. Indicate if the outside numbers are greater/less than 5 or odd/even, depending on the color of the rectangle.";
+          return "If the number in the center is colored black, indicate if it is greater/less than 5 or odd/even based on the color of the rectangle as you just practiced.";
         case 4:
-          return "Remember, if the rectangle is " + colorFirstTask() + ", indicate if the number in black is " + getTaskInstruction(getHand(1),1) + "using the " + getHand(1) + " hand."
+          $( getImageText(instructionImages[10]) ).insertBefore( "#instructions" + slideNum);
+          return "However, if the number in the center is colored grey, respond using the outside numbers that are colored black instead. Indicate if the outside numbers are greater/less than 5 or odd/even, depending on the color of the rectangle.";
         case 5:
-          return "If the rectangle is " + colorSecondTask() + ", indicate if the number in black is " + getTaskInstruction(getHand(2),2) + "using the " + getHand(2) + " hand."
+          return "Remember, use your " + getHand(1) + " hand if the rectangle is colored " + colorFirstTask() + " to indicate if the number is " + getTaskInstruction(getHand(1),1) + "/" + getTaskInstruction(getHand(1),2) + " and use your " + getHand(2) + " hand if the rectangle is colored " + colorSecondTask() + " to indicate if the number is " + getTaskInstruction(getHand(2),1) + "/" + getTaskInstruction(getHand(2),2) + ".";
         case 6:
           iterateAgain = true;
           $( getImageText(instructionImages[2]) ).insertAfter( "#instructions" + slideNum);
@@ -308,7 +306,7 @@ function getNextInstructions(slideNum, expStage){
     case "main2":
       switch (slideNum){
         case 1:
-          return "Remember, respond greater/less than 5 or odd/even based on the color of the the numbers."
+          return "Remember, respond greater/less than 5 or odd/even based on the color of the rectangle around the numbers."
         case 2:
           if (rectangleCue == true) {
             iterateAgain = true;
@@ -327,7 +325,7 @@ function getNextInstructions(slideNum, expStage){
         case 3:
           task = 1;
           changeTextFormat('#instructions' + slideNum,'margin-top', '0px');
-          return "If the numbers are " + colorFirstTask() + ", indicate if the target number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
+          return "If the rectangle is " + colorFirstTask() + ", indicate if the number in black is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
         case 4:
           if (rectangleCue == true) {
             iterateAgain = true;
@@ -346,14 +344,16 @@ function getNextInstructions(slideNum, expStage){
         case 5:
           task = 2;
           changeTextFormat('#instructions' + slideNum,'margin-top', '0px');
-          return "If the numbers are " + colorSecondTask() + ", indicate if the target number is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
+          return "If the rectangle is " + colorSecondTask() + ", indicate if the number in black is " + getTaskInstruction(getHand(task),1) + " ('" + getLetter(getHand(task),1) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),1) + " finger) or " + getTaskInstruction(getHand(task),2) + " ('" + getLetter(getHand(task),2) + "' with " + getHand(task) + " hand " + getFinger(getHand(task),2) + " finger).";
         case 6:
-          return "The experiment will consist of " + numBlocks +" blocks of " + trialsPerBlock + " trials each. You will have a short rest break between each block.";
+          return "Remember to only respond to the numbers that are colored black, not the numbers that are colored grey."
         case 7:
+          return "The experiment will consist of " + numBlocks +" blocks of " + trialsPerBlock + " trials each. You will have a short rest break between each block.";
+        case 8:
           iterateAgain = true;
           $( getImageText(instructionImages[2]) ).insertAfter( "#instructions" + slideNum);
           return "Please place your right hand on the 'N' and 'M' keys and left hand on the 'Z' and 'X' keys as shown.";
-        case 8:
+        case 9:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
           return "Press any button begin."
       }

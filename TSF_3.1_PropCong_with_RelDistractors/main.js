@@ -18,7 +18,7 @@ let informativeEarlyFlankers = false; //if informative, early flankers colored l
 let earlyCueInterval = (rectangleCue != true) ? 0 : ((speed == "fast") ? 0 : 0); //100; early cue (relative to target presentation), 0 makes cue concurrant with target presentation. only valid with rectangle cue
 let numBlocks = 4, trialsPerBlock = 128; // (multiples of 16) (48 usually)
 let numPracticeTrials = 16;
-let miniBlockLength = 0; //doesn't need to be multiple of 24. 0 to turn off
+let miniBlockLength = 42; //doesn't need to be multiple of 24. 0 to turn off
 let practiceAccCutoff = (testMode == true) ? 0 : 75; // 75 acc%
 let taskAccCutoff = (testMode == true) ? 0 : 75; // 75 acc%
 
