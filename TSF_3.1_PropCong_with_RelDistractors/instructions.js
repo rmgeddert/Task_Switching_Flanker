@@ -198,7 +198,7 @@ function getNextInstructions(slideNum, expStage){
           return "This block contains "+numPracticeTrials+" trials. Please place your " + getHand(task) + " hand on the '" + getLetter(getHand(task),1) + "' and '" + getLetter(getHand(task),2) + "' keys as shown.";
         case 4:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          return "Press any button begin."
+          return "Press any button to begin."
       }
     case "prac2":
       task = 2;
@@ -217,7 +217,7 @@ function getNextInstructions(slideNum, expStage){
           return "This block contains "+numPracticeTrials+" trials. Please place your " + getHand(task) + " hand on the '" + getLetter(getHand(task),1) + "' and '" + getLetter(getHand(task),2) + "' keys as shown.";
         case 6:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          return "Press any button begin."
+          return "Press any button to begin."
       }
     case "prac3":
       switch (slideNum){
@@ -269,7 +269,7 @@ function getNextInstructions(slideNum, expStage){
           return "This block contains "+numPracticeTrials+" trials. Please place your hands on the 'Z' and 'X' keys and 'N' and 'M' keys as shown.";
         case 8:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          return "Press any button begin."
+          return "Press any button to begin."
       }
     case "prac4":
       switch (slideNum){
@@ -291,7 +291,7 @@ function getNextInstructions(slideNum, expStage){
           return "This block contains "+numPracticeTrials+" trials. You must get " + practiceAccCutoff + "% correct to move on to the main task. Please place your hands on the 'Z' and 'X' keys and 'N' and 'M' keys as shown.";
         case 7:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          return "Press any button begin.";
+          return "Press any button to begin.";
       }
     case "main1":
       switch (slideNum){
@@ -355,7 +355,7 @@ function getNextInstructions(slideNum, expStage){
           return "Please place your right hand on the 'N' and 'M' keys and left hand on the 'Z' and 'X' keys as shown.";
         case 9:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
-          return "Press any button begin."
+          return "Press any button to begin."
       }
   }
 };

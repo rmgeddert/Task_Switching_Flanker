@@ -295,7 +295,7 @@ function createStimArray(taskArr, flankerCongruencies, targetArr){
   return stimulusArr;
 }
 
-function getRelevancyArray(nTrials){
+function getRelevancyArray(nTrials, propCenterTrials){
   let relevancyArr = [], newBatch;
   let batchesNeeded = Math.ceil(nTrials/16);
   for (let i = 0; i < batchesNeeded; i++) {
@@ -303,15 +303,15 @@ function getRelevancyArray(nTrials){
       newBatch = new Array(16).fill("t");
       relevancyArr = relevancyArr.concat(newBatch);
     } else {
-      newBatch = createRelevancyBatch(16);
+      newBatch = createRelevancyBatch(16, propCenterTrials);
       relevancyArr = relevancyArr.concat(newBatch);
     }
   }
   return relevancyArr;
 }
 
-function createRelevancyBatch(batchSize){
-  let nTaskRelTrials = Math.floor(batchSize * 0.9)
+function createRelevancyBatch(batchSize, propCenterTrials){
+  let nTaskRelTrials = Math.floor(batchSize * propCenterTrials)
   let nDistRelTrials = batchSize - nTaskRelTrials
 
   let relevancyArr = new Array(nTaskRelTrials).fill("t").concat(new Array(nDistRelTrials).fill("d"));
