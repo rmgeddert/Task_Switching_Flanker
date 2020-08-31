@@ -437,7 +437,7 @@ function itiScreen(){
     blockTrialCount + 1, getAccuracy(acc), respTime, stim,
     expStimDict["target"][stim], expStimDict["distractor"][stim],
     expStimDict["congruency"][stim], cuedTaskSet[trialCount],
-    switchRepeatList[trialCount], partResp, stimOnset, respOnset,
+    switchRepeatList[trialCount], relevancyArr[trialCount], partResp, stimOnset, respOnset,
     blockType, NaN, NaN, NaN]);
   console.log(data);
 
@@ -466,7 +466,7 @@ function miniBlockScreen(){
   ctx.font = "25px Arial";
 
   // display miniblock text
-  ctx.fillText("You are "+ Math.round((trialCount/trialsPerBlock)*100)+"% through this block.",canvas.width/2,canvas.height/2 - 50);
+  ctx.fillText("You are "+ Math.round(((trialCount%trialsPerBlock)/trialsPerBlock)*100)+"% through this block.",canvas.width/2,canvas.height/2 - 50);
   ctx.fillText("Your overall accuracy so far is " + Math.round((accCount/trialCount)*100) + "%.",canvas.width/2,canvas.height/2);
   ctx.fillText("Press any button to continue.",canvas.width/2,canvas.height/2 + 100);
   ctx.font = "italic bold 22px Arial";

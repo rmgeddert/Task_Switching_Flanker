@@ -18,7 +18,7 @@ let informativeEarlyFlankers = false; //if informative, early flankers colored l
 let earlyCueInterval = (rectangleCue != true) ? 0 : ((speed == "fast") ? 0 : 0); //100; early cue (relative to target presentation), 0 makes cue concurrant with target presentation. only valid with rectangle cue
 let numBlocks = 4, trialsPerBlock = 128; // (multiples of 16) (48 usually)
 let numPracticeTrials = 16;
-let miniBlockLength = 42; //doesn't need to be multiple of 24. 0 to turn off
+let miniBlockLength = 64; //doesn't need to be multiple of 24. 0 to turn off
 let practiceAccCutoff = (testMode == true) ? 0 : 75; // 75 acc%
 let taskAccCutoff = (testMode == true) ? 0 : 75; // 75 acc%
 
@@ -117,14 +117,14 @@ $(document).ready(function(){
     } else if (expType == 7) {
       // 7: feedback - press button to start next block
       sectionEnd = new Date().getTime() - runStart;
-      data.push(["feedback", sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      data.push(["feedback", sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
       console.log(data);
       expType = 0;
       countDown(3);
     } else if (expType == 8) { // 8: "press button to start task"
       // log how much time was spent in this section
       sectionEnd = new Date().getTime() - runStart;
-      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
       console.log(data);
       // reset expStage and start task
       expType = 0;
@@ -132,7 +132,7 @@ $(document).ready(function(){
     } else if (expType == 9) { // 9: "press button to start next section"
       // log how much time was spent in this section
       sectionEnd = new Date().getTime() - runStart;
-      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
       console.log(data);
       // reset expStage and proceed to next section
       expType = 0;
@@ -140,7 +140,7 @@ $(document).ready(function(){
     } else if (expType == 11) { // repeat instructions
       // log how much time was spent in this section
       sectionEnd = new Date().getTime() - runStart;
-      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
       console.log(data);
       // iterate block and go back to instructions
       expType = 0;

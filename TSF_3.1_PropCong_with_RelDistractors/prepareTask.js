@@ -299,8 +299,13 @@ function getRelevancyArray(nTrials){
   let relevancyArr = [], newBatch;
   let batchesNeeded = Math.ceil(nTrials/16);
   for (let i = 0; i < batchesNeeded; i++) {
-    newBatch = createRelevancyBatch(16);
-    relevancyArr = relevancyArr.concat(newBatch);
+    if ((expStage.indexOf("prac") != -1 && expStage.indexOf("prac4") == -1)) {
+      newBatch = new Array(16).fill("t");
+      relevancyArr = relevancyArr.concat(newBatch);
+    } else {
+      newBatch = createRelevancyBatch(16);
+      relevancyArr = relevancyArr.concat(newBatch);
+    }
   }
   return relevancyArr;
 }
@@ -451,7 +456,7 @@ function createActionArray(){
     let task = cuedTaskSet[index];
     if (relevancyArr[index] == "t" || (expStage.indexOf("prac") != -1 && expStage.indexOf("prac4") == -1)) { //if trial is target trial
       actionArr.push(responseMappings[taskMapping][expStimDict[task][taskStim]]);
-    } else { //if trial is distractor trial  
+    } else { //if trial is distractor trial
       actionArr.push(responseMappings[taskMapping][expStimDict["dist_" + task][taskStim]])
     }
   })

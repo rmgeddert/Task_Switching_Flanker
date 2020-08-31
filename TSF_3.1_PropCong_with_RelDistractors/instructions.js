@@ -129,7 +129,7 @@ function runInstructions(){
 
     // log data for time spent on this section
     sectionEnd = new Date().getTime() - runStart;
-    data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+    data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
     console.log(data);
 
     // clear all button press listeners
@@ -142,7 +142,7 @@ function runInstructions(){
   $(document).on('click', '#nextSectionButton', function(){
     // log data for time spent on this section
     sectionEnd = new Date().getTime() - runStart;
-    data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+    data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
     console.log(data);
 
     // clear all button press listeners
