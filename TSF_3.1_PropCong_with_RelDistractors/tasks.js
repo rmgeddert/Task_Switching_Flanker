@@ -77,7 +77,7 @@ function createTaskArrays(numTrials){
   taskStimuliSet = getStimSet(taskStimuliPairs);
   cuedTaskSet = getTaskSet(taskStimuliPairs);
   switchRepeatList = getSwitchRepeatList(cuedTaskSet, numTrials);
-  relevancyArr = getRelevancyArray(numTrials, 0.9);
+  relevancyArr = getRelevancyArray(taskStimuliPairs.length, 0.9);
   actionSet = createActionArray();
 }
 
