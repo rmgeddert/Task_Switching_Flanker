@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="jquery-3.4.1.js"></script>
+	<script type="text/javascript" src ="menu.js"></script>
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<table>
+		<tr>
+			<td>
+				<p id="instruction" style="font-family: arial; font-size: 40px;"></p>
+				<p id="NoGo" style="font-family: arial; color: black; font-size: 40px;"></p>
+				<button id="myButton"> Continue </button>
+				<form id="mturk_form" method="POST" action="https://dibs-web01.vm.duke.edu/AMTSubmit/dataHandler.php">
+					<!-- <form id="mturk_form" method="POST" action="https://workersandbox.mturk.com/mturk/externalSubmit"> -->
+					<!-- <form id="mturk_form" method="POST" action="https://wwww.mturk.com/mturk/externalSubmit"> -->
+					<input type="hidden" id="assignmentId" name="assignmentId" value="">
+					<input type="hidden" id="workerId" name="workerId" value="">
+					<input type="hidden" id="hitId" name="hitId" value="">
+					<input type="hidden" id="RTs" name="RTs" value="">
+					<input type="hidden" id="demographics" name="demographics" value="TaskSwitchFlanker">
+					<input type="hidden" id="ExpName" name="ExpName" value="TaskSwitchFlanker">
+					<p style="font-size:22px; margin-left: 50px; margin-right:50px;">
+						Thank you for participating in this study. In this particular experiment, we were looking to see how the interference caused by switching between tasks interacted with the interference caused by distractor numbers. By isolating these independent effects, future experiments will allow us to manipulate them in a variety of interesting ways that will help us better understand attention and cognition.
+					</p>
+					<p style="font-size:22px; margin-left: 50px; margin-right:50px;">
+						If you would like to know more about or have any other questions about this experiment or your data, please feel free to contact me at rmg55@duke.edu or the principal investigator Tobias Egner at tobias.egner@duke.edu. Thank you so much for your participation!
+					</p>
+					<p style="font-size:24px">
+						Please click the "Submit" button to upload your data.
+					</p>
+					<input id="submitButton" type="submit" name="Finish" value="Submit">
+				</form>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

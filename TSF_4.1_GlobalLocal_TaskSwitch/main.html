@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <link rel="stylesheet" href="styles.css">
+    <script src="jquery-3.4.1.js"></script>
+    <script src ="counterbalancing.js"></script>
+    <script src="prepareTask.js"></script>
+    <script src="instructions.js"></script>
+    <script src ="tasks.js"></script>
+    <script src ="main.js"></script>
+    <script src ="images.js"></script>
+    <title>Big Letter Small Letter Task</title>
+  </head>
+
+  <body>
+    <!-- instruction elements for all text screens -->
+    <div class="instructions">
+      <div class="instruction-content">
+        <div class="instruction-header">
+          <h1>Instructions </h1>
+          <p style="font-weight: bold">Please read these instructions carefully.</p>
+        </div>
+        <div class="instruction-body">
+          <p id="instructions1" ></p>
+          <p id="instructions2" ></p>
+          <p id="instructions3" ></p>
+          <p id="instructions4" ></p>
+          <p id="instructions5" ></p>
+          <p id="instructions6" ></p>
+          <p id="instructions7" ></p>
+          <p id="instructions8" ></p>
+          <p id="instructions9" ></p>
+        </div>
+        <div class="instruction-buttons">
+          <button id="nextInstrButton">Next</button>
+          <button id="startExpButton">Start Experiment</button>
+          <button id="nextSectionButton">Next Section</button>
+        </div>
+      </div>
+    </div>
+    <div class="MenuClosedPrompt">
+      <h1 style = "color: red">The previous screen appears to be closed.</h1>
+      <p>You navigated to this window from a previous window, with the prompt: "Click 'Continue' button to start the main task. PLEASE DO NOT CLOSE THIS SCREEN."</p>
+      <p>This navigator window appears to be closed, or the current script has lost contact with the window. Even if the task is now completed, data submission will fail and your data will not be saved.</p>
+      <p>Please return to the MTurk window and restart the experiment. Please do not close any windows during this assignment or you may not be compensated. We apologize for any inconvenience. Thank you.</p>
+    </div>
+    <!--canvas element for displaying stimuli during the task and practice -->
+    <canvas id="myCanvas" width="800" height="600"></canvas>
+  </body>
+</html>

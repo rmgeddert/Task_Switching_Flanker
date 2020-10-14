@@ -1,0 +1,105 @@
+/* high level defaults */
+html{
+  height:100%;
+	width:100%;
+	margin:0;
+	padding:0;
+	border:0;
+}
+
+body {
+  height:100%;
+	width:100%;
+	margin:0;
+	padding:0;
+	border:0;
+  font-family: Arial, Helvetica;
+}
+
+table{
+  height:100%;
+	width:100%;
+	margin:0;
+	padding:0;
+	border:0;
+	text-align:center;
+	vertical-align:middle;
+}
+
+canvas {
+  /* centers horizontally but not vertically */
+  /* padding-left: 0;
+  padding-right: 0;
+  margin-left: auto;
+  margin-right: auto; */
+  /* centers both horizontal and vertical
+  see https://stackoverflow.com/questions/5127937/how-to-center-canvas-in-html5 */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* misc */
+  display: none;
+}
+
+/* instruction screen styles */
+.instructions {
+  display: none;
+  color: black;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.instruction-body {
+  font-size: 18px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.instruction-header p {
+  padding-bottom: 15px;
+  border-bottom: 3px solid black;
+}
+
+.instruction-header {
+  text-align: left;
+}
+
+/* buttons  */
+#nextInstrButton{
+  font-size: 22px;
+}
+
+#nextSectionButton{
+  color: blue;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+#startExpButton {
+  display:none;
+  color: black;
+  border: 3px outset grey;
+  background-color: #CCCCCC;
+  padding: 8px;
+  text-decoration: none;
+  font-family: Arial, Helvetica;
+  font-weight: bold;
+}
+
+#startExpButton:hover {
+  color: white;
+}
+
+#startExpButton:active {
+  border: 3px inset grey;
+}
+
+/* menu closed styles */
+.MenuClosedPrompt{
+  display: none;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
