@@ -2,8 +2,8 @@
 "use strict";
 
 // for testing
-let testMode = true;
-let speed = "normal"; //fast, normal
+let testMode = false;
+let speed = "fast"; //fast, normal
 // speed = (testMode == true) ? "fast" : speed; //testMode defaults to "fast"
 let skipPractice = false; // turn practice blocks on or off
 let openerNeeded = false; //true
@@ -118,14 +118,14 @@ $(document).ready(function(){
     } else if (expType == 7) {
       // 7: feedback - press button to start next block
       sectionEnd = new Date().getTime() - runStart;
-      data.push(["feedback", sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      data.push(["feedback", sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
       console.log(data);
       expType = 0;
       countDown(3);
     } else if (expType == 8) { // 8: "press button to start task"
       // log how much time was spent in this section
       sectionEnd = new Date().getTime() - runStart;
-      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
       console.log(data);
       // reset expStage and start task
       expType = 0;
@@ -133,7 +133,7 @@ $(document).ready(function(){
     } else if (expType == 9) { // 9: "press button to start next section"
       // log how much time was spent in this section
       sectionEnd = new Date().getTime() - runStart;
-      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
       console.log(data);
       // reset expStage and proceed to next section
       expType = 0;
@@ -141,7 +141,7 @@ $(document).ready(function(){
     } else if (expType == 11) { // repeat instructions
       // log how much time was spent in this section
       sectionEnd = new Date().getTime() - runStart;
-      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
       console.log(data);
       // iterate block and go back to instructions
       expType = 0;

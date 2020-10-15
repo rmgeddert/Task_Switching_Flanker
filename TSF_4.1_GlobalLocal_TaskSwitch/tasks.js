@@ -353,13 +353,10 @@ function itiScreen(){
   let stim = taskStimuliSet[trialCount];
 
   // log data
-  // data.push(["task", sectionType, block, blockType, trialCount + 1,
-  //   blockTrialCount + 1, getAccuracy(acc), respTime, stim,
-  //   expStimDict["target"][stim], expStimDict["distractor"][stim],
-  //   expStimDict["congruency"][stim], cuedTaskSet[trialCount],
-  //   switchRepeatList[trialCount], relevancyArr[trialCount], partResp, stimOnset, respOnset,
-  //   blockType, NaN, NaN, NaN]);
-  // console.log(data);
+  data.push(["task", sectionType, block, blockType, trialCount + 1,
+    blockTrialCount + 1, getAccuracy(acc), respTime, stim["g"], stim["l"],
+    (stim["g"] == stim["l"]) ? "c" : "i", cuedTaskSet[trialCount], switchRepeatList[trialCount], partResp, stimOnset, respOnset, actionSet[trialCount], NaN, NaN, NaN]);
+  console.log(data);
 
   // prepare ITI canvas
   ctx.fillStyle = accFeedbackColor();

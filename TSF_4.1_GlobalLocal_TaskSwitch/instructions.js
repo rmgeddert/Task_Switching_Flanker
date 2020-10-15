@@ -4,11 +4,11 @@
 let instructions = {
   // contains the interator for each instruction block
   iterator: {
-    "prac1-1": 1, "prac1-2": 1, "prac2": 1, "prac3": 1, "main1": 1,
+    "prac1-1": 1, "prac1-2": 1, "prac2": 1, "prac3": 1, "main1": 1, "main2": 1
   },
   // contains the max value of each instruction iteration. iteration will STOP at max.
   max: {
-    "prac1-1": 3, "prac1-2": 5, "prac2": 5, "prac3": 5, "main1": 3
+    "prac1-1": 3, "prac1-2": 5, "prac2": 5, "prac3": 5, "main1": 4, "main2": 4
   },
   // what does instruction section end with?
   // #nextSectionButton, #startExpButton, buttonPressNextSection, buttonPressStartTask
@@ -46,6 +46,9 @@ function navigateInstructionPath(repeat = false){
         break;
       case "prac3":
         expStage = "main1";
+        break;
+      case "main1":
+        expStage = "main2";
         break;
     }
     runInstructions();
@@ -118,7 +121,7 @@ function runInstructions(){
     console.log("button click");
     // log data for time spent on this section
     sectionEnd = new Date().getTime() - runStart;
-    data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+    data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
     console.log(data);
 
     // clear all button press listeners
@@ -131,7 +134,7 @@ function runInstructions(){
   $(document).on('click', '#nextSectionButton', function(){
     // log data for time spent on this section
     sectionEnd = new Date().getTime() - runStart;
-    data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+    data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
     console.log(data);
 
     // clear all button press listeners
@@ -225,22 +228,22 @@ function getNextInstructions(slideNum, expStage){
         case 3:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
           return "Remember to respond as quickly and as accuractely as possible on each trial.";
+        case 4:
+          return "This experiment consists of 4 section, with each section lasting about 3 to 4 minutes.";
       }
     case "main2":
       switch (slideNum){
         case 1:
-          return "This experiment consists of 4 blocks, with each block lasting about 3 to 4 minutes."
-        case 2:
           $( getImageText(instructionImages[get_task_image(1)]) ).insertAfter( "#instructions" + slideNum);
-          return "If the rectangle is " + colorFirstTask() + ", indicate if the " + first_task_target() + " an 'S' (" + key_S + " with " + finger_S + " hand index finger) or an 'H' (" + key_H + " with " + finger_H + " hand index finger).";
-        case 3:
+          return "Remember, if the rectangle is " + colorFirstTask() + ", indicate if the " + first_task_target() + " an 'S' (" + key_S + " with " + finger_S + " hand index finger) or an 'H' (" + key_H + " with " + finger_H + " hand index finger).";
+        case 2:
           $( getImageText(instructionImages[get_task_image(2)]) ).insertAfter( "#instructions" + slideNum);
           return "If the rectangle is " + colorSecondTask() + ", indicate if the " + second_task_target() + " an 'S' (" + key_S + " with " + finger_S + " hand index finger) or an 'H' (" + key_H + " with " + finger_H + " hand index finger).";
-        case 4:
+        case 3:
           iterateAgain = true;
           $( getImageText(instructionImages[1]) ).insertAfter( "#instructions" + slideNum);
           return "This block contains "+numPracticeTrials+" trials. Please place your hands on the '1' and '0' keys as shown.";
-        case 5:
+        case 4:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
           return "Press any button to begin.";
       }
