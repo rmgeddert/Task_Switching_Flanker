@@ -3,7 +3,7 @@
 
 // for testing
 let testMode = false;
-let speed = "fast"; //fast, normal
+let speed = "normal"; //fast, normal
 // speed = (testMode == true) ? "fast" : speed; //testMode defaults to "fast"
 let skipPractice = false; // turn practice blocks on or off
 let openerNeeded = false; //true

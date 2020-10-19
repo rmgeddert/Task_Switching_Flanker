@@ -1,4 +1,3 @@
-// updated: 2/17 11:06
 // create global curStage variable
 let curStage = 0;
 
@@ -15,10 +14,10 @@ function gup(name, tmpURL){
   return (results == null) ? "" : results[1];
 }
 
-// stop users from closing the menu.html window
-window.onbeforeunload = function() {
-    return 'You have unsaved changes!';
-}
+// // stop users from closing the menu.html window
+// window.onbeforeunload = function() {
+//     return 'You have unsaved changes!';
+// }
 
 // for testing, gets experiment set up immediately
 function startExperiment(){
@@ -56,7 +55,7 @@ function updateMainMenu(expStage){
 }
 
 // prevent duplicate workers from completing task
-let workerArr = ['A1E8ZYOQSGKTP8', 'A3NMQ3019X6YE0', 'A2IO83300NZCUE', 'A222XREQ12K58P', 'A1YC558J4E5KZ', 'A3GHPWV5J07UE8', 'A2V27A9GZA1NR2', 'A1CY7IOJ9YH136', 'A3PIJN4LHKKNPH', 'A3S0CAN1GKD8I4', 'A3R168GJZRF7KU', 'A2FWZR12905V6J', 'A2NAKIXS3DVGAA', 'A2O2Y99RA9GFUJ', 'AQWH9UY6FVU21', 'A1MMLN9XGYXF7M', 'A19S4W3QLLQJ0T', 'A1RV2LERVS0A4H', 'A37L7WFHSC4RNF', 'AROZ6EDDUGTLP', 'AKFJYQX7VPPW', 'AMPMTF5IAAMK8', 'A3NUUMHNIE3XHA', 'A1JKHGRDXU18PM', 'A21OKN7OJOFG2P', 'A2YWSSQEXXCRGK', 'A2LVCS009DMEAT', 'A3VP27UUQ34OXK', 'AUFUUD4WG9CVO', 'A3GHPWV5J07UE8', 'A2QBFXY9UQMJTT', 'A2MOC4PTJYY15B', 'A10JXOU89D5RXR', 'A1198W1SPF1R4', 'A2BBDH8DZD77AU', 'AMV1E7FFPVAW4', 'A1GLY95E6HRTCD', 'A25PFSORDO3SWQ', 'A37OUZOGQKGMW0', 'A141QUHWYCE2E', 'A1AJ2G7JXXJ8UJ', 'A1ROEDVMTO9Y3X', 'A2FL477TMKC91L', 'A22DVMN2Y3XHWA', 'A3PK3QF2HEYZ0N'];
+let workerArr = [];
 
 // checks if workerID exists in workerid array
 function duplicateWorker(workedID){
@@ -72,15 +71,35 @@ $(document).ready(function(){
   $("#NoGo").hide();
 
   // gets MTurk Worker Information and assign to HTML elements
-  document.getElementById('assignmentId').value = gup('assignmentId', document.referrer);
-  document.getElementById('hitId').value = gup('hitId', document.referrer);
-  document.getElementById('workerId').value = gup('workerId', document.referrer);
+  //window.location.href, document.referrer
+  // console.log(window.location.href);
+  let mt = getAllUrlParams(window.location.href);
+  // console.log(mt);
+  // if(mt.hitid == ""){mt.hitid = "NA"}
+  // if(mt.workerid == ""){mt.workerid  = "NA"}
+  // if(mt.assid == ""){mt.assid = "NA"}
+
+  document.getElementById('assignmentId').value = mt.assid;
+  document.getElementById('hitId').value = mt.hitid;
+  document.getElementById('workerId').value = mt.workerid;
+
+  console.log(document.getElementById('assignmentId').value);
+  console.log(document.getElementById('hitId').value);
+  console.log(document.getElementById('workerId').value);
+
+  // console.log(window.location.href);
+  // console.log(gup('assignmentId', window.location.href));
+  // console.log(gup('hitId', window.location.href));
+  // console.log(gup('workerId', window.location.href));
+  // document.getElementById('assignmentId').value = gup('assignmentId', window.location.href);
+  // document.getElementById('hitId').value = gup('hitId', window.location.href);
+  // document.getElementById('workerId').value = gup('workerId', window.location.href);
 
   // check worker ID
   if (document.getElementById("assignmentId").value == "" || document.getElementById("assignmentId").value == "ASSIGNMENT_ID_NOT_AVAILABLE"){
 
     // display text for accepting HIT
-    $("#instruction").text("Accept HIT first");
+    $("#instruction").text("Please accept HIT first");
     $("#instruction").show();
     $("#myButton").hide();
     $("#redo").hide();
@@ -98,27 +117,6 @@ $(document).ready(function(){
 
   }
 
-  // //http://stackoverflow.com/questions/8595909/how-to-completley-disable-any-mouse-click
- //  //disable right click
- //  $(document).bind('contextmenu', function(e) {
- //      e.stopPropagation();
- //      e.preventDefault();
- //      e.stopImmediatePropagation();
- //      return false;
- // });
-
-  // //Stops backspace presses (8) and spaces (32);
-  // //http://stackoverflow.com/questions/1495219/how-can-i-prevent-the-backspace-key-from-navigating-back
-  // $(function(){
-  //   let rx = /INPUT|SELECT|TEXTAREA/i;
-  // 	$(document).bind("keydown keypress", function(e){
-  // 		if( e.which == 32 ||e.which == 8 ){ // 8 == backspace
-  // 			if(!rx.test(e.target.tagName) || e.target.disabled || e.target.readOnly ){
-  // 				e.preventDefault();
-  // 			}
-  // 		}
-  // 	});
-  // });
 });
 
 function prepareMenu(){
@@ -136,4 +134,69 @@ function prepareMenu(){
         break;
     }
   });
+}
+
+function getAllUrlParams(url) {
+
+    // get query string from url (optional) or window
+    var queryString = url ? url.split('?')[1] : window.location.search.slice(1);
+
+    // we'll store the parameters here
+    var obj = {};
+
+    // if query string exists
+    if (queryString) {
+
+        // stuff after # is not part of query string, so get rid of it
+        queryString = queryString.split('#')[0];
+
+        // split our query string into its component parts
+        var arr = queryString.split('&');
+
+        for (var i = 0; i < arr.length; i++) {
+            // separate the keys and the values
+            var a = arr[i].split('=');
+
+            // set parameter name and value (use 'true' if empty)
+            var paramName = a[0];
+            var paramValue = typeof (a[1]) === 'undefined' ? true : a[1];
+
+            // (optional) keep case consistent
+            paramName = paramName.toLowerCase();
+            if (typeof paramValue === 'string') paramValue = paramValue.toLowerCase();
+
+            // if the paramName ends with square brackets, e.g. colors[] or colors[2]
+            if (paramName.match(/\[(\d+)?\]$/)) {
+
+                // create key if it doesn't exist
+                var key = paramName.replace(/\[(\d+)?\]/, '');
+                if (!obj[key]) obj[key] = [];
+
+                // if it's an indexed array e.g. colors[2]
+                if (paramName.match(/\[\d+\]$/)) {
+                    // get the index value and add the entry at the appropriate position
+                    var index = /\[(\d+)\]/.exec(paramName)[1];
+                    obj[key][index] = paramValue;
+                } else {
+                    // otherwise add the value to the end of the array
+                    obj[key].push(paramValue);
+                }
+            } else {
+                // we're dealing with a string
+                if (!obj[paramName]) {
+                    // if it doesn't exist, create property
+                    obj[paramName] = paramValue;
+                } else if (obj[paramName] && typeof obj[paramName] === 'string') {
+                    // if property does exist and it's a string, convert it to an array
+                    obj[paramName] = [obj[paramName]];
+                    obj[paramName].push(paramValue);
+                } else {
+                    // otherwise add the property
+                    obj[paramName].push(paramValue);
+                }
+            }
+        }
+    }
+
+    return obj;
 }
