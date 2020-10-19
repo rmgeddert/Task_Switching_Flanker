@@ -8,7 +8,7 @@ let instructions = {
   },
   // contains the max value of each instruction iteration. iteration will STOP at max.
   max: {
-    "prac1-1": 3, "prac1-2": 5, "prac2": 5, "prac3": 5, "main1": 4, "main2": 4
+    "prac1-1": 4, "prac1-2": 5, "prac2": 5, "prac3": 5, "main1": 4, "main2": 4
   },
   // what does instruction section end with?
   // #nextSectionButton, #startExpButton, buttonPressNextSection, buttonPressStartTask
@@ -164,7 +164,9 @@ function getNextInstructions(slideNum, expStage){
         case 2:
           return "Sometimes you will need to indicate whether the small letters are an 'S' or an 'H' and sometimes you will need to indicate whether the large shape is an 'S' or an 'H'.";
         case 3:
-          return "On each trial, a colored rectangle surround the letters will tell you whether to classify the small letters or the large shape.";
+          return "On each trial, a colored rectangle surrounding the letters will tell you whether to classify the small letters or the large shape.";
+        case 4:
+          return "You will begin with a few practice sections to familiarize you with the task before beginning the main experiment. You will need to get at least " + practiceAccCutoff + "% correct on each practice section before you can move on to the next one.";
       }
     case "prac1-2":
       switch (slideNum){
