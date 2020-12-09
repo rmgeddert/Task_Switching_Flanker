@@ -51,19 +51,19 @@ let expType = 0; // see below
 */
 
 let pracOrder = randIntFromInterval(1,2);
-console.log("pracOrder", pracOrder);
+// console.log("pracOrder", pracOrder);
   // case 1: practice parity first
   // case 2: practice magnitude first
 
 let taskMapping = randIntFromInterval(1,4);
-console.log("taskMapping", taskMapping);
+// console.log("taskMapping", taskMapping);
   // case 1: odd/even: "z" and "m", greater/less: "z" and "m"
   // case 2: odd/even: "z" and "m", greater/less: "m" and "z"
   // case 3: odd/even: "m" and "z", greater/less: "z" and "m"
   // case 4: odd/even: "m" and "z", greater/less: "m" and "z"
 
 let colorMapping = randIntFromInterval(1,2);
-console.log("colorMapping", colorMapping);
+// console.log("colorMapping", colorMapping);
   // case 1: odd/even = Red, greater/less = Blue
   // case 2: greater/less = Blue, odd/even = Red
 
@@ -97,7 +97,6 @@ $(document).ready(function(){
 
   // create key press listener
   $("body").keypress(function(event){
-    console.log(event.which);
     if (expType == 0) {
       expType = 5; //keydown when not needed. Keyup will reset to 0.
     } else if (expType == 1){
@@ -126,7 +125,7 @@ $(document).ready(function(){
 
       // 7: block feedback - press button to start next block
       sectionEnd = new Date().getTime() - runStart;
-      data.push(["feedback", sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      data.push(["feedback", sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
       console.log(data);
       expType = 0;
 
@@ -138,7 +137,7 @@ $(document).ready(function(){
     } else if (expType == 8) { // 8: "press button to start task"
       // log how much time was spent in this section
       sectionEnd = new Date().getTime() - runStart;
-      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
       console.log(data);
       // reset expStage and start task
       expType = 0;
@@ -146,7 +145,7 @@ $(document).ready(function(){
     } else if (expType == 9) { // 9: "press button to start next section"
       // log how much time was spent in this section
       sectionEnd = new Date().getTime() - runStart;
-      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
       console.log(data);
       // reset expStage and proceed to next section
       expType = 0;
@@ -154,7 +153,7 @@ $(document).ready(function(){
     } else if (expType == 11) { // repeat instructions
       // log how much time was spent in this section
       sectionEnd = new Date().getTime() - runStart;
-      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
       console.log(data);
       // iterate block and go back to instructions
       expType = 0;

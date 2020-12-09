@@ -68,14 +68,14 @@ function createPracticeTaskArrays(nTrials, task){
   cuedTaskSet = getTaskSet(taskStimuliPairs);
   switchRepeatList = getSwitchRepeatList(cuedTaskSet, nTrials);
   actionSet = createActionArray();
-  console.log("taskStimuliSet");
-  console.log(taskStimuliSet);
-  console.log("cuedTaskSet");
-  console.log(cuedTaskSet);
-  console.log("switchRepeatList");
-  console.log(switchRepeatList);
-  console.log("actionSet");
-  console.log(actionSet);
+  // console.log("taskStimuliSet");
+  // console.log(taskStimuliSet);
+  // console.log("cuedTaskSet");
+  // console.log(cuedTaskSet);
+  // console.log("switchRepeatList");
+  // console.log(switchRepeatList);
+  // console.log("actionSet");
+  // console.log(actionSet);
 }
 
 function createTaskArrays(trialsPerBlock){
@@ -88,14 +88,14 @@ function createTaskArrays(trialsPerBlock){
   cuedTaskSet = getTaskSet(taskStimuliPairs);
   switchRepeatList = getSwitchRepeatList(cuedTaskSet);
   actionSet = createActionArray();
-  console.log("taskStimuliSet");
-  console.log(taskStimuliSet);
-  console.log("cuedTaskSet");
-  console.log(cuedTaskSet);
-  console.log("switchRepeatList");
-  console.log(switchRepeatList);
-  console.log("actionSet");
-  console.log(actionSet);
+  // console.log("taskStimuliSet");
+  // console.log(taskStimuliSet);
+  // console.log("cuedTaskSet");
+  // console.log(cuedTaskSet);
+  // console.log("switchRepeatList");
+  // console.log(switchRepeatList);
+  // console.log("actionSet");
+  // console.log(actionSet);
 }
 
 function countDown(seconds){
@@ -316,7 +316,7 @@ function itiScreen(){
   // log data
   data.push(["task", sectionType, block, blockType, trialCount + 1,
     blockTrialCount + 1, getAccuracy(acc), respTime, taskStimuliSet[trialCount],
-    getCongruency(taskStimuliSet[trialCount]), cuedTaskSet[trialCount], switchRepeatList[trialCount], partResp, stimOnset, respOnset, actionSet[trialCount], NaN, NaN, NaN]);
+    getCongruency(taskStimuliSet[trialCount]), cuedTaskSet[trialCount], switchRepeatList[trialCount], partResp, stimOnset, respOnset, actionSet[trialCount][1], NaN, NaN, NaN]);
   console.log(data);
 
   // prepare ITI canvas
@@ -534,6 +534,12 @@ function getCongruency(num){
       return "c";
     } else {
       return "i";
+    }
+  } else {
+    if (taskMapping == 1 || taskMapping == 4) {
+      return "i";
+    } else {
+      return "c";
     }
   }
 }
