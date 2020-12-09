@@ -2,22 +2,19 @@
 "use strict";
 
 // for testing
-let testMode = false;
-let speed = "normal"; //fast, normal
-speed = (testMode == true) ? "fast" : speed; //testMode defaults to "fast"
+let testMode = true;
+let speed = "fast"; //fast, normal
+// speed = (testMode == true) ? "fast" : speed; //testMode defaults to "fast"
 let skipPractice = false; // turn practice blocks on or off
 let openerNeeded = false; //true
 
 // ----- Experiment Paramenters (CHANGE ME) ----- //
 let rectangleCue = false; // if true, colored rectangular cue signals task, else the numbers themselves are colored
-let earlyDistractors = false; //if true, flankers precede target presentation
-let stimInterval = (speed == "fast") ? 10 : 2000; //2000 stimulus interval
+let stimInterval = (speed == "fast") ? 10 : 1500; //2000 stimulus interval
 let fixInterval = (speed == "fast") ? 10 : 500; //500 ms intertrial interval
-let earlyFlankerInterval = (earlyDistractors == false) ? 0 : ((speed == "fast") ? 10 : 300); //200; early flanker (relative to target presentation)
-let informativeEarlyFlankers = true; //if informative, early flankers colored like task
-let earlyCueInterval = (rectangleCue != true) ? 0 : ((speed == "fast") ? 20 : 200); //100; early cue (relative to target presentation), 0 makes cue concurrant with target presentation. only valid with rectangle cue
+let earlyCueInterval = (rectangleCue != true) ? 0 : ((speed == "fast") ? 0 : 0); //100; early cue (relative to target presentation), 0 makes cue concurrant with target presentation. only valid with rectangle cue
 let numBlocks = 4, trialsPerBlock = 128; // (multiples of 16) (48 usually)
-let numPracticeTrials = 16;
+let numPracticeTrials = 8;
 let miniBlockLength = 0; //doesn't need to be multiple of 24. 0 to turn off
 let practiceAccCutoff = (testMode == true) ? 0 : 75; // 75 acc%
 let taskAccCutoff = (testMode == true) ? 0 : 75; // 75 acc%
@@ -31,15 +28,13 @@ function ITIInterval(){
 }
 
 //initialize global task variables
-let selectedStimDict = selectStimuli(); // establish stimuli set for task
-let expStimDict = defineStimuli(selectedStimDict); //build reference dictionary for stimuli
-let taskStimuliSet, cuedTaskSet, actionSet, switchRepeatList; // global vars for task arrays
+let taskStimuliSet, cuedTaskSet, actionSet, switchRepeatList, relevancyArr; // global vars for task arrays
 let canvas, ctx; // global canvas variable
 let expStage = (skipPractice == true) ? "main1" : "prac1-1";
 // vars for tasks (iterator, accuracy) and reaction times:
 let trialCount, blockTrialCount, acc, accCount, stimOnset, respOnset, respTime, block = 1, partResp, runStart, blockType = NaN;
 let stimTimeout, breakOn = false, repeatNecessary = false, data=[];
-let sectionStart, sectionEnd, sectionType;
+let sectionStart, sectionEnd, sectionType, sectionTimer;
 let expType = 0; // see below
 /*  expType explanations:
       0: No key press expected/needed
@@ -54,21 +49,32 @@ let expType = 0; // see below
       9: proceed to next instruction "press to continue"
       10: Screen Size too small, "press any button to continue"
 */
+
 let pracOrder = randIntFromInterval(1,2);
-  // case 1: practice magnitude first
-  // case 2: practice parity first
-let taskMapping = randIntFromInterval(1,8);
-  // case 1: LH [par_odd, par_even]  -  RH [mag_higher, mag_lower]
-  // case 2: LH [par_odd, par_even]  -  RH [mag_lower, mag_higher]
-  // case 3: LH [par_even, par_odd]  -  RH [mag_higher, mag_lower]
-  // case 4: LH [par_even, par_odd]  -  RH [mag_lower, mag_higher]
-  // case 5: LH [mag_lower, mag_higher]  -  RH [par_odd, par_even]
-  // case 6: LH [mag_lower, mag_higher]  -  RH [par_even, par_odd]
-  // case 7: LH [mag_higher, mag_lower]  -  RH [par_odd, par_even]
-  // case 8: LH [mag_higher, mag_lower]  -  RH [par_even, par_odd]
+console.log("pracOrder", pracOrder);
+  // case 1: practice parity first
+  // case 2: practice magnitude first
+
+let taskMapping = randIntFromInterval(1,4);
+console.log("taskMapping", taskMapping);
+  // case 1: odd/even: "z" and "m", greater/less: "z" and "m"
+  // case 2: odd/even: "z" and "m", greater/less: "m" and "z"
+  // case 3: odd/even: "m" and "z", greater/less: "z" and "m"
+  // case 4: odd/even: "m" and "z", greater/less: "m" and "z"
+
 let colorMapping = randIntFromInterval(1,2);
-  // case 1: magnitude = Red, parity = Blue
-  // case 2: magnitude = Blue, parity = Red
+console.log("colorMapping", colorMapping);
+  // case 1: odd/even = Red, greater/less = Blue
+  // case 2: greater/less = Blue, odd/even = Red
+
+// instrction variables based on mappings
+let parityColor = (colorMapping == 1) ? "red" : "blue";
+let magnitudeColor = (colorMapping == 1) ? "blue" : "red";
+let parity_z = (taskMapping == 1 || taskMapping == 2) ? "odd" : "even";
+let parity_m = (parity_z == "odd") ? "even" : "odd";
+let magnitude_z = (taskMapping == 1 || taskMapping == 3) ? "greater than 5" : "less than 5";
+let magnitude_m = (magnitude_z == "greater than 5") ? "less than 5" : "greater than 5";
+
 let blockOrder = getBlockOrder(randIntFromInterval(1,4));
   // Latin square counterbalancing
   // 1:   A   B   D   C
@@ -79,7 +85,6 @@ let blockOrder = getBlockOrder(randIntFromInterval(1,4));
   // Congruency manipulations
   // A: H Fl L TS, B: H FL H TS, C: L Fl L TS, D: L Fl L TS
   // high 75% (H), low 25% (L), Flanker Inc (Fl), Task Switch (TS)
-
 
 // ------ EXPERIMENT STARTS HERE ------ //
 $(document).ready(function(){
@@ -92,12 +97,13 @@ $(document).ready(function(){
 
   // create key press listener
   $("body").keypress(function(event){
+    console.log(event.which);
     if (expType == 0) {
       expType = 5; //keydown when not needed. Keyup will reset to 0.
     } else if (expType == 1){
       expType = 2; //prevent additional responses during this trial (i.e. holding down key)
       partResp = event.which;
-      acc = actionSet[trialCount].includes(partResp) ? 1 : 0;
+      acc = (actionSet[trialCount].indexOf(partResp)) != -1 ? 1 : 0;
       if (acc == 1){accCount++;}
       respOnset = new Date().getTime() - runStart;
       respTime = respOnset - stimOnset;
@@ -116,16 +122,23 @@ $(document).ready(function(){
       expType = 0;
       countDown(3);
     } else if (expType == 7) {
-      // 7: feedback - press button to start next block
+      clearInterval(sectionTimer);
+
+      // 7: block feedback - press button to start next block
       sectionEnd = new Date().getTime() - runStart;
-      data.push(["feedback", sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      data.push(["feedback", sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
       console.log(data);
       expType = 0;
+
+      // increment block information before beginning next block
+      block++; blockIndexer++;
+      blockType = blockOrder[blockIndexer];
+      blockTrialCount = 0;
       countDown(3);
     } else if (expType == 8) { // 8: "press button to start task"
       // log how much time was spent in this section
       sectionEnd = new Date().getTime() - runStart;
-      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
       console.log(data);
       // reset expStage and start task
       expType = 0;
@@ -133,7 +146,7 @@ $(document).ready(function(){
     } else if (expType == 9) { // 9: "press button to start next section"
       // log how much time was spent in this section
       sectionEnd = new Date().getTime() - runStart;
-      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
       console.log(data);
       // reset expStage and proceed to next section
       expType = 0;
@@ -141,7 +154,7 @@ $(document).ready(function(){
     } else if (expType == 11) { // repeat instructions
       // log how much time was spent in this section
       sectionEnd = new Date().getTime() - runStart;
-      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
+      data.push([expStage, sectionType, block, blockType, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, sectionStart, sectionEnd, sectionEnd - sectionStart]);
       console.log(data);
       // iterate block and go back to instructions
       expType = 0;

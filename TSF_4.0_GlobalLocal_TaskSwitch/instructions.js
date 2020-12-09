@@ -244,7 +244,7 @@ function getNextInstructions(slideNum, expStage){
         case 3:
           iterateAgain = true;
           $( getImageText(instructionImages[1]) ).insertAfter( "#instructions" + slideNum);
-          return "This block contains "+numPracticeTrials+" trials. Please place your hands on the '1' and '0' keys as shown.";
+          return "Please place your hands on the '1' and '0' keys as shown.";
         case 4:
           changeTextFormat('#instructions' + slideNum,'font-weight','bold');
           return "Press any button to begin.";

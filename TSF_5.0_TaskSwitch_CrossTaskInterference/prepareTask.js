@@ -1,92 +1,13 @@
-// ------------------------------------- //
-//  Choose which stimuli are in the task //
-// ------------------------------------- //
-let parityIncStim = {
-  "1": ["2","4"],
-  "2": ["1","3"],
-  "3": ["2","4"],
-  "4": ["1","3"],
-  "6": ["7","9"],
-  "7": ["6","8"],
-  "8": ["7","9"],
-  "9": ["6","8"]
-}
-let magnitudeIncStim = {
-  "1": ["7","9"],
-  "2": ["6","8"],
-  "3": ["7","9"],
-  "4": ["6","8"],
-  "6": ["2","4"],
-  "7": ["1","3"],
-  "8": ["2","4"],
-  "9": ["1","3"]
-}
-
-function selectStimuli(){
-  let dict = {};
-  let targets = ["1","2","3","4","6","7","8","9"];
-
-  // create dictionary for target characteristics
-  targets.forEach((target) => {
-    dict[target] = {};
-    dict[target]["p"] = isEven(target) ? 'even' : 'odd';
-    dict[target]["m"] = (target > 5) ? 'larger' : 'smaller';
-    dict[target]["congruent"] = target;
-    // choose parity incongruent number to be flanker
-    dict[target]["parityInc"] = parityIncStim[target][getRandomInt(2)];
-    // choose magnitude incongruent number to be flanker
-    dict[target]["magnitudeInc"] = magnitudeIncStim[target][getRandomInt(2)];
-  });
-  return dict;
-}
-
-// create look up dictionary for each full stimulus "33233" that describes its components and characteristics
-function defineStimuli(stimDict){
-  let dict = {
-    target: {},
-    p: {},
-    m: {},
-    distractor: {},
-    congruency: {}
-  };
-
-  Object.keys(stimDict).forEach(
-    function(target){
-      addStimToDict(target,"congruent");
-      addStimToDict(target,"parityInc");
-      addStimToDict(target,"magnitudeInc");
-    }
-  );
-
-  return dict;
-
-  function addStimToDict(target, congruency){
-    // get flanker and build stimulus
-    let flanker = stimDict[target][congruency];
-    let stimulus = flanker+flanker+target+flanker+flanker;
-    // build dictionary entry
-    dict['target'][stimulus] = target;
-    dict['distractor'][stimulus] = flanker;
-    dict['p'][stimulus] = stimDict[target]["p"];
-    dict['m'][stimulus] = stimDict[target]["m"];
-    dict['congruency'][stimulus] = congruency;
-  }
-}
-
-// ------------------------------------- //
-//      Create arrays for prac task      //
-// ------------------------------------- //
-// uses some prac specific functions and the rest are from main task functions below
-
-function createPracticeTaskPairs(nTrials, task){
-  let targetArr = createTargetArr(nTrials);
-  let flankerCongruenciesArr = createPracticeFlankersArr(nTrials);
+// practice task arrays
+// vvvvvvvvvvvvvvvv
+function createPracticeStimPairs(nTrials, task){
+  let congruenciesArr = createPracticeCongruenciesArr(nTrials);
   let taskArr = createPracTaskArray(nTrials, task);
-  let stimArr = createStimArray(taskArr, flankerCongruenciesArr, targetArr);
-  return stimTaskPairArr = stimArr.map((s, i) => [s, taskArr[i]]);
+  let targetArr = createTargetsArr(nTrials, congruenciesArr);
+  return stimTaskPairArr = targetArr.map((s, i) => [s, taskArr[i]]);
 }
 
-function createPracticeFlankersArr(nTrials){
+function createPracticeCongruenciesArr(nTrials){
   // calc how mnay congruent/incongruent trials are needed
   let nConTrials = Math.ceil(nTrials * 0.5);
   let nIncTrials = nTrials - nConTrials;
@@ -100,7 +21,7 @@ function createPracticeFlankersArr(nTrials){
 
 function createPracTaskArray(nTrials, task){
   if (task == "") {
-    let taskA = "p", taskB = "m";
+    let taskA = "m", taskB = "p";
 
     // calc how many switch and repeat trials needed
     let nSwitchTrials = Math.ceil(nTrials * 0.5);
@@ -148,60 +69,25 @@ function createPracTaskArray(nTrials, task){
   }
 }
 
-// ------------------------------------- //
-//      Create arrays for main task      //
-// ------------------------------------- //
+// main task arrays
+// vvvvvvvvvvvvvvvv
+// creates what stimuli and task are on each trial
 function createStimuliAndTaskSets(nTrials, blockLetter){
-  let targetArr, flankerCongruenciesArr, taskArr, stimArr;
-  let iterationCount = 1;
-  do {
-    targetArr = createTargetArr(nTrials);
-    flankerCongruenciesArr = createFlankersArray(nTrials, blockLetter);
-    taskArr = createTaskArray(nTrials, blockLetter);
-    stimArr = createStimArray(taskArr, flankerCongruenciesArr, targetArr);
-    iterationCount++;
-  } while (stimArr == undefined && iterationCount < 100)
+  let targetsArr, congruenciesArr, taskArr, stimArr;
+
+  // create arrays for target and task based on congruencies
+  congruenciesArr = createCongruencyArray(nTrials, blockLetter);
+  taskArr = createTaskArray(nTrials, blockLetter);
+  targetsArr = createTargetsArr(nTrials, congruenciesArr);
 
   // return zipped task and stim arr into one variable
-  return stimTaskPairArr = stimArr.map((s, i) => [s, taskArr[i]]);
+  return stimTaskPairArr = targetsArr.map((s, i) => [s, taskArr[i]]);
 }
 
-function createTargetArr(nTrials){
-  let targetsArr = [], newBatch;
-  let batchesNeeded = Math.ceil(nTrials/16);
-  for (let i = 0; i < batchesNeeded; i++) {
-    do {
-      newBatch = createTargetBatch();
-    } while (newBatch[0] == targetsArr[targetsArr.length - 1]);
-    targetsArr = targetsArr.concat(newBatch);
-  }
-  return targetsArr;
-}
-
-function createTargetBatch(){
-  let targets = ["1","2","3","4","6","7","8","9"];
-  let targetArr = targets.concat(targets); //one batch has 2 sets of targets
-
-  // shuffle targets
-  do {
-    shuffle(targetArr);
-  } while (targetRepeats(targetArr));
-  return targetArr;
-
-  // check shuffled target array for repeats
-  function targetRepeats(arr){
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i] == arr[i+1]) {
-        return true;
-      }
-    }
-    return false;
-  }
-}
-
-function createFlankersArray(batchSize, blockLetter){
+// create congruency array (is each trial congruent or incongruent)
+function createCongruencyArray(batchSize, blockLetter){
   // calc how mnay congruent/incongruent trials are needed
-  let nConTrials = Math.ceil(getBlockCongruencies(blockLetter).fl_con * batchSize);
+  let nConTrials = Math.ceil(getBlockCongruencies(blockLetter).ct_con * batchSize);
   let nIncTrials = batchSize - nConTrials;
   // nIncTrials = Math.ceil(getBlockCongruencies(blockLetter).fl_inc * batchSize);
 
@@ -212,8 +98,9 @@ function createFlankersArray(batchSize, blockLetter){
   return shuffle(congruenciesArr);
 }
 
+// creates task array (responding globally or locally)
 function createTaskArray(batchSize, blockLetter){
-  let taskA = "p", taskB = "m";
+  let taskA = "m", taskB = "p";
 
   // calc how many switch and repeat trials needed
   let nSwitchTrials = Math.ceil(getBlockCongruencies(blockLetter).switch * batchSize);
@@ -224,14 +111,14 @@ function createTaskArray(batchSize, blockLetter){
   let task2 = (task1 == taskA) ? taskB : taskA;
 
   //build array with switch trial pairs ("A", "B") x ###
-  let switchArr = [];
+  let taskArr = [];
   for (let i = 0; i < Math.ceil(batchSize * getBlockCongruencies(blockLetter).switch / 2); i++) {
-    switchArr.push(task1);
-    switchArr.push(task2);
+    taskArr.push(task1);
+    taskArr.push(task2);
   }
 
   // get number of switches
-  nSwitches = switchArr.length;
+  nSwitches = taskArr.length;
 
   //function to get all indices of a certain value(val) in an array (arr)
   function getAllIndexes(arr, val) {
@@ -242,61 +129,64 @@ function createTaskArray(batchSize, blockLetter){
     return indexes;
   }
 
-  // insert repeat trials into switchArr
+  // insert repeat trials into taskArr
   for (let i = 0; i < Math.ceil((batchSize - nSwitches) / 2); i++) {
     // insert an A task
-    let a_indexes = getAllIndexes(switchArr,taskA);
+    let a_indexes = getAllIndexes(taskArr,taskA);
     let repeatloc_a = a_indexes[Math.floor(Math.random()*a_indexes.length)];
-    switchArr.splice(repeatloc_a, 0, taskA);
+    taskArr.splice(repeatloc_a, 0, taskA);
 
     // insert task B
-    let b_indexes = getAllIndexes(switchArr,taskB);
+    let b_indexes = getAllIndexes(taskArr,taskB);
     let repeatloc_b = b_indexes[Math.floor(Math.random()*b_indexes.length)];
-    switchArr.splice(repeatloc_b, 0, taskB);
+    taskArr.splice(repeatloc_b, 0, taskB);
   }
-
-  return switchArr;
+  return taskArr;
 }
 
-function createStimArray(taskArr, flankerCongruencies, targetArr){
-  let stimulusArr = [], flanker;
-  for (let i = 0; i < taskArr.length; i++) {
-    let target = targetArr[i];
-    // determine flanker based on task and congruency
-    if (flankerCongruencies[i] == "i") {
-      if (taskArr[i] == "p") {
-        flanker = selectedStimDict[target]["parityInc"];
+// create what correct answer on each trial is
+function createTargetsArr(nTrials, congruenciesArr){
+  let targetsArr = [];
+  for (let i = 0; i < nTrials; i++) {
+    if (congruenciesArr[i] == "c") {
+      if (taskMapping == 1 || taskMapping == 4) {
+        if (i != 0) {
+          targetsArr.push(_.sample([2,4,7,9].filter(n => n != targetsArr[i - 1])));
+        } else {
+          targetsArr.push(_.sample([2,4,7,9]));
+        }
       } else {
-        flanker = selectedStimDict[target]["magnitudeInc"];
+        if (i != 0) {
+          targetsArr.push(_.sample([1,3,6,8].filter(n => n != targetsArr[i - 1])));
+        } else {
+          targetsArr.push(_.sample([1,3,6,8]));
+        }
       }
     } else {
-      flanker = target;
+      if (taskMapping == 1 || taskMapping == 4) {
+        if (i != 0) {
+          targetsArr.push(_.sample([1,3,6,8].filter(n => n != targetsArr[i - 1])));
+        } else {
+          targetsArr.push(_.sample([1,3,6,8]));
+        }
+      } else {
+        if (i != 0) {
+          targetsArr.push(_.sample([2,4,7,9].filter(n => n != targetsArr[i - 1])));
+        } else {
+          targetsArr.push(_.sample([2,4,7,9]));
+        }
+      }
     }
-
-    // // check if flankers repeat from previous trial
-    // if (i != 0) {
-    //   if (flanker == prevFlanker | flanker == prevTarget){
-    //     return undefined;
-    //   }
-    // }
-
-    // add stimulus to arr
-    stimulusArr.push(flanker + flanker + target + flanker + flanker);
-
-    // remember what previous flanker was
-    prevFlanker = flanker;
-    prevTarget = target;
   }
-
-  return stimulusArr;
+  return targetsArr;
 }
 
 // determine if trial is switch or repeat (first trials in blocks are "n")
-function getSwitchRepeatList(taskArr, blockTrialLength){
+function getSwitchRepeatList(taskArr){
   let switchRepeatArr = [], prevTask;
   for (let i = 0; i < taskArr.length; i++){
     // check if task switch/repeat and increment
-    if ((i % trialsPerBlock != 0) && (i % miniBlockLength != 0) && (i % blockTrialLength != 0)) {
+    if ((i % trialsPerBlock != 0) && (i % miniBlockLength != 0)) {
       //if not first trial of block
       if (taskArr[i] == prevTask) { //trial is repeat
         switchRepeatArr.push("r");
@@ -336,51 +226,27 @@ function createActionArray(){
   let responseMappings = {
     1: {
       odd : [90,122],
-      even : [88,120],
-      larger : [78,110],
+      even : [77,109],
+      larger : [90,122],
       smaller : [77,109]
     },
     2: {
       odd : [90,122],
-      even : [88,120],
+      even : [77,109],
       larger : [77,109],
-      smaller : [78,110]
+      smaller : [90,122]
     },
     3: {
-      odd : [88,120],
+      odd : [77,109],
       even : [90,122],
-      larger : [78,110],
+      larger : [90,122],
       smaller : [77,109]
     },
     4: {
-      odd : [88,120],
+      odd : [77,109],
       even : [90,122],
       larger : [77,109],
-      smaller : [78,110]
-    },
-    5: {
-      odd : [78,110],
-      even : [77,109],
-      larger : [88,120],
       smaller : [90,122]
-    },
-    6: {
-      odd : [77,109],
-      even : [78,110],
-      larger : [88,120],
-      smaller : [90,122]
-    },
-    7: {
-      odd : [78,110],
-      even : [77,109],
-      larger : [90,122],
-      smaller : [88,120]
-    },
-    8: {
-      odd : [77,109],
-      even : [78,110],
-      larger : [90,122],
-      smaller : [88,120]
     }
   };
 
@@ -388,11 +254,26 @@ function createActionArray(){
   let actionArr = [];
   taskStimuliSet.forEach(function(taskStim, index){
     let task = cuedTaskSet[index];
-    actionArr.push(responseMappings[taskMapping][expStimDict[task][taskStim]]);
+    actionArr.push(responseMappings[taskMapping][getCategory(taskStim, task)]);
   })
   return actionArr;
 }
 
+function getCategory(number, task){
+  if (task == "m") {
+    if (number < 5) {
+      return "smaller";
+    } else {
+      return "larger";
+    }
+  } else {
+    if (number%2 == 0) {
+      return "even";
+    } else {
+      return "odd";
+    }
+  }
+}
 
 // ------------- Misc Functions ------------- //
 // Fisher-Yates shuffle

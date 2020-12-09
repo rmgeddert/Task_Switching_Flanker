@@ -17,143 +17,132 @@ function getBlockCongruencies(blockLetter) {
       return {
         switch: 0.25,
         repeat: 0.75,
-        fl_con: 0.25,
-        fl_inc: 0.75
+        ct_con: 0.25,
+        ct_inc: 0.75
       };
     case "B":
       return {
         switch: 0.75,
         repeat: 0.25,
-        fl_con: 0.25,
-        fl_inc: 0.75
+        ct_con: 0.25,
+        ct_inc: 0.75
       };
     case "C":
       return {
         switch: 0.25,
         repeat: 0.75,
-        fl_con: 0.75,
-        fl_inc: 0.25
+        ct_con: 0.75,
+        ct_inc: 0.25
       };
     case "D":
       return {
         switch: 0.75,
         repeat: 0.25,
-        fl_con: 0.75,
-        fl_inc: 0.25
+        ct_con: 0.75,
+        ct_inc: 0.25
       };
   }
 }
 
-function getTaskInstruction(hand, identifier){
-  if (hand == "right") {
-    switch (taskMapping){
-      case 1:
-      case 3:
-        return (identifier == 1) ? "greater than 5" : "less than 5";
-      case 2:
-      case 4:
-        return (identifier == 1) ? "less than 5" : "greater than 5";
-      case 5:
-      case 7:
-        return (identifier == 1) ? "odd" : "even";
-      case 6:
-      case 8:
-        return (identifier == 1) ? "even" : "odd";
+function get_task_image(num){
+  switch (taskMapping) {
+    case 1:
+      if (pracOrder == num) { //task is parity
+        return (colorMapping == 1) ? 3 : 11;
+      } else { //task is magnitude
+        return (colorMapping == 1) ? 4 : 12;
+      }
+    case 2:
+      if (pracOrder == num) { //task is parity
+        return (colorMapping == 1) ? 5 : 13;
+      } else { //task is magnitude
+        return (colorMapping == 1) ? 6 : 14;
+      }
+    case 3:
+      if (pracOrder == num) { //task is parity
+        return (colorMapping == 1) ? 7 : 15;
+      } else { //task is magnitude
+        return (colorMapping == 1) ? 8 : 16;
+      }
+    case 4:
+      if (pracOrder == num) { //task is parity
+        return (colorMapping == 1) ? 9 : 17;
+      } else { //task is magnitude
+        return (colorMapping == 1) ? 10 : 18;
+      }
+  }
+}
+
+function first_task(){
+  if (pracOrder == 1) {
+    if (taskMapping == 1 || taskMapping == 2) {
+      return "odd or even";
+    } else {
+      return "even or odd";
     }
   } else {
-    switch (taskMapping){
-      case 1:
-      case 2:
-        return (identifier == 1) ? "odd" : "even";
-      case 3:
-      case 4:
-        return (identifier == 1) ? "even" : "odd";
-      case 5:
-      case 6:
-        return (identifier == 1) ? "less than 5" : "greater than 5";
-      case 7:
-      case 8:
-        return (identifier == 1) ? "greater than 5" : "less than 5";
+    if (taskMapping == 1 || taskMapping == 3) {
+      return "greater or less than five";
+    } else {
+      return "less or greater than five";
     }
   }
 }
 
-function getHand(identifier){
-  if (pracOrder == 1){ //if mag task first
-    if (identifier == 1) { //first hand
-      return (taskMapping <= 4) ? "right" : "left"; //is mag right or left
-    } else if (identifier == 2){ //second hand
-      return (taskMapping <= 4) ? "left" : "right";
+function second_task(){
+  if (pracOrder == 1) {
+    if (taskMapping == 1 || taskMapping == 3) {
+      return "greater or less than five";
+    } else {
+      return "less or greater than five";
     }
-  } else { //if par task first
-    if (identifier == 1) { //first hand
-      return (taskMapping <= 4) ? "left" : "right"; //is par right or left
-    } else if (identifier == 2){ //second hand
-      return (taskMapping <= 4) ? "right" : "left";
-    }
-  }
-}
-
-function getLetter(hand, identifier){
-  if (hand == "right") { //first hand
-    return (identifier == 1) ? "N" : "M";
   } else {
-    return (identifier == 1) ? "Z" : "X";
-  }
-}
-
-function getFinger(hand, identifier){
-  if (hand == "right") { //first hand
-    return (identifier == 1) ? "index" : "middle";
-  } else {
-    return (identifier == 1) ? "middle" : "index";
-  }
-}
-
-function getHandImageNum(identifier){
-  if (pracOrder == 1){ //if mag task first
-    if (identifier == 1) { //first hand
-      return (taskMapping <= 4) ? 3 : 4; //is mag right or left
-    } else if (identifier == 2){ //second hand
-      return (taskMapping <= 4) ? 4 : 3;
+    if (taskMapping == 1 || taskMapping == 2) {
+      return "odd or even";
+    } else {
+      return "even or odd";
     }
-  } else { //if par task first
-    if (identifier == 1) { //first hand
-      return (taskMapping <= 4) ? 4 : 3; //is par right or left
-    } else if (identifier == 2){ //second hand
-      return (taskMapping <= 4) ? 3 : 4;
+  }
+}
+
+// options 1,1; 1,2; 2,1; 2,2
+function task_instruction(task_num, finger_num){
+  if (task_num == 1) {
+    if (pracOrder == 1) {
+      return (finger_num == 1) ? parity_z : parity_m;
+    } else {
+      return (finger_num == 1) ? magnitude_z : magnitude_m;
+    }
+  } else {
+    if (pracOrder == 1) {
+      return (finger_num == 1) ? magnitude_z : magnitude_m;
+    } else {
+      return (finger_num == 1) ? parity_z : parity_m;
     }
   }
 }
 
 function colorFirstTask(){
-  if (pracOrder == 1){ //mag first
-    return magColor();
-  } else { // par first
-    return parColor();
+  if (pracOrder == 1){ //parity first
+    return parityColor;
+  } else { // magnitude first
+    return magnitudeColor;
   }
 }
 
 function colorSecondTask(){
-  if (pracOrder == 1){ //mag first
-    return parColor();
-  } else { // par first
-    return magColor();
+  if (pracOrder == 1){ //parity first so magnitude second
+    return magnitudeColor;
+  } else { // maagnitude first so parity second
+    return parityColor;
   }
 }
 
-function magColor(){
-  return (colorMapping == 1) ? "red" : "blue";
-}
-
-function parColor(){
-  return (colorMapping == 1) ? "blue" : "red";
-}
 
 function getFirstPracticeTask(){
-  return (pracOrder == 1) ? "m" : "p";
+  return (pracOrder == 1) ? "p" : "m";
 }
 
 function getSecondPracticeTask(){
-  return (pracOrder == 1) ? "p" : "m";
+  return (pracOrder == 1) ? "m" : "p";
 }

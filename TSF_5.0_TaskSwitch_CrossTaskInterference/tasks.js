@@ -19,20 +19,21 @@ function runTasks(){
   // --- PRACTICE 1 --- //
   if (expStage.indexOf("prac1") != -1){
 
-    runPractice(16, getFirstPracticeTask());
+    runPractice(numPracticeTrials, getFirstPracticeTask());
 
   // --- PRACTICE 2 --- //
-  } else if (expStage.indexOf("prac2") != -1){
+} else if (expStage.indexOf("prac2") != -1){
 
-    runPractice(16, getSecondPracticeTask());
+    runPractice(numPracticeTrials, getSecondPracticeTask());
 
   // --- PRACTICE 3 --- //
   } else if (expStage.indexOf("prac3") != -1) {
 
-    runPractice(16);
+    runPractice(numPracticeTrials * 2);
 
   // --- MAIN TASK --- //
   } else if (expStage.indexOf("main") != -1) {
+
     // set blockType for first block of real task (see blockFeedback.js)
     blockIndexer = 0;
     blockType = blockOrder[blockIndexer];
@@ -48,39 +49,53 @@ function runTasks(){
   }
 }
 
-// function createTaskArrays(numTrials, repeat = false, taskSpecification = ""){
-//   // create new task array or add to old one if repeat
-//   if (!repeat) {
-//     taskStimuliPairs = createStimuliAndTaskSets(numTrials, taskSpecification);
-//   } else {
-//     taskStimuliPairs = taskStimuliPairs.concat( createStimuliAndTaskSets(numTrials, taskSpecification));
-//   }
-//
-//   // using task stim pairs, define stim set, task set, switch/repeat list, and action set
-//   taskStimuliSet = getStimSet(taskStimuliPairs);
-//   cuedTaskSet = getTaskSet(taskStimuliPairs);
-//   switchRepeatList = getSwitchRepeatList(cuedTaskSet, numTrials); //list of switches and repeats
-//   actionSet = createActionArray();
-// }
+function runPractice(numPracticeTrials, task = ""){
+  trialCount = 0;
+  if (repeatNecessary != true){
+    block = 1;
+  }
 
-function createTaskArrays(numTrials){
-  // for each block, add to large array of all trials
-  let taskStimuliPairs = [];
-  blockOrder.forEach(function(blockLetter){
-    taskStimuliPairs = taskStimuliPairs.concat(createStimuliAndTaskSets(numTrials, blockLetter))
-  });
-  taskStimuliSet = getStimSet(taskStimuliPairs);
-  cuedTaskSet = getTaskSet(taskStimuliPairs);
-  switchRepeatList = getSwitchRepeatList(cuedTaskSet, numTrials);
-  actionSet = createActionArray();
+  // create task array for practice block
+  createPracticeTaskArrays(numPracticeTrials, task);
+
+  // start countdown into practice block
+  countDown(3);
 }
 
-function createPracticeTaskArray(nTrials, task){
-  let taskStimuliPairs = createPracticeTaskPairs(nTrials, task);
+function createPracticeTaskArrays(nTrials, task){
+  let taskStimuliPairs = createPracticeStimPairs(nTrials, task);
   taskStimuliSet = getStimSet(taskStimuliPairs);
   cuedTaskSet = getTaskSet(taskStimuliPairs);
   switchRepeatList = getSwitchRepeatList(cuedTaskSet, nTrials);
   actionSet = createActionArray();
+  console.log("taskStimuliSet");
+  console.log(taskStimuliSet);
+  console.log("cuedTaskSet");
+  console.log(cuedTaskSet);
+  console.log("switchRepeatList");
+  console.log(switchRepeatList);
+  console.log("actionSet");
+  console.log(actionSet);
+}
+
+function createTaskArrays(trialsPerBlock){
+  // for each block, add to large array of all trials
+  let taskStimuliPairs = [];
+  blockOrder.forEach(function(blockLetter){
+    taskStimuliPairs = taskStimuliPairs.concat(createStimuliAndTaskSets(trialsPerBlock, blockLetter))
+  });
+  taskStimuliSet = getStimSet(taskStimuliPairs);
+  cuedTaskSet = getTaskSet(taskStimuliPairs);
+  switchRepeatList = getSwitchRepeatList(cuedTaskSet);
+  actionSet = createActionArray();
+  console.log("taskStimuliSet");
+  console.log(taskStimuliSet);
+  console.log("cuedTaskSet");
+  console.log(cuedTaskSet);
+  console.log("switchRepeatList");
+  console.log(switchRepeatList);
+  console.log("actionSet");
+  console.log(actionSet);
 }
 
 function countDown(seconds){
@@ -96,24 +111,11 @@ function countDown(seconds){
   }
 }
 
-function runPractice(numPracticeTrials, task = ""){
-  trialCount = 0;
-  if (repeatNecessary != true){
-    block = 1;
-  }
-
-  // create task array for practice block
-  createPracticeTaskArray(numPracticeTrials, task);
-
-  // start countdown into practice block
-  countDown(3);
-}
-
 function runPracticeTrial(){
   if (openerNeeded == false || opener != null) {
     sectionType = "pracTask";
     if (trialCount < taskStimuliSet.length){
-      if (expType == 3){ //check fi key is being held down
+      if (expType == 3){ //check if key is being held down
         expType = 4;
         promptLetGo();
       } else {
@@ -147,9 +149,6 @@ function runTrial(){
         //if arrived at big block break, update block information
         breakOn = true;
         bigBlockScreen();
-        block++; blockIndexer++;
-        blockType = blockOrder[blockIndexer];
-        blockTrialCount = 0;
 
       } else if (trialCount % miniBlockLength == 0 && !breakOn && trialCount != 0) {
 
@@ -157,9 +156,11 @@ function runTrial(){
         breakOn = true; miniBlockScreen();
 
       } else {
+
         if (expType == 3 || expType == 5){ //if key is being held down still
           expType = 4;
           promptLetGo();
+
         } else {
 
           // check if screen size is big enough
@@ -204,6 +205,135 @@ function endOfExperiment(){
   }
 }
 
+function fixationScreen(){
+  // prepare canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.font = "bold 60px Arial";
+  ctx.fillStyle = "black";
+
+  // display fixation
+  ctx.fillText("+",canvas.width/2,canvas.height/2);
+
+  // determine which function is next
+  let nextScreenFunc = (earlyCueInterval > 0) ? earlyTaskCue : stimScreen;
+
+  // go to next after appropriate time
+  setTimeout(nextScreenFunc, fixInterval);
+}
+
+function stimScreen(){
+  if (expType == 5) {
+
+    expType = 6;
+    promptLetGo();
+
+  } else {
+
+    stimOnset = new Date().getTime() - runStart;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // set color, unless rectangular cue is needed.
+    if (rectangleCue == false) {
+
+      ctx.fillStyle = (cuedTaskSet[trialCount] == "m") ? magnitudeColor : parityColor;
+
+    } else {
+
+      drawRect();
+
+    }
+
+    //reset all response variables and await response (expType = 1)
+    expType = 1; acc = NaN, respTime = NaN, partResp = NaN, respOnset = NaN;
+
+    // display stimulus
+    drawStimulus();
+
+    // proceed to ITI screen after timeout
+    stimTimeout = setTimeout(itiScreen,stimInterval);
+  }
+}
+
+function drawStimulus(){
+  let number = taskStimuliSet[trialCount];
+
+  // determine color of text
+  if (rectangleCue) {
+    ctx.fillStyle = "black";
+  } else {
+    ctx.fillStyle = (cuedTaskSet[trialCount] == "m") ? magnitudeColor : parityColor;
+  }
+
+  ctx.font = "bold 100px Arial";
+
+  // draw number on canvas
+  ctx.fillText(number,canvas.width/2,canvas.height/2);
+}
+
+function earlyTaskCue(){
+  if (expType == 5) {
+
+    expType = 6;
+    promptLetGo();
+
+  } else {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // if preceded by early flanker
+    drawRect();
+
+    // continue to stimulus after early cue delay
+    stimTimeout = setTimeout(stimScreen,earlyCueInterval);
+  }
+}
+
+function drawRect(){
+  // text margin
+  let borderMargin = 40;
+
+  // set size of rectangle
+  let frameWidth = 160;
+  let frameHeight = 160;
+
+  // draw box
+  ctx.beginPath();
+  ctx.lineWidth = "6";
+  ctx.strokeStyle = (cuedTaskSet[trialCount] == "m") ? magnitudeColor : parityColor;
+  ctx.rect((canvas.width/2) - (frameWidth/2), (canvas.height/2) - (frameHeight/2) - 5, frameWidth, frameHeight);
+  ctx.stroke();
+}
+
+function itiScreen(){
+  if (expType == 1) { // participant didn't respond
+    expType = 0;
+  } else if (expType == 2) { //participant still holding down response key
+    expType = 3;
+  }
+
+  // variable for readability below
+  let stim = taskStimuliSet[trialCount];
+
+  // log data
+  data.push(["task", sectionType, block, blockType, trialCount + 1,
+    blockTrialCount + 1, getAccuracy(acc), respTime, taskStimuliSet[trialCount],
+    getCongruency(taskStimuliSet[trialCount]), cuedTaskSet[trialCount], switchRepeatList[trialCount], partResp, stimOnset, respOnset, actionSet[trialCount], NaN, NaN, NaN]);
+  console.log(data);
+
+  // prepare ITI canvas
+  ctx.fillStyle = accFeedbackColor();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // display response feedback (correct/incorrect/too slow)
+  ctx.font = "bold 60px Arial";
+  ctx.fillText(accFeedback(),canvas.width/2,canvas.height/2);
+
+  // trial finished. iterate trial counters
+  trialCount++; blockTrialCount++;
+
+  // proceed to next trial or to next section after delay
+  setTimeout(trialFunc, ITIInterval());
+}
+
 function practiceAccuracyFeedback(accuracy){
   sectionStart = new Date().getTime() - runStart;
   sectionType = "pracFeedback";
@@ -236,191 +366,6 @@ function practiceAccuracyFeedback(accuracy){
   }
 }
 
-function fixationScreen(){
-  // prepare canvas
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "black";
-
-  // display fixation
-  ctx.fillText("+",canvas.width/2,canvas.height/2);
-
-  // determine which function is next
-  let nextScreenFunc;
-  if (earlyFlankerInterval > 0 | earlyCueInterval > 0){
-    nextScreenFunc = (earlyCueInterval > earlyFlankerInterval) ? earlyTaskCue : earlyFlanker;
-  } else {
-    nextScreenFunc = stimScreen;
-  }
-
-  // go to next after appropriate time
-  setTimeout(nextScreenFunc, fixInterval);
-}
-
-function stimScreen(){
-  if (expType == 5) {
-
-    expType = 6;
-    promptLetGo();
-
-  } else {
-    stimOnset = new Date().getTime() - runStart;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // set color, unless rectangular cue is needed.
-    if (rectangleCue == false) {
-      ctx.fillStyle = (cuedTaskSet[trialCount] == "m") ? magColor() : parColor();
-    } else {
-      // if so, set fillstyle to black and draw rectangular cue
-      ctx.fillStyle = "black";
-      drawRect();
-    }
-
-    //reset all response variables and await response (expType = 1)
-    expType = 1; acc = NaN, respTime = NaN, partResp = NaN, respOnset = NaN;
-
-    // display stimulus
-    ctx.fillText(taskStimuliSet[trialCount],canvas.width/2,canvas.height/2);
-
-    // proceed to ITI screen after timeout
-    stimTimeout = setTimeout(itiScreen,stimInterval);
-  }
-}
-
-function earlyFlanker(){
-  if (expType == 5) {
-
-    expType = 6;
-    promptLetGo();
-
-  } else {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // determine color of flankers
-    setFlankerFillStyle();
-
-    // draw flanker
-    drawFlankers();
-
-    // if rectangle cue is needed in the task
-    if (rectangleCue == true && earlyCueInterval > 0) {
-      // if rectangle cue should be there right now
-      if (earlyCueInterval >= earlyFlankerInterval) {
-        // then draw rectangle
-        drawRect();
-        // and proceed to task
-        setTimeout(stimScreen, earlyFlankerInterval);
-      } else { //if rectangle still to come, proceed to draw rectangle
-        setTimeout(earlyTaskCue, earlyFlankerInterval - earlyCueInterval)
-      }
-    } else { //if no early cue, proceed to stim
-      setTimeout(stimScreen, earlyFlankerInterval);
-    }
-
-    // // if flanker precedes early cue (and early cue is needed)
-    // if (earlyCueInterval > 0 && earlyFlankerInterval > earlyCueInterval) {
-    //   setTimeout(earlyTaskCue, earlyFlankerInterval - earlyCueInterval);
-    // } else {
-    //   if (earlyCueInterval > 0) {
-    //     drawRect();
-    //   }
-    //   setTimeout(stimScreen, earlyFlankerInterval);
-    // }
-  }
-}
-
-function earlyTaskCue(){
-  if (expType == 5) {
-
-    expType = 6;
-    promptLetGo();
-
-  } else {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // if cue precedes early flanker (and  early flanker is needed)
-    if (earlyFlankerInterval > 0 && earlyCueInterval > earlyFlankerInterval) {
-      setTimeout(earlyFlanker, earlyCueInterval - earlyFlankerInterval);
-    } else {
-      if (earlyFlankerInterval > 0) {
-        setFlankerFillStyle();
-        drawFlankers();
-      }
-      setTimeout(stimScreen, earlyCueInterval);
-    }
-
-    // if preceded by early flanker
-    drawRect();
-  }
-}
-
-function setFlankerFillStyle(){
-  // if flankers are informative and there is no rectangle cue
-  if (informativeEarlyFlankers == true && rectangleCue == false) {
-      ctx.fillStyle = (cuedTaskSet[trialCount] == "m") ? magColor() : parColor();
-  } else { //if not, fillStyle = "black"
-    ctx.fillStyle = "black";
-  }
-}
-
-function drawFlankers(){
-  // display flankers
-  let flanker = expStimDict['distractor'][taskStimuliSet[trialCount]];
-  let target = expStimDict['target'][taskStimuliSet[trialCount]];
-  let targetSpace = (target == 1) ? " " : "  "; // one space for 1, two spaces for 2-9
-  let justFlankers = flanker + flanker + targetSpace + flanker + flanker;
-  ctx.fillText(justFlankers,canvas.width/2,canvas.height/2);
-}
-
-function drawRect(){
-  // text margin
-  let borderMargin = 40;
-
-  // measure text
-  let stimWidth = ctx.measureText(taskStimuliSet[trialCount]).width;
-  let frameWidth = stimWidth + borderMargin;
-  let frameHeight = 100; //unmeasurable, https://stackoverflow.com/questions/1134586/how-can-you-find-the-height-of-text-on-an-html-canvas
-
-  // draw box
-  ctx.beginPath();
-  ctx.lineWidth = "6";
-  ctx.strokeStyle = (cuedTaskSet[trialCount] == "m") ? magColor() : parColor();
-  ctx.rect((canvas.width/2) - (frameWidth/2), (canvas.height/2) - (frameHeight/2) - 5, frameWidth, frameHeight);
-  ctx.stroke();
-}
-
-function itiScreen(){
-  if (expType == 1) { // participant didn't respond
-    expType = 0;
-  } else if (expType == 2) { //participant still holding down response key
-    expType = 3;
-  }
-
-  // variable for readability below
-  let stim = taskStimuliSet[trialCount];
-
-  // log data
-  data.push(["task", sectionType, block, blockType, trialCount + 1,
-    blockTrialCount + 1, getAccuracy(acc), respTime, stim,
-    expStimDict["target"][stim], expStimDict["distractor"][stim],
-    expStimDict["congruency"][stim], cuedTaskSet[trialCount],
-    switchRepeatList[trialCount], partResp, stimOnset, respOnset,
-    blockType, NaN, NaN, NaN]);
-  console.log(data);
-
-  // prepare ITI canvas
-  ctx.fillStyle = accFeedbackColor();
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // display response feedback (correct/incorrect/too slow)
-  ctx.fillText(accFeedback(),canvas.width/2,canvas.height/2);
-
-  // trial finished. iterate trial counters
-  trialCount++; blockTrialCount++;
-
-  // proceed to next trial or to next section after delay
-  setTimeout(trialFunc, ITIInterval());
-}
-
 function miniBlockScreen(){
   sectionType = "miniblock";
   sectionStart = new Date().getTime() - runStart;
@@ -432,43 +377,59 @@ function miniBlockScreen(){
   ctx.font = "25px Arial";
 
   // display miniblock text
-  ctx.fillText("You are "+ Math.round((trialCount/trialsPerBlock)*100)+"% through this block.",canvas.width/2,canvas.height/2 - 50);
+  ctx.fillText("You are "+ Math.round(((trialCount%trialsPerBlock)/trialsPerBlock)*100)+"% through this block.",canvas.width/2,canvas.height/2 - 50);
   ctx.fillText("Your overall accuracy so far is " + Math.round((accCount/trialCount)*100) + "%.",canvas.width/2,canvas.height/2);
   ctx.fillText("Press any button to continue.",canvas.width/2,canvas.height/2 + 100);
   ctx.font = "italic bold 22px Arial";
-  ctx.fillText("Remember, you need >" + taskAccCutoff + "% accuracy to be paid.",canvas.width/2,canvas.height/2 + 50);
+  ctx.fillText("Remember, you need >" + taskAccCutoff + "% accuracy.",canvas.width/2,canvas.height/2 + 50);
 }
 
 function bigBlockScreen(){
-  sectionType = "bigBlock";
+  let minutesBreak = 2;
+  sectionType = "blockBreak";
   sectionStart = new Date().getTime() - runStart;
-  expType = 7;
+  expType = 0; //else expType stays = 1 till below runs
+  setTimeout(function(){expType = 7},2000);
 
-  // prep canvas
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "black";
+  // display break screen (With timer)
+  drawBreakScreen("0" + minutesBreak,"00", minutesBreak);
+  blockBreakFunction(minutesBreak,0,minutesBreak);
 
-  // display big  block text
-  ctx.font = "25px Arial";
-  ctx.fillText("You finished block " + block + "/" + numBlocks + "!",canvas.width/2,canvas.height/2 - 100);
-  ctx.fillText("Your overall accuracy so far is " + Math.round((accCount / trialCount) * 100) + "%.",canvas.width/2,canvas.height/2 - 50);
-
-  // display accuracy reminder based on current accuracy
-  ctx.font = "italic bold 22px Arial";
-  if (Math.round((accCount / trialCount) * 100) < taskAccCutoff) {
-    ctx.fillStyle = "red";
-    ctx.fillText("You need >" + taskAccCutoff + "% accuracy in the task.",canvas.width/2,canvas.height/2);
-  } else {
+  function blockBreakFunction(minutes, seconds, max){
+    let time = minutes*60 + seconds;
     ctx.fillStyle = "black";
-    ctx.fillText("You need >" + taskAccCutoff + "% accuracy in the task.",canvas.width/2,canvas.height/2);
+    sectionTimer = setInterval(function(){
+      if (time < 0) {return}
+      ctx.fillStyle = (time <= 60) ? "red" : "black";
+      let minutes = Math.floor(time / 60);
+      if (minutes < 10) minutes = "0" + minutes;
+      let seconds = Math.floor(time % 60);
+      if (seconds < 10) seconds = "0" + seconds;
+      drawBreakScreen(minutes, seconds, max);
+      time--;
+    }, 1000);
   }
+}
+
+function drawBreakScreen(minutes, seconds, max){
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // draw timer (with color from previous function)
+  ctx.font = "bold 45px Arial";
+  ctx.fillText(minutes + ":" + seconds,canvas.width/2,canvas.height/2 - 100);
+
+  // display miniblock text
   ctx.fillStyle = "black";
-
   ctx.font = "25px Arial";
-  ctx.fillText("Always respond as quickly and as accurately as possible.",canvas.width/2,canvas.height/2 + 50);
-
+  ctx.fillText("This is a short break. Please don't pause for more than " + max + " minutes.",canvas.width/2,canvas.height/2 - 150);
+  if (numBlocks - block > 1) {
+    ctx.fillText("You are finished with block " + block + ". You have " + (numBlocks - block) + " blocks left.",canvas.width/2,canvas.height/2);
+  } else {
+    ctx.fillText("You are finished with block " + block + ". You have " + (numBlocks - block) + " block left.",canvas.width/2,canvas.height/2);
+  }
+  ctx.fillText("Your overall accuracy so far is " + Math.round((accCount/trialCount)*100) + "%.",canvas.width/2,canvas.height/2+50);
   ctx.font = "bold 25px Arial";
-  ctx.fillText("Press any button to continue.",canvas.width/2,canvas.height/2 + 150);
+  ctx.fillText("Press any button to continue.",canvas.width/2,canvas.height/2 + 200);
 }
 
 // functions for determining ITI feedback depending on accuracy
@@ -564,5 +525,15 @@ function promptScreenSize(){
     ctx.font = "bold 25px Arial";
     ctx.fillText("Please refresh the page to restart the experiment.",myCanvas.width/2,(myCanvas.height/2)+100);
 
+  }
+}
+
+function getCongruency(num){
+  if ([2,4,7,9].indexOf(num) != -1) {
+    if (taskMapping == 1 || taskMapping == 4) {
+      return "c";
+    } else {
+      return "i";
+    }
   }
 }
