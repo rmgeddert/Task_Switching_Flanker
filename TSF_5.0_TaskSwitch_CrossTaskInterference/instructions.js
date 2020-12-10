@@ -164,7 +164,7 @@ function getNextInstructions(slideNum, expStage){
         case 2:
           return "You will either need to identify the number as " + first_task() + " or identify the number as " + second_task() + ".";
         case 3:
-          return "On each trial, a colored rectangle surrounding the number will tell you how you should clssify the number.";
+          return "On each trial, a colored rectangle surrounding the number will tell you how you should classify the number.";
         case 4:
           return "You will begin with a few practice sections to familiarize you with the task before beginning the main experiment. You will need to get at least " + practiceAccCutoff + "% correct on each practice section before you can move on to the next one.";
       }

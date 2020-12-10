@@ -16,8 +16,8 @@ let earlyCueInterval = (rectangleCue != true) ? 0 : ((speed == "fast") ? 0 : 0);
 let numBlocks = 4, trialsPerBlock = 128; // (multiples of 16) (48 usually)
 let numPracticeTrials = 8;
 let miniBlockLength = 0; //doesn't need to be multiple of 24. 0 to turn off
-let practiceAccCutoff = (testMode == true) ? 0 : 75; // 75 acc%
-let taskAccCutoff = (testMode == true) ? 0 : 75; // 75 acc%
+let practiceAccCutoff = (testMode == true) ? 0 : 85; // 75 acc%
+let taskAccCutoff = (testMode == true) ? 0 : 85; // 75 acc%
 
 function ITIInterval(){
   let itiMin = (speed == "fast") ? 20 : 1200; //1200
