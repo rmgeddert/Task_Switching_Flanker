@@ -108,6 +108,12 @@ function get_task_image(num){
   }
 }
 
+function get_task_color(num){
+  if (true) {
+
+  }
+}
+
 function getFirstPracticeTask(){
   return (pracOrder == 1) ? "g" : "l";
 }
